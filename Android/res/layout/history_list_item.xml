@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/history_list_item_name_time_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_margin="20dp" >
+
+    <TextView
+        android:id="@+id/history_list_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:ellipsize="end"
+        android:text="@string/place_noun"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:width="205dp" />
+
+    <TextView
+        android:id="@+id/history_list_item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/history_list_item_name"
+        android:gravity="right"
+        android:text="@string/time_noun"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:width="90dp" />
+
+</RelativeLayout>

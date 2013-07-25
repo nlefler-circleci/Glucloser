@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, PumpActivity!</string>
+    <string name="app_name">Glucloser</string>
+    <string name="add_verb">Add</string>
+    <string name="location_noun">Location</string>
+    <string name="foods_noun">Foods</string>
+    <string name="tags_noun">Tags</string>
+    <string name="suggest_verb">Suggest</string>
+    <string name="save_verb">Save</string>
+    <string name="on_noun">On</string>
+    <string name="off_noun">Off</string>
+    <string name="empty_string" />
+    <string name="remove_verb">Remove</string>
+    <string name="food_input_hint">Type food here</string>
+    <string name="carb_input_hint">Type carbs here</string>
+    <string name="add_tag">Add tag</string>
+    <string name="photo_noun">Photo</string>
+    <string name="add_place_place_name">Place name</string>
+    <string name="meal_noun">Meal</string>
+    <string name="place_noun">Place</string>
+    <string name="add_meal_string">Add Meal</string>
+    <string name="place_input_hint">Add a place</string>
+    <string name="carbs_noun">Carbs</string>
+    <string name="history_noun">History</string>
+    <string name="search_verb">Search</string>
+    <string name="stats_noun">Stats</string>
+    <string name="food_name">Food Name</string>
+    <string name="add_food_string">Add Food</string>
+    <string name="add_place_string">Add Place</string>
+    <string name="add_tag_string">Add Tag</string>
+    <string name="time_noun">Time</string>
+    <string name="correction_noun">Correction</string>
+    <string name="meal_detail_phrase">Meal Details</string>
+    <string name="tag_detail_phrase">Tag Details</string>
+    <string name="food_detail_phrase">Food Details</string>
+    <string name="place_detail_phrase">Place Details</string>
+    <string name="meals_noun">Meals</string>
+    <string name="food_noun">Food</string>
+    <string name="clear_verb">Clear</string>
+    <string name="tag_noun">Tag</string>
+    <string name="date_noun">Date</string>
+    <string name="bolus_type_phrase">Bolus Type</string>
+    <string name="syncing_verb">Syncing</string>
+    <string name="finished">Finished</string>
+    <string name="bolus_started_phrase">Bolus Started At</string>
+    <string name="omni_bar_hint">Type to search or add</string>
+    <string name="sync_verb">Sync</string>
+    <string name="add_food_verb">Add Food</string>
+    <string name="edit_verb">Edit</string>
+    <string-array name="action_bar_action_list">
+        <item>Home</item>
+        <item>Add Meal</item>
+        <item>History</item>
+        <item>Stats</item>
+    </string-array>
+</resources>
