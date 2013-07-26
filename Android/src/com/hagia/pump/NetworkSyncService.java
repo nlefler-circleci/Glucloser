@@ -44,7 +44,7 @@ public class NetworkSyncService extends Service {
 	@Override
 	public void onCreate() {
 		mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		BugSenseHandler.initAndStartSession(this.getApplicationContext(), PumpActivity.BUGSENSE_API_KEY);
+		BugSenseHandler.initAndStartSession(this.getApplicationContext(), getString(R.string.bugsense_api_key));
 		BugSenseHandler.setLogging(true);
 		super.onCreate();
 	}

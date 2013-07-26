@@ -35,11 +35,6 @@ public class PumpActivity extends Activity {
 	private static final String LOG_TAG = "Pump_Pump";
 	public static final int LOG_LEVEL = Log.VERBOSE;
 
-	private static final String PARSE_APP_ID = "";
-	private static final String PARSE_API_KEY = "";
-
-	protected static final String BUGSENSE_API_KEY = "";
-
 	private static PumpActivity instance;
 	private ActionBar actionBar;
 	private Bundle fragmentArgs;
@@ -68,11 +63,11 @@ public class PumpActivity extends Activity {
 		handler = new Handler();
 		
 		// Initialize BugSense
-		BugSenseHandler.initAndStartSession(this.getApplicationContext(), BUGSENSE_API_KEY);
+		BugSenseHandler.initAndStartSession(this.getApplicationContext(), getString(R.string.bugsense_api_key));
 		BugSenseHandler.setLogging(true);
 
 		// Initialize parse
-		Parse.initialize(this, PARSE_APP_ID, PARSE_API_KEY);
+		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_api_key));
 
 		// Initialize Database
 		DatabaseUtil.initialize(this);
