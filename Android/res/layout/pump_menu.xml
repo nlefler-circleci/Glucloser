@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
     <item android:id="@+id/sync"
         android:title="@string/sync_verb"/>
+    <item android:id="@+id/edit_places"
+          android:title="@string/edit_places"/>
 </menu>

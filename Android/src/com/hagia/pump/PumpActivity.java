@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
 import com.hagia.pump.fragments.add.AddMealFragment;
+import com.hagia.pump.fragments.edit.EditPlacesFragment;
 import com.hagia.pump.fragments.history.HistoryFragment;
 import com.hagia.pump.fragments.home.HomeFragment;
 import com.hagia.pump.fragments.stats.StatsFragment;
@@ -170,6 +171,9 @@ public class PumpActivity extends Activity {
 		case R.id.sync:
 			DatabaseUtil.instance().startNetworkSyncServiceUsingContext(PumpActivity.getPumpActivity().getApplicationContext());
 			return true;
+        case R.id.edit_places:
+            showFragment(new EditPlacesFragment(), "Edit Places");
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

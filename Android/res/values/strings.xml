@@ -47,6 +47,7 @@
     <string name="sync_verb">Sync</string>
     <string name="add_food_verb">Add Food</string>
     <string name="edit_verb">Edit</string>
+    <string name="edit_places">Edit Places</string>
     <string-array name="action_bar_action_list">
         <item>Home</item>
         <item>Add Meal</item>
