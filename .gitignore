@@ -17,6 +17,7 @@ out/
 # Local configuration file (sdk path, etc)
 local.properties
 Android/res/values/keys.xml
+Android/.idea/workspace.xml
 
 # Eclipse project files
 .classpath
