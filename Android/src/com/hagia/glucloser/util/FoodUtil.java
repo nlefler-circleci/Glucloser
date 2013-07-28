@@ -488,7 +488,7 @@ public class FoodUtil {
 				DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
 				food.needsUpload);
 
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
 				Tables.FOOD_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		if (code == -1) {

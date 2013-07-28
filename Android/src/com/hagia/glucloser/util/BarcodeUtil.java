@@ -98,7 +98,7 @@ public class BarcodeUtil {
 				DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
 				barCode.needsUpload);
 
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
 				Tables.BARCODE_TO_FOOD_NAME_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		if (code == -1) {

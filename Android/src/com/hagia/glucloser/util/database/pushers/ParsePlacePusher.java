@@ -40,7 +40,7 @@ public class ParsePlacePusher extends SyncPusher {
 				values.clear();
 				getCommonValuesIntoValuesForTable(values, Tables.PLACE_DB_NAME, objId, false);
 				
-				DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.PLACE_DB_NAME, values,
 						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {place.id});
 				if (code == -1) {

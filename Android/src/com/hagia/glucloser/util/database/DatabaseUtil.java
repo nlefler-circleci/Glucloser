@@ -213,7 +213,7 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 		long retCode;
 		Cursor cursor = getReadableDatabase().query(table, null, whereClause, whereArgs,
 				null, null, null);
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		if (cursor.moveToFirst()) {
 			cursor.close();
 			Log.v(LOG_TAG, "Upsert found record, updating");

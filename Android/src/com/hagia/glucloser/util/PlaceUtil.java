@@ -495,7 +495,7 @@ public class PlaceUtil {
 				DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
 				place.needsUpload);
 
-		if (transaction) db.beginTransaction();
+		if (transaction) db.beginTransactionNonExclusive();
 
 		long code = db.insertWithOnConflict(
 				Tables.PLACE_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);

@@ -40,7 +40,7 @@ public class ParseMealPusher extends SyncPusher {
 				values.clear();
 				getCommonValuesIntoValuesForTable(values, Tables.MEAL_DB_NAME, objId, false);
 				
-				DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.MEAL_DB_NAME, values,
 						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {meal.id});
 				if (code == -1) {

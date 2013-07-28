@@ -255,7 +255,7 @@ public class MealUtil {
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.MEAL_DB_NAME,
 				Meal.DATE_EATEN_DB_COLUMN_NAME),DatabaseUtil.parseDateFormat.format(meal.dateEaten));
 
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
 				Tables.MEAL_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		if (code == -1) {

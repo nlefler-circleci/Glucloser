@@ -47,7 +47,7 @@ private static final String LOG_TAG = "Pump_Tag_To_Food_Util";
 				DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
 				tagToFood.needsUpload);
 
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
 				Tables.TAG_TO_FOOD_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		if (code == -1) {

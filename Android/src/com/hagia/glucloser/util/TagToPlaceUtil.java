@@ -42,7 +42,7 @@ private static final String LOG_TAG = "Pump_Tag_To_Place_Util";
 				DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
 				tagToPlace.needsUpload);
 
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
 				Tables.TAG_TO_PLACE_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		

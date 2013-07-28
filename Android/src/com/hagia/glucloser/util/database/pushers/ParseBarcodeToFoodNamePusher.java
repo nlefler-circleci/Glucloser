@@ -41,7 +41,7 @@ public class ParseBarcodeToFoodNamePusher extends SyncPusher {
 				getCommonValuesIntoValuesForTable(values, Tables.BARCODE_TO_FOOD_NAME_DB_NAME,
 						objId, false);
 				
-				DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.BARCODE_TO_FOOD_NAME_DB_NAME, values,
 						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?",
 						new String[] {barCode.id});

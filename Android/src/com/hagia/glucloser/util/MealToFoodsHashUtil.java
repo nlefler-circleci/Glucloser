@@ -79,7 +79,7 @@ public class MealToFoodsHashUtil {
 
 		Log.v(LOG_TAG, "Saving meal to foods hash with values " + values);
 
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
 				Tables.MEAL_TO_FOODS_HASH_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		if (code == -1) {

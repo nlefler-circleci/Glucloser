@@ -40,7 +40,7 @@ public class ParseTagPusher extends SyncPusher {
 				values.clear();
 				getCommonValuesIntoValuesForTable(values, Tables.TAG_DB_NAME, objId, false);
 				
-				DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.TAG_DB_NAME, values,
 						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {tag.id});
 				if (code == -1) {

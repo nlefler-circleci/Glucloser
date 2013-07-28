@@ -117,7 +117,7 @@ public class SaveManager {
 				meal.placeToMeal.place.needsUpload = true;
 
 				// Start writing
-				DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 
 				// PlaceToMeal
 				long placeToMealId = PlaceToMealUtil.savePlaceToMeal(meal.placeToMeal);

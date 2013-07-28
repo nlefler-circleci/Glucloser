@@ -48,7 +48,7 @@ public class PlaceToMealUtil {
 
 		Log.v(LOG_TAG, "Saving place to meal with values " + values);
 
-		DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
 				Tables.PLACE_TO_MEAL_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 		if (code == -1) {

@@ -38,7 +38,7 @@ public class ParsePlaceToMealPusher extends SyncPusher {
 				getCommonValuesIntoValuesForTable(values, Tables.PLACE_TO_MEAL_DB_NAME, objId, false);
 				Log.v(LOG_TAG, "Uploading PlaceToMeal to Parse: " + values);
 				
-				DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.PLACE_TO_MEAL_DB_NAME, values,
 						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {placeToMeal.id});
 				if (code == -1) {

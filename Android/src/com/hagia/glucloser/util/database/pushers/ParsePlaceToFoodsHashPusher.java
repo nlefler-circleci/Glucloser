@@ -39,7 +39,7 @@ public class ParsePlaceToFoodsHashPusher extends SyncPusher {
 						objId, false);
 				Log.v(LOG_TAG, "Uploading PlaceToFoodsHash to Parse: " + values);
 				
-				DatabaseUtil.instance().getWritableDatabase().beginTransaction();
+				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.PLACE_TO_FOODS_HASH_DB_NAME, values,
 						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {placeToFoodsHash.id});
 				if (code == -1) {
