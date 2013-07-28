@@ -18,6 +18,7 @@ out/
 local.properties
 Android/res/values/keys.xml
 Android/.idea/workspace.xml
+Android/.idea/dictionaries/
 
 # Eclipse project files
 .classpath
