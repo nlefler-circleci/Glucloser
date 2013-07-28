@@ -539,4 +539,8 @@ public class PlaceUtil {
 			place.needsUpload = true;
 		}
 	}
+
+    public static void deletePlace(Place place) {
+
+    }
 }

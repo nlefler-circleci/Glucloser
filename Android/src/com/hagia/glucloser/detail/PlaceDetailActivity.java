@@ -4,10 +4,12 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +42,8 @@ public class PlaceDetailActivity extends Activity {
 	public static final String PLACE_EXTRA_KEY = "placeExtra";
 
 	public enum NavigationItem {
-		Edit
+		Edit,
+        Delete
 	}
 
 	private ActionBar actionBar;
@@ -202,6 +205,29 @@ public class PlaceDetailActivity extends Activity {
 
 			showFragment(fragment, "EDITPLACE");
 			return true;
+        case R.id.delete:
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle(R.string.delete_place_dialog_title);
+            builder.setMessage(R.string.delete_place_dialog_message);
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO: Add progress indicator
+                    PlaceUtil.deletePlace(place);
+                    finish();
+                }
+            });
+            builder.setNegativeButton(R.string.cancel_verb, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
