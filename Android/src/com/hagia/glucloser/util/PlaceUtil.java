@@ -340,7 +340,6 @@ public class PlaceUtil {
 	 * in the main thread.
 	 * 
 	 * @param place The place to get a meal count for
-	 * @param callback The callback to call with the result
 	 */
 	public static int getNumberOfMealsForPlace(Place place) {
 		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().rawQuery(
@@ -514,7 +513,7 @@ public class PlaceUtil {
 			}
 			return code;
 		} else {
-			Log.i(LOG_TAG, "Error code recieved from insert: " + code);
+			Log.i(LOG_TAG, "Error code received from insert: " + code);
 			Log.i(LOG_TAG, "Values are: " + values);
 			if (transaction) db.endTransaction();
 
