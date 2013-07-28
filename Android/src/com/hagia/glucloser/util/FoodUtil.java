@@ -12,7 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.hagia.glucloser.PumpActivity;
+import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.types.Food;
 import com.hagia.glucloser.types.Meal;
 import com.hagia.glucloser.types.MealToFood;
@@ -417,7 +417,7 @@ public class FoodUtil {
 	 */
 	public static List<Food> getFoodsForFoodHash(String foodHash) {
 		long start;
-		if (PumpActivity.LOG_LEVEL >= Log.VERBOSE) {
+		if (GlucloserActivity.LOG_LEVEL >= Log.VERBOSE) {
 			start = System.currentTimeMillis();
 		}
 		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
@@ -435,7 +435,7 @@ public class FoodUtil {
 			cursor.moveToNext();
 		}
 
-		if (PumpActivity.LOG_LEVEL >= Log.VERBOSE) {
+		if (GlucloserActivity.LOG_LEVEL >= Log.VERBOSE) {
 			Log.v(LOG_TAG, "GetFoodsForFoodHash took " + (System.currentTimeMillis() - start));
 		}
 		return foods;

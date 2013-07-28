@@ -31,7 +31,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.hagia.glucloser.PumpActivity;
+import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.types.Food;
 import com.hagia.glucloser.types.MealToFood;
 import com.hagia.glucloser.types.Place;
@@ -162,7 +162,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				AddFoodFragment fragment = new AddFoodFragment();
 				fragment.setArguments(args);
 
-				PumpActivity.getPumpActivity().showFragment((Fragment)fragment, "AddFood");
+				GlucloserActivity.getPumpActivity().showFragment((Fragment)fragment, "AddFood");
 			}
 
 		});
@@ -363,7 +363,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				AddFoodFragment fragment = new AddFoodFragment();
 				fragment.setArguments(args);
 
-				PumpActivity.getPumpActivity().showFragment(fragment, "AddFood");
+				GlucloserActivity.getPumpActivity().showFragment(fragment, "AddFood");
 			}
 		});
 		
@@ -464,14 +464,14 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 
 				AddPlaceFragment fragment = new AddPlaceFragment();
 				fragment.setArguments(args);
-				PumpActivity.getPumpActivity().showFragment(fragment, "ADDPLACE");
+				GlucloserActivity.getPumpActivity().showFragment(fragment, "ADDPLACE");
 			}
 			break;
 			case 1: // Add
 			{
 				addingPlace = true;
 				AddPlaceFragment fragment = new AddPlaceFragment();
-				PumpActivity.getPumpActivity().showFragment(fragment, "ADDPLACE");
+				GlucloserActivity.getPumpActivity().showFragment(fragment, "ADDPLACE");
 			}
 			break;
 			case 0: // Show All

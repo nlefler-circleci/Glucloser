@@ -32,7 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.hagia.glucloser.PumpActivity;
+import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.thirdparty.zxing.IntentResult;
 import com.hagia.glucloser.types.Barcode;
 import com.hagia.glucloser.types.Food;
@@ -191,7 +191,7 @@ public class AddFoodFragment extends Fragment {
 		populateFood();
 		NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_FOOD_NOTIFICATION, food);
 
-		PumpActivity.getPumpActivity().popFragmentStack();
+		GlucloserActivity.getPumpActivity().popFragmentStack();
 	}
 
 	private void startCameraForFoodPhoto() {
@@ -433,7 +433,7 @@ public class AddFoodFragment extends Fragment {
 		//			public void onClick(View arg0) {
 		//				AddTagFragment fragment = new AddTagFragment();
 		//
-		//				PumpActivity.getPumpActivity().showFragment(fragment, "ADDTAG");
+		//				GlucloserActivity.getPumpActivity().showFragment(fragment, "ADDTAG");
 		//			}
 		//
 		//		});

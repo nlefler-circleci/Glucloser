@@ -23,7 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.hagia.glucloser.PumpActivity;
+import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.detail.MealDetailActivity;
 import com.hagia.glucloser.detail.PlaceDetailActivity;
 import com.hagia.glucloser.fragments.add.AddMealFragment;
@@ -121,8 +121,8 @@ public class HomeFragment extends ListFragment {
 			
 			args.putSerializable(AddMealFragment.MEAL_KEY, setupMealWithPlaceAndFoods(place, foods));
 
-			PumpActivity.getPumpActivity().selectNavigationItemWithBundle(
-					PumpActivity.NavigationItem.AddMealItem, args);
+			GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
+					GlucloserActivity.NavigationItem.AddMealItem, args);
 		} else if (container.placeAndMeal != null) {
 			final Place place = (Place)container.placeAndMeal[0];
 			final Meal meal = (Meal)container.placeAndMeal[1];
@@ -180,8 +180,8 @@ public class HomeFragment extends ListFragment {
 
 							args.putSerializable(AddMealFragment.MEAL_KEY, meal);
 
-							PumpActivity.getPumpActivity().selectNavigationItemWithBundle(
-									PumpActivity.NavigationItem.AddMealItem, args);
+							GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
+									GlucloserActivity.NavigationItem.AddMealItem, args);
 						}
 
 					});
@@ -233,8 +233,8 @@ public class HomeFragment extends ListFragment {
 							
 							args.putSerializable(AddMealFragment.MEAL_KEY, setupMealWithPlaceAndFoods(place, new ArrayList<Food>()));
 
-							PumpActivity.getPumpActivity().selectNavigationItemWithBundle(
-									PumpActivity.NavigationItem.AddMealItem, args);
+							GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
+									GlucloserActivity.NavigationItem.AddMealItem, args);
 						}
 
 					});

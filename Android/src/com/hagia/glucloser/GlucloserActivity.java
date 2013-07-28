@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
-import com.hagia.glucloser.R;
 import com.hagia.glucloser.fragments.add.AddMealFragment;
 import com.hagia.glucloser.fragments.edit.EditPlacesFragment;
 import com.hagia.glucloser.fragments.history.HistoryFragment;
@@ -33,11 +32,11 @@ import com.parse.Parse;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class PumpActivity extends Activity {
+public class GlucloserActivity extends Activity {
 	private static final String LOG_TAG = "Pump_Pump";
 	public static final int LOG_LEVEL = Log.VERBOSE;
 
-	private static PumpActivity instance;
+	private static GlucloserActivity instance;
 	private ActionBar actionBar;
 	private Bundle fragmentArgs;
 	private Handler handler;
@@ -139,7 +138,7 @@ public class PumpActivity extends Activity {
 		Log.i(LOG_TAG, "Stop");
 		LocationUtil.shutdown();
 		DatabaseUtil.syncIfNeeded();
-		BugSenseHandler.closeSession(PumpActivity.this);
+		BugSenseHandler.closeSession(GlucloserActivity.this);
 
 		super.onStop();
 	}
@@ -162,7 +161,7 @@ public class PumpActivity extends Activity {
 		super.onDestroy();
 	}
 
-	public static PumpActivity getPumpActivity() {
+	public static GlucloserActivity getPumpActivity() {
 		return instance;
 	}
 
@@ -170,7 +169,7 @@ public class PumpActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.sync:
-			DatabaseUtil.instance().startNetworkSyncServiceUsingContext(PumpActivity.getPumpActivity().getApplicationContext());
+			DatabaseUtil.instance().startNetworkSyncServiceUsingContext(GlucloserActivity.getPumpActivity().getApplicationContext());
 			return true;
         case R.id.edit_places:
             showFragment(new EditPlacesFragment(), "Edit Places");
@@ -227,7 +226,7 @@ public class PumpActivity extends Activity {
 
 			@Override
 			public void run() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(PumpActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(GlucloserActivity.this);
 
 				builder.setTitle(title);
 				builder.setMessage(message);

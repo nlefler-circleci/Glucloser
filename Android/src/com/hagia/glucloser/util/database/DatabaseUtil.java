@@ -20,8 +20,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.NetworkSyncService;
-import com.hagia.glucloser.PumpActivity;
 import com.hagia.glucloser.util.database.fetchers.ParseFoodFetcher;
 import com.hagia.glucloser.util.database.fetchers.ParseMeterDataFetcher;
 import com.hagia.glucloser.util.database.fetchers.ParsePlaceFetcher;
@@ -253,7 +253,7 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 	
 	public static void syncIfNeeded() {
 		if (needsSync.get()) {
-			instance().startNetworkSyncServiceUsingContext(PumpActivity.getPumpActivity().getApplicationContext());
+			instance().startNetworkSyncServiceUsingContext(GlucloserActivity.getPumpActivity().getApplicationContext());
 		}
 	}
 	// TODO return last sync times
@@ -661,7 +661,7 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 	
 	private static boolean isOnline() {
 	    ConnectivityManager cm =
-	        (ConnectivityManager) PumpActivity.getPumpActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+	        (ConnectivityManager) GlucloserActivity.getPumpActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 	        return true;

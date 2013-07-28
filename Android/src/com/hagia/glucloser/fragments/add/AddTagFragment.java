@@ -20,7 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.hagia.glucloser.PumpActivity;
+import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.types.Tag;
 import com.hagia.hnotificationcenter.NotificationCenter;
 import com.hagia.glucloser.R;
@@ -103,7 +103,7 @@ public class AddTagFragment extends Fragment {
 						NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_TAG_NOTIFICATION, tag);
 					}
 
-					PumpActivity.getPumpActivity().popFragmentStack();
+					GlucloserActivity.getPumpActivity().popFragmentStack();
 				}
 			}
 
