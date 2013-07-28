@@ -20,8 +20,6 @@ import com.hagia.hnotificationcenter.NotificationCenter;
 import com.hagia.glucloser.R;
 import com.hagia.glucloser.util.database.save.SaveManager;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -122,7 +120,6 @@ public class AddPlaceFragment extends Fragment {
 		longitudeInput = (TextView) parentView.findViewById(R.id.add_place_view_longitude_input);
 	}
 
-	@TargetApi(17)
 	private void setupViews(View parentView) {
 		if (isSetup) {
 			return;
