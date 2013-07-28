@@ -75,12 +75,21 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 	// Database version
 	private static int VERSION = 4;
 
-	protected static final String RESERVED_WORD_APPEND_TOKEN = "H0W81G";
-	private static final Map<String, Map<String, String>> localKeyToNetworkKeyMap = new HashMap<String, Map<String, String>>() {{
-		put(Tables.METER_DATA_DB_NAME, new HashMap<String, String>() {{ put("Index" + RESERVED_WORD_APPEND_TOKEN, "Index"); }});
+    // Some columns used by Medtronic are reserved by parse.
+    // Append a string to make them unique.
+	protected static final String RESERVED_WORD_APPEND_TOKEN = "#HAGIA#";
+    // Mapping of DB name to (Network Column Name to Local Column Name)
+	private static final Map<String, Map<String, String>> localKeyToNetworkKeyMap =
+            new HashMap<String, Map<String, String>>() {{
+		put(Tables.METER_DATA_DB_NAME, new HashMap<String, String>() {{
+            put("Index" + RESERVED_WORD_APPEND_TOKEN, "Index"); }});
 	}};
-	private static final Map<String, Map<String, String>> networkKeyToLocalKeyMap = new HashMap<String, Map<String, String>>() {{
-		put(Tables.METER_DATA_DB_NAME, new HashMap<String, String>() {{ put("Index", "Index" + RESERVED_WORD_APPEND_TOKEN); }});
+    // Reverse of localKeyToNetworkKeyMap
+    // TODO: Use reverse of above map
+	private static final Map<String, Map<String, String>> networkKeyToLocalKeyMap =
+            new HashMap<String, Map<String, String>>() {{
+		put(Tables.METER_DATA_DB_NAME, new HashMap<String, String>() {{
+            put("Index", "Index" + RESERVED_WORD_APPEND_TOKEN); }});
 	}};
 
 	public static final String OBJECT_ID_COLUMN_NAME = "objectId";
@@ -240,7 +249,6 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 
 	public static void setNeedsSync() {
 		needsSync.set(true);
-		//DatabaseUtil.instance().startNetworkSyncServiceUsingContext(PumpActivity.getPumpActivity().getApplicationContext());
 	}
 	
 	public static void syncIfNeeded() {
@@ -527,13 +535,6 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 		Log.v(LOG_TAG, "Finished updating last sync " + logDirection + " time");
 	}
 
-	/**
-	 * 
-	 * @param tableName the name of the parse table to sync
-	 * @param lastSyncTime the lower bound on creation date to sync
-	 * @return [the new last down sync time to update our sync info table with,
-	 * 			the new last down sync time to update our sync info table with]
-	 */
 	private Date[] doSync(SyncFetcher fetcher, Date lastDownSyncDate, SyncImporter importer,
 			SyncPusher pusher, Date lastUpSyncDate, PartialSyncCallback onPartialSync) {
 		Log.v(LOG_TAG, "Performing sync for table");

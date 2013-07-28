@@ -1,6 +1,7 @@
 package com.hagia.glucloser.util.database.fetchers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,13 @@ public class ParseMeterDataFetcher extends SyncFetcher {
 	@Override
 	public List<Map<String, Object>> fetchRecords(Date sinceDate) {
 		Log.i(LOG_TAG, "Starting fetch for " + Tables.METER_DATA_DB_NAME + " from Parse");
+
+        // TODO: Allow user to set this
+        // Only sync last two weeks to speed up full sync time during development
+        Date overrideDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 14);
+        if (sinceDate == null || overrideDate.compareTo(sinceDate) > 0) {
+            sinceDate = overrideDate;
+        }
 
 		List<ParseObject> parseObjects = fetchParseObjectsForTableSinceDate(
 				Tables.METER_DATA_DB_NAME, sinceDate, LOG_TAG);

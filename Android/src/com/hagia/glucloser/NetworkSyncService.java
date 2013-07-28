@@ -103,6 +103,7 @@ public class NetworkSyncService extends Service {
 						mNM.notify(NOTIFICATION, notification);
 						mNM.cancel(NOTIFICATION);
 					} catch (Exception e) {
+                        Log.e(LOG_TAG, "Exception during sync: " + e.getMessage());
 						notification = new Notification.Builder(NetworkSyncService.this)
 						.setContentTitle("Glucloser was unable to sync")
 						.setTicker("Glucloser was unable to sync. Please try later.")
