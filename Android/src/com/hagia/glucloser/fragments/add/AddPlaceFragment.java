@@ -306,7 +306,6 @@ public class AddPlaceFragment extends Fragment {
 		LocationUtil.addLocationListener(locationListener);
 	}
 
-	@SuppressLint("NewApi")
 	private void initMap() {
 		int playServicesResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
 		if (playServicesResult != ConnectionResult.SUCCESS) {

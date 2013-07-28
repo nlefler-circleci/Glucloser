@@ -149,8 +149,8 @@ public class EditPlacesListAdapter implements ListAdapter {
 			if (((Double)convertView.getTag()) == requestId) {
 				return convertView;
 			}
+            theView = (LinearLayout) convertView;
 		}
-        theView = (LinearLayout) convertView;
 		theView.setTag(requestId);
 
 		TextView nameView = (TextView)theView.findViewById(R.id.place_line_item_place_name);
