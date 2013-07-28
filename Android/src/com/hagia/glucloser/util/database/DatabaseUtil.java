@@ -118,6 +118,12 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 		onUpgrade(db, db.getVersion(), VERSION);
 	}
 
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        db.setForeignKeyConstraintsEnabled(true);
+        db.enableWriteAheadLogging();
+    }
+
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		DatabaseUpgrader upgrader;
