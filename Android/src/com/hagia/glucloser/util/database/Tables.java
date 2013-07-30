@@ -1,5 +1,7 @@
 package com.hagia.glucloser.util.database;
 
+import com.hagia.glucloser.types.Place;
+
 public class Tables {
 	// Table names
 	public static final String FOOD_DB_NAME = "Food";
@@ -15,6 +17,11 @@ public class Tables {
 	public static final String TAG_TO_FOOD_DB_NAME = "TagToFood";
 	public static final String TAG_TO_PLACE_DB_NAME = "TagToPlace";
 	public static final String BARCODE_TO_FOOD_NAME_DB_NAME = "BarCodeToFoodName";
+
+    public static final String PLACE_TO_MEAL_DELETE_TRIGGER_NAME = "PlaceToMealDeleteTrigger";
+    public static final String MEAL_DELETE_TRIGGER_NAME = "MealDeleteTrigger";
+    public static final String MEAL_TO_FOOD_DELETE_TRIGGER_NAME = "MealToFoodDeleteTrigger";
+    public static final String FOOD_DELETE_TRIGGER_NAME = "FoodDeleteTrigger";
 
 	public static final String SYNC_INFO_DOWN_DB_NAME = "SyncInfoDown";
 	public static final String SYNC_INFO_UP_DB_NAME = "SyncInfoUp";
@@ -91,7 +98,28 @@ public class Tables {
 			" updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER DEFAULT 1, " +
 			" createdAt TEXT, barCode TEXT UNIQUE, foodName TEXT UNIQUE);";
 
-	private static String syncInfoDownBuild = "CREATE TABLE IF NOT EXISTS " + SYNC_INFO_DOWN_DB_NAME + 
+    protected static final String PLACE_TO_MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
+            DatabaseUtil.DATABASE_NAME + "." + PLACE_TO_MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+            PLACE_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + PLACE_TO_MEAL_DB_NAME + " WHERE " +
+            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'); END;";
+    protected static final String MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
+            DatabaseUtil.DATABASE_NAME + "." + MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+            MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + MEAL_DB_NAME + " WHERE " +
+            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'); END;";
+    protected static final String MEAL_TO_FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
+        DatabaseUtil.DATABASE_NAME + "." + MEAL_TO_FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+        MEAL_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + MEAL_TO_FOOD_DB_NAME + " WHERE " +
+        "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+        "'); END;";
+    protected static final String FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
+        DatabaseUtil.DATABASE_NAME + "." + FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+        MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + FOOD_DB_NAME + " WHERE " +
+        "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+        "'); END;";
+
+	private static String syncInfoDownBuild = "CREATE TABLE IF NOT EXISTS " + SYNC_INFO_DOWN_DB_NAME +
 			" (ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
 	static {
 		for (String tableName : syncingTableNames) {
@@ -127,4 +155,11 @@ public class Tables {
 		SYNC_INFO_DOWN_CREATION_SQL,
 		SYNC_INFO_UP_CREATION_SQL
 	};
+
+    protected static String[] triggerCreationSQLs = new String[] {
+            PLACE_TO_MEAL_DELETE_TRIGGER,
+            MEAL_TO_FOOD_DELETE_TRIGGER,
+            MEAL_DELETE_TRIGGER,
+            FOOD_DELETE_TRIGGER
+    };
 }

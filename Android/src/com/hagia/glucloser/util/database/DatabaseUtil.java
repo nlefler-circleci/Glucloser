@@ -66,14 +66,10 @@ import com.hagia.glucloser.util.database.upgrade.ZeroToOne;
 
 
 public class DatabaseUtil extends SQLiteOpenHelper {
-	public DatabaseUtil(Context context) {
-		super(context, "PUMP_DATABASE", null, VERSION);
-	}
-
 	private static final String LOG_TAG = "Pump_Database_Util";
 
-	// Database version
-	private static int VERSION = 4;
+    public static String DATABASE_NAME = "GLUCLOSER_DB";
+	private static int DATABASE_VERSION = 4;
 
     // Some columns used by Medtronic are reserved by parse.
     // Append a string to make them unique.
@@ -112,10 +108,14 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 		new ZeroToOne(), new OneToTwo(), new TwoToThree(), new ThreeToFour()
 	};
 
-	@Override
+	public DatabaseUtil(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+
+    @Override
 	public void onCreate(SQLiteDatabase db) {
 		createBaseTablesAndIndexes(db);
-		onUpgrade(db, db.getVersion(), VERSION);
+		onUpgrade(db, db.getVersion(), DATABASE_VERSION);
 	}
 
     @Override
@@ -144,15 +144,17 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 
 	private boolean createBaseTablesAndIndexes(SQLiteDatabase db) {
 		db.beginTransaction();
-		// Tables
 		for (String sql : Tables.tableCreationSQLs) {
 			db.execSQL(sql);
 		}
 
-		// Indexes
 		for (String sql : Indexes.indexCreationSQLs) {
 			db.execSQL(sql);
 		}
+
+        for (String sql : Tables.triggerCreationSQLs) {
+            db.execSQL(sql);
+        }
 		db.setTransactionSuccessful();
 		db.endTransaction();
 
