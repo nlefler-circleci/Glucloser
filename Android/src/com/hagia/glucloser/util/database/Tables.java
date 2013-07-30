@@ -99,25 +99,25 @@ public class Tables {
 			" createdAt TEXT, barCode TEXT UNIQUE, foodName TEXT UNIQUE);";
 
     protected static final String PLACE_TO_MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
-            DatabaseUtil.DATABASE_NAME + "." + PLACE_TO_MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
-            PLACE_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + PLACE_TO_MEAL_DB_NAME + " WHERE " +
+            PLACE_TO_MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+            PLACE_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + PLACE_TO_MEAL_DB_NAME + " WHERE " +
             "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
-            "'); END;";
+            "'; END;";
     protected static final String MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
-            DatabaseUtil.DATABASE_NAME + "." + MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
-            MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + MEAL_DB_NAME + " WHERE " +
+            MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+            MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + MEAL_DB_NAME + " WHERE " +
             "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
-            "'); END;";
+            "'; END;";
     protected static final String MEAL_TO_FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
-        DatabaseUtil.DATABASE_NAME + "." + MEAL_TO_FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
-        MEAL_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + MEAL_TO_FOOD_DB_NAME + " WHERE " +
-        "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
-        "'); END;";
+            MEAL_TO_FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+            MEAL_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + MEAL_TO_FOOD_DB_NAME + " WHERE " +
+            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'; END;";
     protected static final String FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
-        DatabaseUtil.DATABASE_NAME + "." + FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
-        MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN (DELETE FROM " + FOOD_DB_NAME + " WHERE " +
-        "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
-        "'); END;";
+            FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
+            MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + FOOD_DB_NAME + " WHERE " +
+            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'; END;";
 
 	private static String syncInfoDownBuild = "CREATE TABLE IF NOT EXISTS " + SYNC_INFO_DOWN_DB_NAME +
 			" (ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
