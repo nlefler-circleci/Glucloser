@@ -73,7 +73,7 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 
     // Some columns used by Medtronic are reserved by parse.
     // Append a string to make them unique.
-	protected static final String RESERVED_WORD_APPEND_TOKEN = "#HAGIA#";
+	protected static final String RESERVED_WORD_APPEND_TOKEN = "_HAGIA_";
     // Mapping of DB name to (Network Column Name to Local Column Name)
 	private static final Map<String, Map<String, String>> localKeyToNetworkKeyMap =
             new HashMap<String, Map<String, String>>() {{
