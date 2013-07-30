@@ -541,6 +541,10 @@ public class PlaceUtil {
 	}
 
     public static void deletePlace(Place place) {
-
+        SQLiteDatabase db = DatabaseUtil.instance().getWritableDatabase();
+        db.beginTransactionNonExclusive();
+        db.delete(Tables.PLACE_DB_NAME, DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {place.id});
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 }
