@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.hagia.glucloser.R;
+import com.crashlytics.android.Crashlytics;
 import com.hagia.glucloser.util.database.DatabaseUtil;
 
 
@@ -44,6 +45,8 @@ public class NetworkSyncService extends Service {
 	@Override
 	public void onCreate() {
 		mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        // Initialize crash reporting
+        Crashlytics.start(this);
 		super.onCreate();
 	}
 

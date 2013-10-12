@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
+import com.crashlytics.android.Crashlytics;
 import com.hagia.glucloser.fragments.add.AddMealFragment;
 import com.hagia.glucloser.fragments.edit.EditPlacesFragment;
 import com.hagia.glucloser.fragments.history.HistoryFragment;
@@ -63,6 +64,9 @@ public class GlucloserActivity extends Activity {
 		navigationItemNames = getResources().getStringArray(R.array.action_bar_action_list);
 
 		handler = new Handler();
+
+        // Initialize crash reporting
+        Crashlytics.start(this);
 
 		// Initialize parse
 		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_api_key));
