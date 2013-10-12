@@ -8,7 +8,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.hagia.glucloser.R;
 import com.hagia.glucloser.util.database.DatabaseUtil;
 
@@ -45,8 +44,6 @@ public class NetworkSyncService extends Service {
 	@Override
 	public void onCreate() {
 		mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		BugSenseHandler.initAndStartSession(this.getApplicationContext(), getString(R.string.bugsense_api_key));
-		BugSenseHandler.setLogging(true);
 		super.onCreate();
 	}
 
@@ -55,7 +52,6 @@ public class NetworkSyncService extends Service {
 		// Cancel the persistent notification.
 		mNM.cancel(NOTIFICATION);
 		DatabaseUtil.stopSync();
-		BugSenseHandler.closeSession(this);
 		super.onDestroy();
 	}
 

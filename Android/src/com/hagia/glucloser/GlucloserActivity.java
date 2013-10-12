@@ -3,12 +3,15 @@ package com.hagia.glucloser;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,8 +32,6 @@ import com.hagia.glucloser.util.database.DatabaseUtil;
 import com.hagia.glucloser.util.database.save.SaveManager;
 
 import com.parse.Parse;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class GlucloserActivity extends Activity {
 	private static final String LOG_TAG = "Pump_Pump";
@@ -62,10 +63,6 @@ public class GlucloserActivity extends Activity {
 		navigationItemNames = getResources().getStringArray(R.array.action_bar_action_list);
 
 		handler = new Handler();
-		
-		// Initialize BugSense
-		BugSenseHandler.initAndStartSession(this.getApplicationContext(), getString(R.string.bugsense_api_key));
-		BugSenseHandler.setLogging(true);
 
 		// Initialize parse
 		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_api_key));
@@ -138,7 +135,6 @@ public class GlucloserActivity extends Activity {
 		Log.i(LOG_TAG, "Stop");
 		LocationUtil.shutdown();
 		DatabaseUtil.syncIfNeeded();
-		BugSenseHandler.closeSession(GlucloserActivity.this);
 
 		super.onStop();
 	}
@@ -300,5 +296,4 @@ public class GlucloserActivity extends Activity {
 			return NavigationItem.HomeItem;
 		}
 	}
-	
 }
