@@ -58,4 +58,6 @@
     <string name="delete_place_dialog_message">Are you sure you want to delete this place? All related meals will also be deleted.</string>
     <string name="delete_verb">Delete</string>
     <string name="cancel_verb">Cancel</string>
+    <string name="edit_time_action">Edit Time</string>
+    <string name="edit_date_action">Edit Date</string>
 </resources>
