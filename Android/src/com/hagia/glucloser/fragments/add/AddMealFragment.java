@@ -288,7 +288,6 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		if (foodMap.containsKey(food.id)) {
 			boolean replaceFoodView = foodViewList.contains(food.id);
 			addFood(food, /*new ArrayList<TagToFood>(),*/ true, replaceFoodView);
-
 		} else {
 			Log.v(LOG_TAG, "Ignoring updated food with id " + food.id + ". Not in our map");
 		}
@@ -330,6 +329,11 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 	}
 
 	private void addViewForFood(Food food, boolean replace) {
+        if (food.name == null || food.name.isEmpty() || food.carbs < 0)
+        {
+            Log.w(LOG_TAG, "Ignoring food with invalid name or carb count");
+            return;
+        }
 		RelativeLayout foodItem = null;
 		if (replace) {
 			foodItem = (RelativeLayout) foodTableLayout.findViewWithTag(food.id);
