@@ -364,7 +364,7 @@ public class AddFoodFragment extends Fragment {
 		carbValueInput = (EditText)parentView.findViewById(R.id.add_food_view_carbs_input);
 
 		tagListLayout = (LinearLayout)parentView.findViewById(R.id.add_food_view_tags_list_layout);
-		addTagListItem = (TextView)parentView.findViewById(R.id.add_food_view_tags_list_add_tag_label);
+//		addTagListItem = (TextView)parentView.findViewById(R.id.add_food_view_tags_list_add_tag_label);
 
 		correctionCheckbox = (CheckBox)parentView.findViewById(R.id.add_food_view_correction_checkbox);
 

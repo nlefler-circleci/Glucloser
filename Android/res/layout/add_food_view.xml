@@ -1,129 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView1"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/add_food_view_food_name_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/food_name"
-            style="@style/sectionHeader">
-            <requestFocus />
-        </TextView>
-
-        <AutoCompleteTextView
-            android:id="@+id/add_food_view_food_name_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
-            android:nextFocusDown="@+id/add_food_view_carbs_input"
-            android:nextFocusRight="@+id/add_food_view_carbs_input"
-            android:text="@string/empty_string" />
-
-        <TextView
-            android:id="@+id/add_food_view_carbs_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/carbs_noun"
-            style="@style/sectionHeader" />
-
-        <EditText
-            android:id="@+id/add_food_view_carbs_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:nextFocusDown="@+id/add_food_view_correction_checkbox"
-            android:nextFocusLeft="@+id/add_food_view_food_name_input"
-            android:nextFocusRight="@+id/add_food_view_correction_checkbox"
-            android:nextFocusUp="@+id/add_food_view_food_name_input" >
-
-            <requestFocus />
-        </EditText>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/add_food_view_tags_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:text="@string/tags_noun"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/add_food_view_tags_list_add_tag_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:text="@string/add_tag_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </RelativeLayout>
+    <ScrollView
+        android:id="@+id/add_food_scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp" >
 
         <LinearLayout
-            android:id="@+id/add_food_view_tags_list_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/add_food_view_food_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/food_name"
+                style="@style/sectionHeader">
+                <requestFocus />
+            </TextView>
+
+            <AutoCompleteTextView
+                android:id="@+id/add_food_view_food_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:nextFocusDown="@+id/add_food_view_carbs_input"
+                android:nextFocusRight="@+id/add_food_view_carbs_input"
+                android:text="@string/empty_string" />
+
+            <TextView
+                android:id="@+id/add_food_view_carbs_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/carbs_noun"
+                style="@style/sectionHeader" />
+
+            <EditText
+                android:id="@+id/add_food_view_carbs_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:nextFocusDown="@+id/add_food_view_correction_checkbox"
+                android:nextFocusLeft="@+id/add_food_view_food_name_input"
+                android:nextFocusRight="@+id/add_food_view_correction_checkbox"
+                android:nextFocusUp="@+id/add_food_view_food_name_input" >
+
+                <requestFocus />
+            </EditText>
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" >-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/add_food_view_tags_label"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:text="@string/tags_noun"-->
+                    <!--android:textAppearance="?android:attr/textAppearanceMedium" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/add_food_view_tags_list_add_tag_label"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:text="@string/add_tag_string"-->
+                    <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
+            <!--</RelativeLayout>-->
+
+            <LinearLayout
+                android:id="@+id/add_food_view_tags_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/add_food_view_correction_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/add_food_view_save_button"
+                android:nextFocusLeft="@+id/add_food_view_carbs_input"
+                android:nextFocusRight="@+id/add_food_view_save_button"
+                android:nextFocusUp="@+id/add_food_view_carbs_input"
+                android:text="@string/correction_noun" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/add_food_view_correction_checkbox"
+    </ScrollView>
+
+    <View android:id="@+id/divider"
+    android:background="?android:attr/dividerHorizontal"
+    android:layout_height="1dp"
+    android:layout_width="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/add_food_view_action_buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle" >
+
+        <Button
+            android:id="@+id/add_food_view_scan_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:nextFocusDown="@+id/add_food_view_save_button"
-            android:nextFocusLeft="@+id/add_food_view_carbs_input"
-            android:nextFocusRight="@+id/add_food_view_save_button"
-            android:nextFocusUp="@+id/add_food_view_carbs_input"
-            android:text="@string/correction_noun" />
+            android:clickable="true"
+            android:layout_weight="1"
+            android:text="Scan"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <LinearLayout
-            android:id="@+id/add_food_view_action_buttons_layout"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/add_food_view_photo_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:clickable="true"
+            android:layout_weight="1"
+            android:text="@string/photo_noun"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <Button
-                android:id="@+id/add_food_view_scan_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="Scan" />
-
-            <Button
-                android:id="@+id/add_food_view_photo_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="@string/photo_noun" />
-
-            <Button
-                android:id="@+id/add_food_view_suggest_carbs_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="@string/suggest_verb" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/add_food_view_suggest_carbs_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_weight="1"
+            android:text="@string/suggest_verb"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Button
             android:id="@+id/add_food_view_save_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_weight="1"
             android:clickable="true"
-            android:text="@string/save_verb" />
-    </LinearLayout>
+            android:text="@string/save_verb"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</ScrollView>
+    </LinearLayout>
+</LinearLayout>
