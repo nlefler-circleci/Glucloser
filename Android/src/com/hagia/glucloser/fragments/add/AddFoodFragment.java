@@ -189,7 +189,10 @@ public class AddFoodFragment extends Fragment {
 
 	private void saveAndExit() {
 		populateFood();
-		NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_FOOD_NOTIFICATION, food);
+        if (!food.name.isEmpty() && food.carbs >= 0)
+        {
+		    NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_FOOD_NOTIFICATION, food);
+        }
 
 		GlucloserActivity.getPumpActivity().popFragmentStack();
 	}
