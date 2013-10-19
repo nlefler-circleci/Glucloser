@@ -120,7 +120,6 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		};
 		LocationUtil.addLocationListener(savedPlacesLocationListener);
 		updateNearbyPlacesAndShowSelectDialog(LocationUtil.getCurrentLocation(), false);
-		populateStateFromBundle(state);
 
 		try {
 			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
@@ -262,11 +261,11 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 					bundle.getSerializable(FOODS_KEY);
 			if (foods != null) {
 				for (Food food : foods) {
-					addFood(food, /*new ArrayList<TagToFood>(),*/ false, false);
+					addFood(food, /*new ArrayList<TagToFood>(),*/ true, false);
 				}
 			} else {
 				for (MealToFood m2f : meal.mealToFoods) {
-					addFood(m2f.food, /*new ArrayList<TagToFood>(),*/ false, false);
+					addFood(m2f.food, /*new ArrayList<TagToFood>(),*/ true, false);
 				}
 			}
 		} else {
@@ -341,7 +340,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		if (foodItem == null) {
 			foodItem = (RelativeLayout)getActivity().getLayoutInflater().inflate(
 					R.layout.food_line_item, null);
-			foodTableLayout.addView(foodItem, foodTableLayout.getChildCount() - 1);
+			foodTableLayout.addView(foodItem, Math.max(0, foodTableLayout.getChildCount() - 1));
 		}
 		TextView name = (TextView)foodItem.findViewById(R.id.food_line_item_food_name);
 		TextView carbs = (TextView)foodItem.findViewById(R.id.food_line_item_carbs_value);
