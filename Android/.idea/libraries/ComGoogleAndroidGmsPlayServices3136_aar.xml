@@ -2,6 +2,8 @@
   <library name="ComGoogleAndroidGmsPlayServices3136.aar">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/build/exploded-bundles/ComGoogleAndroidGmsPlayServices3136.aar/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/build/exploded-bundles/ComGoogleAndroidGmsPlayServices3136.aar/res" />
+      <root url="jar://$PROJECT_DIR$/build/exploded-bundles/ComGoogleAndroidGmsPlayServices3136.aar/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
