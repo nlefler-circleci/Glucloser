@@ -27,3 +27,6 @@ Android/.idea/dictionaries/
 
 # Gradle
 .gradle/
+
+# Other
+.DS_Store
