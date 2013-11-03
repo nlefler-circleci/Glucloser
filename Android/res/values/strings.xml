@@ -53,6 +53,7 @@
         <item>Add Meal</item>
         <item>History</item>
         <item>Stats</item>
+        <item>Edit Places</item>
     </string-array>
     <string name="delete_place_dialog_title">Delete Place?</string>
     <string name="delete_place_dialog_message">Are you sure you want to delete this place? All related meals will also be deleted.</string>

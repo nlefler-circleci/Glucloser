@@ -40,8 +40,6 @@ import com.hagia.glucloser.fragments.home.HomeListAdapter.ResultContainer;
 public class HomeFragment extends ListFragment {
 	private static final String LOG_TAG = "Pump_Home_Fragment";
 
-	private EditText omniBar;
-
 	private String searchTerm;
 
 	private HomeListAdapter listAdapter;
@@ -77,35 +75,7 @@ public class HomeFragment extends ListFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
-		View view = inflater.inflate(R.layout.home_view, container, false);
-
-		omniBar = (EditText) view.findViewById(R.id.home_omni_bar);
-		omniBar.setOnEditorActionListener(new OnEditorActionListener() {
-			private InputMethodManager manager = (InputMethodManager)
-					getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-						actionId == EditorInfo.IME_ACTION_DONE) {
-					refineContent();
-
-					manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-					return true;
-				}
-				return false;
-			}
-		});
-
-		return view;
-	}
-
-	@Override
-	public void onPause() {
-		InputMethodManager manager = (InputMethodManager)
-				getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		manager.hideSoftInputFromWindow(omniBar.getWindowToken(), 0);
-
-		super.onPause();
+		return inflater.inflate(R.layout.home_view, container, false);
 	}
 
 	@Override
@@ -244,12 +214,13 @@ public class HomeFragment extends ListFragment {
 	}
 
 	private void refineContent() {
-		searchTerm = omniBar.getText().toString().trim();
+        return;
+//		searchTerm = omniBar.getText().toString().trim();
 
 		// getCurrentLocation may be null, but it's better than doing nothing
 		// while waiting for location and appearing to lag after the user
 		// presses search
-		listAdapter.fetchDataWithTerm(LocationUtil.getCurrentLocation(), searchTerm);	
+//		listAdapter.fetchDataWithTerm(LocationUtil.getCurrentLocation(), searchTerm);
 	}
 
 	private Meal setupMealWithPlaceAndFoods(Place place, List<Food> foods) {

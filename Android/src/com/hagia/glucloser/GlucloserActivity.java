@@ -14,6 +14,8 @@ import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,21 +43,49 @@ public class GlucloserActivity extends Activity {
     // TODO: Why do I need this
 	private static GlucloserActivity instance;
 
-	private ActionBar _actionBar;
+    private enum DrawerItem {
+        Home, AddMeal, History, Stats, EditPlaces, Invalid;
+
+        public static String fragmentNameForItem(DrawerItem item) {
+            switch (item) {
+                case Home:
+                    return "DrawerItemHome";
+                case AddMeal:
+                    return "DrawerItemAddMeal";
+                case History:
+                    return "DrawerItemHistory";
+                case Stats:
+                    return "DrawerItemStats";
+                case EditPlaces:
+                    return "DrawerItemEditPlaces";
+                case Invalid:
+                default:
+                    Log.e(LOG_TAG, "Invalid drawer item");
+                    return "DrawerItemInvalid";
+            }
+        }
+
+        public static DrawerItem itemForFragmentName(String name) {
+            for (DrawerItem item : values()) {
+                if (name.equals(fragmentNameForItem(item))) {
+                    return item;
+                }
+            }
+            Log.e(LOG_TAG, "Invalid name for drawer item");
+            return Invalid;
+        }
+    };
+
     private DrawerLayout _drawerLayout;
     private ActionBarDrawerToggle _drawerToggle;
     private ListView _drawerList;
 
-	private enum NavigationItem {
-		HomeItem,
-		AddMealItem,
-		HistoryItem,
-		StatsItem
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize crash reporting
+        Crashlytics.start(this);
 
 		if (instance == null) {
 			instance = this;
@@ -63,7 +93,6 @@ public class GlucloserActivity extends Activity {
 
 		setContentView(R.layout.main);
 
-		String[] navigationItemNames = getResources().getStringArray(R.array.action_bar_action_list);
         _drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerToggle = new ActionBarDrawerToggle(this, _drawerLayout, R.drawable.ic_drawer,
                 R.string.drawer_open_action, R.string.drawer_close_action){
@@ -80,15 +109,13 @@ public class GlucloserActivity extends Activity {
         _drawerLayout.setDrawerListener(_drawerToggle);
         _drawerList = (ListView) findViewById(R.id.drawer_list);
 
-        _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, navigationItemNames));
+        String[] drawerItemNames = getResources().getStringArray(R.array.action_bar_action_list);
+        _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerItemNames));
         _drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        _actionBar = getActionBar();
-        _actionBar.setDisplayHomeAsUpEnabled(true);
-        _actionBar.setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 
-        // Initialize crash reporting
-        Crashlytics.start(this);
 
 		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_api_key));
 
@@ -106,10 +133,17 @@ public class GlucloserActivity extends Activity {
 			public void onBackStackChanged() {
 				if (getFragmentManager().getBackStackEntryCount() == 0) {
 					finish();
-				}
+				} else {
+                    String fragmentName = getFragmentManager().getBackStackEntryAt(0).getName();
+                    forceUpdateSelectedDrawerItem(DrawerItem.itemForFragmentName(fragmentName));
+                }
 			}
 		});
 
+        if (savedInstanceState == null) {
+            selectDrawerItem(DrawerItem.Home);
+            forceUpdateSelectedDrawerItem(DrawerItem.Home);
+        }
 		// Turn off syncing on startup. Without any other clients
 		// it serves no purpose.
 		//DatabaseUtil.instance().startNetworkSyncServiceUsingContext(this);
@@ -166,7 +200,7 @@ public class GlucloserActivity extends Activity {
         }
 
 		switch (item.getItemId()) {
-		case R.id.sync:
+		case R.id.sync_item:
 			DatabaseUtil.instance().startNetworkSyncServiceUsingContext(this.getApplicationContext());
 			return true;
 		default:
@@ -180,37 +214,50 @@ public class GlucloserActivity extends Activity {
 	}
 	
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        private DrawerItem[] itemValues = DrawerItem.values();
+
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            Fragment fragment = null;
-            String tag = "tag";
-
-            switch (position)
-            {
-                default:
-                case 0:
-                    fragment = new HomeFragment();
-                    break;
-                case 1:
-                    fragment = new AddMealFragment();
-                    break;
-                case 2:
-                    fragment = new HistoryFragment();
-                    break;
-                case 3:
-                    fragment = new StatsFragment();
-                    break;
-                case 4:
-                    fragment = new EditPlacesFragment();
-                    break;
-            }
-
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_fragment_container,
-                    fragment, tag);
-            transaction.addToBackStack(tag);
-            transaction.commit();
+            selectDrawerItem(itemValues[position]);
         }
+    }
+
+    private void forceUpdateSelectedDrawerItem(DrawerItem drawerItem) {
+        // TODO: Is there a better way to update the drawer ui?
+        _drawerList.setSelection(drawerItem.ordinal());
+        _drawerLayout.closeDrawer(Gravity.LEFT);
+        _drawerToggle.syncState();
+    }
+    private void selectDrawerItem(DrawerItem drawerItem) {
+        Fragment fragment = null;
+
+        switch (drawerItem)
+        {
+            default:
+            case Home:
+                fragment = new HomeFragment();
+                break;
+            case AddMeal:
+                fragment = new AddMealFragment();
+                break;
+            case History:
+                fragment = new HistoryFragment();
+                break;
+            case Stats:
+                fragment = new StatsFragment();
+                break;
+            case EditPlaces:
+                fragment = new EditPlacesFragment();
+                break;
+        }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_fragment_container,
+                fragment, DrawerItem.fragmentNameForItem(drawerItem));
+        transaction.addToBackStack(DrawerItem.fragmentNameForItem(drawerItem));
+        transaction.commit();
+
+        _drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public static void showFragment(Fragment f, String s)
