@@ -60,4 +60,6 @@
     <string name="cancel_verb">Cancel</string>
     <string name="edit_time_action">Edit Time</string>
     <string name="edit_date_action">Edit Date</string>
+    <string name="drawer_open_action">Open Drawer</string>
+    <string name="drawer_close_action">Close Drawer</string>
 </resources>
