@@ -66,11 +66,21 @@ public class GlucloserActivity extends Activity {
 		String[] navigationItemNames = getResources().getStringArray(R.array.action_bar_action_list);
         _drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerToggle = new ActionBarDrawerToggle(this, _drawerLayout, R.drawable.ic_drawer,
-                R.string.drawer_open_action, R.string.drawer_close_action);
+                R.string.drawer_open_action, R.string.drawer_close_action){
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(R.string.app_name);
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle("Draw Open");
+                invalidateOptionsMenu();
+            }
+        };
         _drawerLayout.setDrawerListener(_drawerToggle);
         _drawerList = (ListView) findViewById(R.id.drawer_list);
 
-        _drawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navigationItemNames));
+        _drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, navigationItemNames));
         _drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         _actionBar = getActionBar();
@@ -175,11 +185,25 @@ public class GlucloserActivity extends Activity {
             Fragment fragment = null;
             String tag = "tag";
 
-            fragment = new HomeFragment();
-            fragment = new AddMealFragment();
-            fragment = new HistoryFragment();
-            fragment = new StatsFragment();
-            fragment = new EditPlacesFragment();
+            switch (position)
+            {
+                default:
+                case 0:
+                    fragment = new HomeFragment();
+                    break;
+                case 1:
+                    fragment = new AddMealFragment();
+                    break;
+                case 2:
+                    fragment = new HistoryFragment();
+                    break;
+                case 3:
+                    fragment = new StatsFragment();
+                    break;
+                case 4:
+                    fragment = new EditPlacesFragment();
+                    break;
+            }
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.main_fragment_container,
@@ -187,6 +211,16 @@ public class GlucloserActivity extends Activity {
             transaction.addToBackStack(tag);
             transaction.commit();
         }
+    }
+
+    public static void showFragment(Fragment f, String s)
+    {
+        return;
+    }
+
+    public static void selectNavigationItemWithBundle(int i, Bundle b)
+    {
+       return;
     }
 }
 
