@@ -1,5 +1,6 @@
 package com.hagia.glucloser.fragments.home;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -214,7 +215,7 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
 
 				SortedSet<PopularMealListItem> meals = new TreeSet<PopularMealListItem>(placeDistanceComparator);
 
-                List<Place> foundPlaces = null;
+                List<Place> foundPlaces = new ArrayList<Place>();
 				if (searchTerm != null) {
 					foundPlaces = PlaceUtil.getAllPlacesWithNameContaining(searchTerm);
 				} else {
