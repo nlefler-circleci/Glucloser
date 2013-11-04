@@ -13,7 +13,7 @@ import com.hagia.glucloser.R;
 
 public class HistoryFragment extends Fragment {
 	private static final String LOG_TAG = "Pump_History_Activity";
-	
+
 	private View parentView = null;
 	private HistoryListAdapter listAdapter;
 	private ListView mealsListView;

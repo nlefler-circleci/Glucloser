@@ -1,20 +1,16 @@
 package com.hagia.glucloser;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -197,6 +193,18 @@ public class GlucloserActivity extends Activity {
 		}
 	}
 
+    public void pushFragment(Fragment fragment, Bundle args) {
+        if (args != null) {
+            fragment.setArguments(args);
+        }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_fragment_container,
+                fragment, fragment.getClass().getName());
+        transaction.addToBackStack(fragment.getClass().getName());
+        transaction.commit();
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         private DrawerItem[] itemValues = DrawerItem.values();
 
@@ -236,11 +244,7 @@ public class GlucloserActivity extends Activity {
                 break;
         }
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_fragment_container,
-                fragment, DrawerItem.fragmentNameForItem(drawerItem));
-        transaction.addToBackStack(DrawerItem.fragmentNameForItem(drawerItem));
-        transaction.commit();
+        pushFragment(fragment, null);
 
         _drawerLayout.closeDrawer(Gravity.LEFT);
     }

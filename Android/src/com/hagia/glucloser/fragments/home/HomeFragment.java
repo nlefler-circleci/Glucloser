@@ -92,8 +92,7 @@ public class HomeFragment extends ListFragment {
 			args.putSerializable(AddMealFragment.MEAL_KEY,
                     setupMealWithPlaceAndFoods(popItem.getPlace(), popItem.getFoods()));
 
-			GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
-                    0, args);
+            ((GlucloserActivity)getActivity()).pushFragment(new AddMealFragment(), args);
 		} else if (item instanceof HistoricMealItem) {
             final HistoricMealItem historicItem = (HistoricMealItem)item;
 
@@ -143,8 +142,7 @@ public class HomeFragment extends ListFragment {
 							Meal meal = setupMealWithPlaceAndFoods(historicItem.getPlace(), foods);
 							args.putSerializable(AddMealFragment.MEAL_KEY, meal);
 
-							GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
-									0, args);
+                            ((GlucloserActivity)getActivity()).pushFragment(new AddMealFragment(), args);
 						}
 
 					});
@@ -194,8 +192,7 @@ public class HomeFragment extends ListFragment {
 							args.putSerializable(AddMealFragment.MEAL_KEY,
                                     setupMealWithPlaceAndFoods(placeItem.getPlace(), new ArrayList<Food>()));
 
-							GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
-									0, args);
+                            ((GlucloserActivity)getActivity()).pushFragment(new AddMealFragment(), args);
 						}
 
 					});
