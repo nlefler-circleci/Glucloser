@@ -42,15 +42,15 @@ public class GlucloserActivity extends Activity {
         public static String fragmentNameForItem(DrawerItem item) {
             switch (item) {
                 case Home:
-                    return "DrawerItemHome";
+                    return HomeFragment.class.getName();
                 case AddMeal:
-                    return "DrawerItemAddMeal";
+                    return AddMealFragment.class.getName();
                 case History:
-                    return "DrawerItemHistory";
+                    return HistoryFragment.class.getName();
                 case Stats:
-                    return "DrawerItemStats";
+                    return StatsFragment.class.getName();
                 case EditPlaces:
-                    return "DrawerItemEditPlaces";
+                    return EditPlacesFragment.class.getName();
                 case Invalid:
                 default:
                     Log.e(LOG_TAG, "Invalid drawer item");
