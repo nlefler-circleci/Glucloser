@@ -259,9 +259,9 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 		needsSync.set(true);
 	}
 	
-	public static void syncIfNeeded() {
+	public static void syncIfNeeded(Context context) {
 		if (needsSync.get()) {
-			instance().startNetworkSyncServiceUsingContext(GlucloserActivity.getPumpActivity().getApplicationContext());
+			instance().startNetworkSyncServiceUsingContext(context);
 		}
 	}
 	// TODO return last sync times
@@ -271,10 +271,6 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 	}
 
 	public synchronized Map<String, Date>[] syncWithNetwork() {
-		if (!isOnline()) {
-			return null;
-		}
-		
 		Map<String, Date> ret[];
 
 		okToContinueSyncing.set(true);
@@ -665,15 +661,5 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 
 		public abstract void onPartialUpSync(Date lastSyncDate);
 		public abstract void onPartialDownSync(Date lastSyncDate);
-	}
-	
-	private static boolean isOnline() {
-	    ConnectivityManager cm =
-	        (ConnectivityManager) GlucloserActivity.getPumpActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-	        return true;
-	    }
-	    return false;
 	}
 }

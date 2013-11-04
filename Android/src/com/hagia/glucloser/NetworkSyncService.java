@@ -3,7 +3,10 @@ package com.hagia.glucloser;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -121,9 +124,21 @@ public class NetworkSyncService extends Service {
 			}
 
 		});
-		taskThread.start();
+        if (isOnline())
+        {
+		    taskThread.start();
+        }
 
 		return super.onStartCommand(intent, flags, startId);
 	}
 
+	private boolean isOnline() {
+	    ConnectivityManager cm =
+	        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+	        return true;
+	    }
+	    return false;
+	}
 }
