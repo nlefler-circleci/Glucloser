@@ -27,6 +27,10 @@ import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.detail.MealDetailActivity;
 import com.hagia.glucloser.detail.PlaceDetailActivity;
 import com.hagia.glucloser.fragments.add.AddMealFragment;
+import com.hagia.glucloser.fragments.home.listItems.HistoricMealItem;
+import com.hagia.glucloser.fragments.home.listItems.HomeListItem;
+import com.hagia.glucloser.fragments.home.listItems.PlaceListItem;
+import com.hagia.glucloser.fragments.home.listItems.PopularMealListItem;
 import com.hagia.glucloser.types.Food;
 import com.hagia.glucloser.types.Meal;
 import com.hagia.glucloser.types.MealToFood;
@@ -35,10 +39,9 @@ import com.hagia.glucloser.types.PlaceToMeal;
 import com.hagia.glucloser.util.LocationUtil;
 import com.hagia.glucloser.util.MealUtil;
 import com.hagia.glucloser.R;
-import com.hagia.glucloser.fragments.home.HomeListAdapter.ResultContainer;
 
 public class HomeFragment extends ListFragment {
-	private static final String LOG_TAG = "Pump_Home_Fragment";
+	private static final String LOG_TAG = "Glucloser_Home_Fragment";
 
 	private String searchTerm;
 
@@ -61,7 +64,7 @@ public class HomeFragment extends ListFragment {
 			}
 
 			@Override
-			public void onProviderDisabled(String provider) {				
+			public void onProviderDisabled(String provider) {
 			}
 
 			@Override
@@ -80,24 +83,19 @@ public class HomeFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
-		ResultContainer container = (ResultContainer) getListView().getItemAtPosition(position);
+		HomeListItem item = (HomeListItem) getListView().getItemAtPosition(position);
 
-		if (container.placeAndFoods != null) {
-			// Popular Meal
+		if (item instanceof PopularMealListItem) {
+            PopularMealListItem popItem = (PopularMealListItem)item;
 			Bundle args = new Bundle();
 
-			Place place = (Place)container.placeAndFoods[0];
-			ArrayList<Food> foods = (ArrayList<Food>)container.placeAndFoods[1];
-			
-			args.putSerializable(AddMealFragment.MEAL_KEY, setupMealWithPlaceAndFoods(place, foods));
+			args.putSerializable(AddMealFragment.MEAL_KEY,
+                    setupMealWithPlaceAndFoods(popItem.getPlace(), popItem.getFoods()));
 
 			GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
-					0, args);
-		} else if (container.placeAndMeal != null) {
-			final Place place = (Place)container.placeAndMeal[0];
-			final Meal meal = (Meal)container.placeAndMeal[1];
-
-			// Historic Meal
+                    0, args);
+		} else if (item instanceof HistoricMealItem) {
+            final HistoricMealItem historicItem = (HistoricMealItem)item;
 
 			// Show the action popup
 			// 1) View Meal Details
@@ -115,39 +113,34 @@ public class HomeFragment extends ListFragment {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-
 							switch (which) {
-							case 0: // Details
+							case 0:
 								showDetails();
 								break;
-							case 1: // New Meal
+							case 1:
 								addNewMeal();
 								break;
-							default: // Details
+							default:
 								showDetails();
 							}
 						}
 
 						private void showDetails() {
 							Intent detailIntent = new Intent(getActivity(), MealDetailActivity.class);
-							detailIntent.putExtra(MealDetailActivity.MEAL_KEY, meal);
+							detailIntent.putExtra(MealDetailActivity.MEAL_KEY, historicItem.getMeal());
 							getActivity().startActivity(detailIntent);
 						}
 
 						private void addNewMeal() {
-							Log.v(LOG_TAG, "Add new meal selected for meal with id " + meal.id);
-							Log.v(LOG_TAG, "Place named " + place.name);
-
 							Bundle args = new Bundle();
 														
 							ArrayList<Food> foods = new ArrayList<Food>();
 							// TODO: Is this running in a thread?
-							for (MealToFood m2f : MealUtil.getFoodsForMeal(meal)) {
+							for (MealToFood m2f : MealUtil.getFoodsForMeal(historicItem.getMeal())) {
 								Food food = m2f.food;
 								foods.add(food);
 							}
-							Meal meal = setupMealWithPlaceAndFoods(place, foods);
-
+							Meal meal = setupMealWithPlaceAndFoods(historicItem.getPlace(), foods);
 							args.putSerializable(AddMealFragment.MEAL_KEY, meal);
 
 							GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
@@ -157,11 +150,8 @@ public class HomeFragment extends ListFragment {
 					});
 			actionFragment.show(getActivity().getFragmentManager(), 
 					"meal_action_dialog");
-		} else if (container.placeAndMealCount != null) {
-			final Place place = (Place)container.placeAndMealCount[0];
-			final Integer mealCount = (Integer)container.placeAndMealCount[1];
-			
-			// Place
+		} else if (item instanceof PlaceListItem) {
+            final PlaceListItem placeItem = (PlaceListItem)item;
 
 			// Show the action popup
 			// 1) View Place Details
@@ -181,27 +171,28 @@ public class HomeFragment extends ListFragment {
 						public void onClick(DialogInterface dialog, int which) {
 
 							switch (which) {
-							case 0: // Details
+							case 0:
 								showDetails();
 								break;
-							case 1: // New Meal
+							case 1:
 								addNewMeal();
 								break;
-							default: // Details
+							default:
 								showDetails();
 							}
 						}
 
 						private void showDetails() {
 							Intent detailIntent = new Intent(getActivity(), PlaceDetailActivity.class);
-							detailIntent.putExtra(PlaceDetailActivity.PLACE_EXTRA_KEY, place);
+							detailIntent.putExtra(PlaceDetailActivity.PLACE_EXTRA_KEY, placeItem.getPlace());
 							getActivity().startActivity(detailIntent);
 						}
 
 						private void addNewMeal() {
 							Bundle args = new Bundle();
 							
-							args.putSerializable(AddMealFragment.MEAL_KEY, setupMealWithPlaceAndFoods(place, new ArrayList<Food>()));
+							args.putSerializable(AddMealFragment.MEAL_KEY,
+                                    setupMealWithPlaceAndFoods(placeItem.getPlace(), new ArrayList<Food>()));
 
 							GlucloserActivity.getPumpActivity().selectNavigationItemWithBundle(
 									0, args);
@@ -239,27 +230,4 @@ public class HomeFragment extends ListFragment {
 		}
 		return meal;
 	}
-	//	private void addListItemForTagAtPosition(Tag tag, int position) {
-	//		LinearLayout parent = getNewItemContainer();
-	//		LinearLayout tagItem = (LinearLayout)getActivity().getLayoutInflater()
-	//				.inflate(R.layout.search_view_tag_result_item, null);
-	//
-	//		parent.addView(tagItem);
-	//
-	//		final TextView name = (TextView)tagItem.findViewById(R.id.search_view_tag_result_item_name);
-	//
-	//		name.setText(tag.name);
-	//
-	//		final String tagId = tag.id;
-	//		tagItem.setOnClickListener(new OnClickListener() {
-	//
-	//			@Override
-	//			public void onClick(View v) {
-	//				Intent detailIntent = new Intent(getActivity(), TagDetailActivity.class);
-	//				detailIntent.putExtra(TagDetailActivity.TAG_EXTRA_KEY, tagId);
-	//				//detailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	//				startActivity(detailIntent);
-	//			}
-	//		});
-	//	}
 }
