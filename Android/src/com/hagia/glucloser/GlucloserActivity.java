@@ -162,7 +162,7 @@ public class GlucloserActivity extends Activity {
 	@Override
 	protected void onStop() {
 		LocationUtil.shutdown();
-		DatabaseUtil.syncIfNeeded();
+		DatabaseUtil.syncIfNeeded(this);
 
 		super.onStop();
 	}
