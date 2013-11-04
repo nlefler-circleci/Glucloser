@@ -103,7 +103,7 @@ public class AddTagFragment extends Fragment {
 						NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_TAG_NOTIFICATION, tag);
 					}
 
-					GlucloserActivity.getPumpActivity().popFragmentStack();
+                    getFragmentManager().popBackStack();
 				}
 			}
 

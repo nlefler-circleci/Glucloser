@@ -40,9 +40,6 @@ public class GlucloserActivity extends Activity {
 	private static final String LOG_TAG = "Glucloser_MainActivity";
 	public static final int LOG_LEVEL = Log.VERBOSE;
 
-    // TODO: Why do I need this
-	private static GlucloserActivity instance;
-
     private enum DrawerItem {
         Home, AddMeal, History, Stats, EditPlaces, Invalid;
 
@@ -86,10 +83,6 @@ public class GlucloserActivity extends Activity {
 
         // Initialize crash reporting
         Crashlytics.start(this);
-
-		if (instance == null) {
-			instance = this;
-		}
 
 		setContentView(R.layout.main);
 
@@ -187,10 +180,6 @@ public class GlucloserActivity extends Activity {
 		super.onResume();
 	}
 
-	public static GlucloserActivity getPumpActivity() {
-		return instance;
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -208,11 +197,6 @@ public class GlucloserActivity extends Activity {
 		}
 	}
 
-	public void popFragmentStack() {
-		FragmentManager manager = getFragmentManager();
-		manager.popBackStack();
-	}
-	
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         private DrawerItem[] itemValues = DrawerItem.values();
 
@@ -228,6 +212,7 @@ public class GlucloserActivity extends Activity {
         _drawerLayout.closeDrawer(Gravity.LEFT);
         _drawerToggle.syncState();
     }
+
     private void selectDrawerItem(DrawerItem drawerItem) {
         Fragment fragment = null;
 
@@ -258,16 +243,6 @@ public class GlucloserActivity extends Activity {
         transaction.commit();
 
         _drawerLayout.closeDrawer(Gravity.LEFT);
-    }
-
-    public static void showFragment(Fragment f, String s)
-    {
-        return;
-    }
-
-    public static void selectNavigationItemWithBundle(int i, Bundle b)
-    {
-       return;
     }
 }
 

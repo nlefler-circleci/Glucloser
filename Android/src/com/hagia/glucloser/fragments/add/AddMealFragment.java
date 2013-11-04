@@ -13,6 +13,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.location.Location;
@@ -164,7 +165,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				AddFoodFragment fragment = new AddFoodFragment();
 				fragment.setArguments(args);
 
-				GlucloserActivity.getPumpActivity().showFragment((Fragment)fragment, "AddFood");
+                pushFragment(fragment, "AddFood");
 			}
 
 		});
@@ -369,7 +370,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				AddFoodFragment fragment = new AddFoodFragment();
 				fragment.setArguments(args);
 
-				GlucloserActivity.getPumpActivity().showFragment(fragment, "AddFood");
+                pushFragment(fragment, "AddFood");
 			}
 		});
 		
@@ -470,14 +471,14 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 
 				AddPlaceFragment fragment = new AddPlaceFragment();
 				fragment.setArguments(args);
-				GlucloserActivity.getPumpActivity().showFragment(fragment, "ADDPLACE");
+                pushFragment(fragment, "AddPlace");
 			}
 			break;
 			case 1: // Add
 			{
 				addingPlace = true;
 				AddPlaceFragment fragment = new AddPlaceFragment();
-				GlucloserActivity.getPumpActivity().showFragment(fragment, "ADDPLACE");
+                pushFragment(fragment, "AddPlace");
 			}
 			break;
 			case 0: // Show All
@@ -603,4 +604,12 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 			clearViews();
 		}
 	}
+
+    private void pushFragment(Fragment fragment, String name) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_fragment_container,
+                fragment, name);
+        transaction.addToBackStack(name);
+        transaction.commit();
+    }
 }

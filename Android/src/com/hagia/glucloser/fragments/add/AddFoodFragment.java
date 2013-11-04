@@ -194,7 +194,7 @@ public class AddFoodFragment extends Fragment {
 		    NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_FOOD_NOTIFICATION, food);
         }
 
-		GlucloserActivity.getPumpActivity().popFragmentStack();
+        getFragmentManager().popBackStack();
 	}
 
 	private void startCameraForFoodPhoto() {
