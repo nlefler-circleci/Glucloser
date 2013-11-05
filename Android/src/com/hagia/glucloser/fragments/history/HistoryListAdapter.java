@@ -44,7 +44,14 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
 		dataSource = new AsyncTask<Integer, List<Meal>, List<Meal>>() {
 			@Override
 			protected List<Meal> doInBackground(Integer... maxMealsToReturn) {
-				return MealUtil.getRecentMeals(maxMealsToReturn[0]);
+				List<Meal> meals = MealUtil.getRecentMeals(maxMealsToReturn[0]);
+                for (Meal meal : meals) {
+                    if (meal.placeToMeal == null ||
+                            meal.placeToMeal.place == null) {
+                        meal.linkPlace();
+                    }
+                }
+                return meals;
 			}		
 
 			@Override
@@ -91,20 +98,10 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
 			theView = (LinearLayout) reuseView;
 		}
 
-
 		TextView name = (TextView)theView.findViewById(R.id.history_list_item_name);
 		TextView time = (TextView)theView.findViewById(R.id.history_list_item_time);
 		theView.setTag(requestId);
 
-		if (meal.placeToMeal == null ||
-				meal.placeToMeal.place == null) {
-			meal.linkPlace();
-			// TODO remove
-			if (meal.placeToMeal == null ||
-					meal.placeToMeal.place == null) {
-				return theView;
-			}
-		}
 		name.setText(meal.placeToMeal.place.name);
 		time.setText(meal.getDateEatenForDisplay());
 
