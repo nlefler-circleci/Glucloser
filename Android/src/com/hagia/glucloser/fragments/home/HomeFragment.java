@@ -43,8 +43,6 @@ import com.hagia.glucloser.R;
 public class HomeFragment extends ListFragment {
 	private static final String LOG_TAG = "Glucloser_Home_Fragment";
 
-	private String searchTerm;
-
 	private HomeListAdapter listAdapter;
 
 	@Override
@@ -201,14 +199,11 @@ public class HomeFragment extends ListFragment {
 		}
 	}
 
-	private void refineContent() {
-        return;
-//		searchTerm = omniBar.getText().toString().trim();
-
+	public void search(String searchTerm) {
 		// getCurrentLocation may be null, but it's better than doing nothing
 		// while waiting for location and appearing to lag after the user
 		// presses search
-//		listAdapter.fetchDataWithTerm(LocationUtil.getCurrentLocation(), searchTerm);
+		listAdapter.fetchDataWithTerm(LocationUtil.getCurrentLocation(), searchTerm);
 	}
 
 	private Meal setupMealWithPlaceAndFoods(Place place, List<Food> foods) {

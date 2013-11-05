@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.crashlytics.android.Crashlytics;
 import com.hagia.glucloser.fragments.add.AddMealFragment;
@@ -133,11 +136,18 @@ public class GlucloserActivity extends Activity {
             selectDrawerItem(DrawerItem.Home);
             forceUpdateSelectedDrawerItem(DrawerItem.Home);
         }
+
+        handleIntent(getIntent());
 		// Turn off syncing on startup. Without any other clients
 		// it serves no purpose.
 		//DatabaseUtil.instance().startNetworkSyncServiceUsingContext(this);
 		
 	}
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -156,7 +166,12 @@ public class GlucloserActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.glucloser_main_activity_options_menu, menu);
-		return super.onCreateOptionsMenu(menu);
+
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView)menu.findItem(R.id.search_bar).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
 	}
 
 	@Override
@@ -203,6 +218,33 @@ public class GlucloserActivity extends Activity {
                 fragment, fragment.getClass().getName());
         transaction.addToBackStack(fragment.getClass().getName());
         transaction.commit();
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+            boolean needToPushHome = false;
+            HomeFragment homeFragment = null;
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                String tag = getFragmentManager().getBackStackEntryAt(0).getName();
+                Fragment topFragment = getFragmentManager().findFragmentByTag(tag);
+                if (topFragment instanceof HomeFragment) {
+                    homeFragment = (HomeFragment)topFragment;
+                } else {
+                    needToPushHome = true;
+                }
+            } else {
+                needToPushHome = true;
+            }
+
+            if (needToPushHome) {
+                homeFragment = new HomeFragment();
+                pushFragment(homeFragment, null);
+            }
+
+            homeFragment.search(intent.getStringExtra(SearchManager.QUERY));
+        } else {
+            Log.e(LOG_TAG, "Got unrecongnized intent: " + intent.getAction());
+        }
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
