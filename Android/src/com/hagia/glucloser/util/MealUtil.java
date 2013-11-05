@@ -66,8 +66,6 @@ public class MealUtil {
 	 * @return A List<Meal> of recently eaten meals
 	 */
 	public static List<Meal> getRecentMeals(int mealLimit) {
-		Log.i(LOG_TAG, "Get recent meals");
-
 		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
 				Tables.MEAL_DB_NAME, null, null, null, null, null,
 				Meal.DATE_EATEN_DB_COLUMN_NAME + " DESC", String.valueOf(mealLimit));
