@@ -43,7 +43,7 @@
     <string name="syncing_verb">Syncing</string>
     <string name="finished">Finished</string>
     <string name="bolus_started_phrase">Bolus Started At</string>
-    <string name="omni_bar_hint">Type to search or add</string>
+    <string name="search_hint">Type to search or add</string>
     <string name="sync_verb">Sync</string>
     <string name="add_food_verb">Add Food</string>
     <string name="edit_verb">Edit</string>

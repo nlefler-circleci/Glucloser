@@ -68,8 +68,8 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
 		// redo the search
         boolean locationChanged = currentLocation != null && lastSearchLocation != null &&
 				lastSearchLocation.distanceTo(currentLocation) < MIN_DISTANCE_CHANGE_FOR_SEARCH;
-        boolean termChanged = ((lastSearchTerm == null && term == null) ||
-						lastSearchTerm != null && lastSearchTerm.equals(term));
+        boolean termChanged = (lastSearchTerm != term) ||
+                (lastSearchTerm != null && !lastSearchTerm.equals(term));
 		if (!locationChanged && !termChanged) {
 			Log.v(LOG_TAG, "Search parameters haven't changed, aborting search");
 			return;
@@ -157,19 +157,23 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
                 for (int i = 0; i < position; ++i) {
                     iterator.next();
                 }
+                return iterator.next();
 			} else {
 				position -= popularMealResults.size();
 			}
-		} else 	if (historicMealResults != null) {
+		}
+        if (historicMealResults != null) {
 			if (position < historicMealResults.size()) {
                 Iterator<HistoricMealItem> iterator = historicMealResults.iterator();
                 for (int i = 0; i < position; ++i) {
                     iterator.next();
                 }
+                return iterator.next();
 			} else {
 				position -= historicMealResults.size();
 			}
-		} else if (placeResults != null) {
+		}
+        if (placeResults != null) {
 			if (position < placeResults.size()) {
 				Iterator<PlaceListItem> iterator = placeResults.iterator();
                 for (int i = 0; i < position; ++i) {
