@@ -21,7 +21,7 @@ import com.hagia.glucloser.types.Place;
 import com.parse.ParseGeoPoint;
 
 public class LocationUtil {
-	private static final String LOG_TAG = "Pump_Location_Util";
+	private static final String LOG_TAG = "Glucloser_Location_Util";
 
 	private static Location currentLocation = null;
 	private static LocationManager locationManager = null;
