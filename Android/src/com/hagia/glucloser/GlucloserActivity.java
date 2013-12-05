@@ -1,6 +1,7 @@
 package com.hagia.glucloser;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
@@ -24,6 +25,9 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.hagia.glucloser.fragments.ErrorDialogFragment;
 import com.hagia.glucloser.fragments.add.AddMealFragment;
 import com.hagia.glucloser.fragments.edit.EditPlacesFragment;
 import com.hagia.glucloser.fragments.history.HistoryFragment;
@@ -38,6 +42,8 @@ import com.parse.Parse;
 public class GlucloserActivity extends Activity {
 	private static final String LOG_TAG = "Glucloser_MainActivity";
 	public static final int LOG_LEVEL = Log.VERBOSE;
+
+    private static final int LOCATION_SERVICES_CHECK_REQUEST = 92388;
 
     private enum DrawerItem {
         Home, AddMeal, History, Stats, EditPlaces, Invalid;
@@ -113,9 +119,9 @@ public class GlucloserActivity extends Activity {
 
 		DatabaseUtil.initialize(this);
 
-		LocationUtil.initialize(
-				(LocationManager) this.getSystemService(Context.LOCATION_SERVICE),
-				this.getApplicationContext());
+        if (checkForLocationServices()) {
+            initializeLocationServices();
+        }
 		
 		SaveManager.initialize();
 
@@ -208,6 +214,18 @@ public class GlucloserActivity extends Activity {
 		}
 	}
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case LOCATION_SERVICES_CHECK_REQUEST:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        initializeLocationServices();
+                        break;
+                }
+        }
+    }
+
     public void pushFragment(Fragment fragment, Bundle args) {
         if (args != null) {
             fragment.setArguments(args);
@@ -289,6 +307,26 @@ public class GlucloserActivity extends Activity {
         pushFragment(fragment, null);
 
         _drawerLayout.closeDrawer(Gravity.LEFT);
+    }
+
+    private void initializeLocationServices() {
+        LocationUtil.initialize(
+                (LocationManager) this.getSystemService(Context.LOCATION_SERVICE),
+                this.getApplicationContext());
+    }
+
+    private boolean checkForLocationServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, LOCATION_SERVICES_CHECK_REQUEST);
+            if (errorDialog != null) {
+                ErrorDialogFragment errorDialogFragment = new ErrorDialogFragment();
+                errorDialogFragment.setDialog(errorDialog);
+                errorDialogFragment.show(getFragmentManager(), getString(R.string.location_services_error_dialog_title));
+            }
+            return false;
+        }
+        return true;
     }
 }
 
