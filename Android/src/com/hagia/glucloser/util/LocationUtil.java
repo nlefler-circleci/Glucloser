@@ -23,10 +23,13 @@ import com.parse.ParseGeoPoint;
 public class LocationUtil {
 	private static final String LOG_TAG = "Glucloser_Location_Util";
 
-	private static Location currentLocation = null;
+    private static boolean isInitialized = false;
+
+	private static Location lastKnownLocation = null;
 	private static LocationManager locationManager = null;
 	private static LocationListener networkLocationListener = null, gpsLocationListener = null;
 	private static Set<LocationListener> clients = null;
+    private static Set<LocationListener> pendingClients = new HashSet<LocationListener>();
 
 	private static Geocoder geoCoder = null;
 
@@ -44,14 +47,14 @@ public class LocationUtil {
 		locationManager = lm;
 		clients = new HashSet<LocationListener>();
 		geoCoder = new Geocoder(context);
-		currentLocation = lm.getLastKnownLocation(NETWORK_PROVIDER);
+		lastKnownLocation = lm.getLastKnownLocation(NETWORK_PROVIDER);
 
 		gpsLocationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
-				if (isBetterLocation(location, currentLocation)) {
+				if (isBetterLocation(location, lastKnownLocation)) {
 					Log.i(LOG_TAG, "Location updated with GPS (" +
 							location.getLatitude() + ", " + location.getLongitude() + ")");
-					currentLocation = location;
+					lastKnownLocation = location;
 				}
 			}
 
@@ -71,10 +74,10 @@ public class LocationUtil {
 
 		networkLocationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
-				if (isBetterLocation(location, currentLocation)) {
+				if (isBetterLocation(location, lastKnownLocation)) {
 					Log.i(LOG_TAG, "Location updated with network (" + 
 							location.getLatitude() + ", " + location.getLongitude() + ")");
-					currentLocation = location;
+					lastKnownLocation = location;
 				}
 			}
 
@@ -85,33 +88,38 @@ public class LocationUtil {
 			public void onProviderDisabled(String provider) {}
 		};
 
+        isInitialized = true;
+
 		addLocationListener(NETWORK_PROVIDER, networkLocationListener);
 		addLocationListener(GPS_PROVIDER, gpsLocationListener);
 
-		for (LocationListener client : clients) {
+		for (LocationListener client : pendingClients) {
 			addLocationListener(client);
 		}
 	}
 
 	public synchronized static void shutdown() {
+        isInitialized = false;
+        pendingClients.clear();
+
 		if (clients == null) {
 			return;
 		}
 
 		if (locationManager != null) {
-			Log.i(LOG_TAG, "Removing updates for " + clients.size() + " clients");
 			for (LocationListener client : clients) {
 				locationManager.removeUpdates(client);
 			}
+            clients.clear();
 		}
 	}
 
 	public static boolean haveValidLocation() {
-		return currentLocation != null;
+		return lastKnownLocation != null;
 	}
 
-	public static Location getCurrentLocation() {
-		return currentLocation;
+	public static Location getLastKnownLocation() {
+		return lastKnownLocation;
 	}
 
 	public static List<Address> getAddressFromLocation(Location loc, int maxResults) {
@@ -126,63 +134,6 @@ public class LocationUtil {
 			Log.e(LOG_TAG, e.getMessage());
 			return new ArrayList<Address>();
 		}
-	}
-
-	/**
-	 * Get the closest known @ref Place.
-	 * 
-	 * @note This method is synchronous. It should not be called on
-	 * the main thread.
-	 * 
-	 * @return The closest @ref Place, or null if there isn't one
-	 */
-	public static Place getClosestPlace() {
-		return getClosestPlace(getCurrentLocation());
-	}
-
-	private static Place closestPlace = null;
-	private static Place secondClosest = null;
-	private static Location lastLocationForClosestPlace = null;
-	private static double distanceToRecomputeClosestPlace = Double.MIN_VALUE;
-	/**
-	 * Get the closest known @ref Place to the provided location.
-	 * 
-	 * @note This method is synchronous. It should not be called on
-	 * the main thread.
-	 * 
-	 * @param location The location to base the search from
-	 * 
-	 * @return The closest @ref Place, or null if there isn't one
-	 */
-	public static Place getClosestPlace(Location location) {
-		if (closestPlace != null && location != null  && lastLocationForClosestPlace != null &&
-				location.distanceTo(lastLocationForClosestPlace) < distanceToRecomputeClosestPlace) {
-			Log.v(LOG_TAG, "Short circuit closest place. Distance from last location (" +
-					currentLocation.distanceTo(lastLocationForClosestPlace) + ") is less than " +
-					"the distance required to recompute (" + distanceToRecomputeClosestPlace + "). " +
-					"Returning " + closestPlace.name);
-			return closestPlace;
-		}
-
-		List<Place> nearby = PlaceUtil.getPlacesNear(location);
-		if (nearby == null || nearby.isEmpty()) {
-			return null;
-		}
-
-		closestPlace = nearby.get(0);
-		if (nearby.size() > 1) {
-			secondClosest = nearby.get(1);
-		}
-		lastLocationForClosestPlace = getCurrentLocation();
-		if (lastLocationForClosestPlace != null &&
-				secondClosest != null) {
-			double distanceToClosest = lastLocationForClosestPlace.distanceTo(closestPlace.location);
-			double distanceToSecondClosest = lastLocationForClosestPlace.distanceTo(secondClosest.location);
-
-			distanceToRecomputeClosestPlace = distanceToClosest + ((distanceToSecondClosest - distanceToClosest) / 2);
-		}
-
-		return nearby.get(0);
 	}
 
 	public static ParseGeoPoint getParseGeoPointForLocation(Location loc) {
@@ -206,7 +157,10 @@ public class LocationUtil {
 	}
 
 	public synchronized static void addLocationListener(LocationListener listener) {
-		// Register the listener with the Location Manager to receive location updates
+        if (!isInitialized) {
+            pendingClients.add(listener);
+            return;
+        }
 
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -217,7 +171,6 @@ public class LocationUtil {
 	}
 
 	private synchronized static void addLocationListener(String provider, LocationListener listener) {
-		// Register the listener with the Location Manager to receive location updates
 		if (locationManager.isProviderEnabled(provider)) {
 			locationManager.requestLocationUpdates(provider, minTime, minDistance, listener);
 			clients.add(listener);
@@ -227,6 +180,11 @@ public class LocationUtil {
 	}
 
 	public synchronized static void removeLocationListener(LocationListener listener) {
+        if (!isInitialized) {
+            pendingClients.remove(listener);
+            return;
+        }
+
 		if (locationManager != null && listener != null) {
 			locationManager.removeUpdates(listener);
 			clients.remove(listener);

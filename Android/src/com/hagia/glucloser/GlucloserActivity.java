@@ -89,7 +89,17 @@ public class GlucloserActivity extends Activity {
         // Initialize crash reporting
         Crashlytics.start(this);
 
-		setContentView(R.layout.main);
+        Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_api_key));
+
+		DatabaseUtil.initialize(this);
+
+        if (checkForLocationServices()) {
+            initializeLocationServices();
+        }
+
+		SaveManager.initialize();
+
+        setContentView(R.layout.main);
 
         _drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         _drawerToggle = new ActionBarDrawerToggle(this, _drawerLayout, R.drawable.ic_drawer,
@@ -113,17 +123,6 @@ public class GlucloserActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-
-
-		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_api_key));
-
-		DatabaseUtil.initialize(this);
-
-        if (checkForLocationServices()) {
-            initializeLocationServices();
-        }
-		
-		SaveManager.initialize();
 
 		getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			

@@ -223,7 +223,7 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
 				if (searchTerm != null) {
 					foundPlaces = PlaceUtil.getAllPlacesWithNameContaining(searchTerm);
 				} else {
-					Place closestPlace = LocationUtil.getClosestPlace(lastSearchLocation);
+					Place closestPlace = PlaceUtil.getClosestPlace();
 					if (closestPlace != null) {
 						foundPlaces.add(closestPlace);
 					}

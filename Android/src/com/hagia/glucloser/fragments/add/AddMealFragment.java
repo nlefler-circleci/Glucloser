@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.types.Food;
 import com.hagia.glucloser.types.MealToFood;
 import com.hagia.glucloser.types.Place;
@@ -113,14 +112,14 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				if (status == LocationProvider.AVAILABLE) {
 					Log.i(LOG_TAG, "LocationProvider status change. Updating nearby places");
 
-					Location loc = LocationUtil.getCurrentLocation();
+					Location loc = LocationUtil.getLastKnownLocation();
 					updateNearbyPlacesAndShowSelectDialog(loc, false);
 				}
 			}
 
 		};
 		LocationUtil.addLocationListener(savedPlacesLocationListener);
-		updateNearbyPlacesAndShowSelectDialog(LocationUtil.getCurrentLocation(), false);
+		updateNearbyPlacesAndShowSelectDialog(LocationUtil.getLastKnownLocation(), false);
 
 		try {
 			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(

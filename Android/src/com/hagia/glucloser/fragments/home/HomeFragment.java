@@ -5,23 +5,15 @@ import java.util.List;
 
 import android.app.DialogFragment;
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.hagia.glucloser.GlucloserActivity;
 import com.hagia.glucloser.detail.MealDetailActivity;
@@ -50,7 +42,7 @@ public class HomeFragment extends ListFragment {
 		listAdapter = new HomeListAdapter(getActivity().getLayoutInflater());
 		setListAdapter(listAdapter);
 		
-		listAdapter.fetchData(LocationUtil.getCurrentLocation());
+		listAdapter.fetchData(LocationUtil.getLastKnownLocation());
 		LocationUtil.addLocationListener(new LocationListener() {
 
 			@Override
@@ -200,10 +192,10 @@ public class HomeFragment extends ListFragment {
 	}
 
 	public void search(String searchTerm) {
-		// getCurrentLocation may be null, but it's better than doing nothing
+		// getLastKnownLocation may be null, but it's better than doing nothing
 		// while waiting for location and appearing to lag after the user
 		// presses search
-		listAdapter.fetchDataWithTerm(LocationUtil.getCurrentLocation(), searchTerm);
+		listAdapter.fetchDataWithTerm(LocationUtil.getLastKnownLocation(), searchTerm);
 	}
 
 	private Meal setupMealWithPlaceAndFoods(Place place, List<Food> foods) {

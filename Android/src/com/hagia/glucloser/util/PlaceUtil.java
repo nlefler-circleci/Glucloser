@@ -264,7 +264,51 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */	
 	public static List<Place> getNearbyPlaces() {
-		return getPlacesNear(LocationUtil.getCurrentLocation());
+		return getPlacesNear(LocationUtil.getLastKnownLocation());
+	}
+
+	private static Place closestPlace = null;
+	private static Place secondClosest = null;
+	private static Location lastLocationForClosestPlace = null;
+	private static double distanceToRecomputeClosestPlace = Double.MIN_VALUE;
+	/**
+	 * Get the closest known @ref Place to the provided location.
+	 *
+	 * @note This method is synchronous. It should not be called on
+	 * the main thread.
+	 *
+	 * @return The closest @ref Place, or null if there isn't one
+	 */
+	public static Place getClosestPlace() {
+        Location currentLocation = LocationUtil.getLastKnownLocation();
+		if (closestPlace != null && currentLocation != null  && lastLocationForClosestPlace != null &&
+				currentLocation.distanceTo(lastLocationForClosestPlace) < distanceToRecomputeClosestPlace) {
+			Log.v(LOG_TAG, "Short circuit closest place. Distance from last location (" +
+					currentLocation.distanceTo(lastLocationForClosestPlace) + ") is less than " +
+					"the distance required to recompute (" + distanceToRecomputeClosestPlace + "). " +
+					"Returning " + closestPlace.name);
+			return closestPlace;
+		}
+
+		List<Place> nearby = getPlacesNear(currentLocation);
+		if (nearby == null || nearby.isEmpty()) {
+			return null;
+		}
+
+		closestPlace = nearby.get(0);
+		if (nearby.size() > 1) {
+			secondClosest = nearby.get(1);
+		}
+		lastLocationForClosestPlace = currentLocation;
+		if (lastLocationForClosestPlace != null &&
+				secondClosest != null) {
+			double distanceToClosest = lastLocationForClosestPlace.distanceTo(closestPlace.location);
+			double distanceToSecondClosest = lastLocationForClosestPlace.distanceTo(secondClosest.location);
+
+			distanceToRecomputeClosestPlace = distanceToClosest + ((distanceToSecondClosest - distanceToClosest) / 2);
+		}
+
+		return nearby.get(0);
 	}
 
 	/**

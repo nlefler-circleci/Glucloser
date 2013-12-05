@@ -227,7 +227,7 @@ public class AddPlaceFragment extends Fragment {
 	}
 
 	private Object[] getLocationInfo() {
-		Location loc = LocationUtil.getCurrentLocation();
+		Location loc = LocationUtil.getLastKnownLocation();
 		double latitude = 0;
 		double longitude = 0;
 		String address = null;

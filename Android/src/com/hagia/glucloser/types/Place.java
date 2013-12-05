@@ -74,7 +74,7 @@ public class Place implements Serializable {
 		this.lastVisited = Calendar.getInstance();
 
 		if (LocationUtil.haveValidLocation()) {
-			this.location = LocationUtil.getCurrentLocation();
+			this.location = LocationUtil.getLastKnownLocation();
 			this.latitudeForSerializing = this.location.getLatitude();
 			this.longitudeForSerializing = this.location.getLongitude();
 		}
