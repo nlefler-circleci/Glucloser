@@ -66,8 +66,8 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
 
 		// If the search params haven't noticeably changed, don't
 		// redo the search
-        boolean locationChanged = currentLocation != null && lastSearchLocation != null &&
-				lastSearchLocation.distanceTo(currentLocation) < MIN_DISTANCE_CHANGE_FOR_SEARCH;
+        boolean locationChanged = lastSearchLocation == null || (currentLocation != null && lastSearchLocation != null &&
+				lastSearchLocation.distanceTo(currentLocation) < MIN_DISTANCE_CHANGE_FOR_SEARCH);
         boolean termChanged = (lastSearchTerm != term) ||
                 (lastSearchTerm != null && !lastSearchTerm.equals(term));
 		if (!locationChanged && !termChanged) {
