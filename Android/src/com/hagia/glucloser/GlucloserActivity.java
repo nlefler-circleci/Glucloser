@@ -3,6 +3,7 @@ package com.hagia.glucloser;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
@@ -105,12 +106,10 @@ public class GlucloserActivity extends Activity {
         _drawerToggle = new ActionBarDrawerToggle(this, _drawerLayout, R.drawable.ic_drawer,
                 R.string.drawer_open_action, R.string.drawer_close_action){
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(R.string.app_name);
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle("Draw Open");
                 invalidateOptionsMenu();
             }
         };
@@ -242,8 +241,8 @@ public class GlucloserActivity extends Activity {
             boolean needToPushHome = false;
             HomeFragment homeFragment = null;
             if (getFragmentManager().getBackStackEntryCount() > 0) {
-                String tag = getFragmentManager().getBackStackEntryAt(0).getName();
-                Fragment topFragment = getFragmentManager().findFragmentByTag(tag);
+                FragmentManager.BackStackEntry topEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+                Fragment topFragment = getFragmentManager().findFragmentById(topEntry.getId());
                 if (topFragment instanceof HomeFragment) {
                     homeFragment = (HomeFragment)topFragment;
                 } else {
