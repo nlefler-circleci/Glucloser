@@ -21,10 +21,10 @@ import android.widget.TextView;
 
 public class PlaceDetailMealListAdapter extends BaseAdapter implements
 		ListAdapter {
-	private static final String LOG_TAG = "Pump_Place_Detail_Meal_List_Adapter";
-	
+	private static final String LOG_TAG = "Glucloser_Place_Detail_Meal_List_Adapter";
+
 	private List<Meal> meals;
-	
+
 	public PlaceDetailMealListAdapter(Place place) {
 		meals = new ArrayList<Meal>();
 		

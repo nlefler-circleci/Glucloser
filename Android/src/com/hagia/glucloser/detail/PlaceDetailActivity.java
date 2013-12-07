@@ -245,9 +245,4 @@ public class PlaceDetailActivity extends Activity {
 		transaction.commit();
 	}
 
-	public void popFragmentStack() {
-		FragmentManager manager = getFragmentManager();
-		manager.popBackStack();
-	}
-
 }
