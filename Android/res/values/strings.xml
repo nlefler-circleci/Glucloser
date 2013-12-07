@@ -64,4 +64,5 @@
     <string name="drawer_open_action">Open Drawer</string>
     <string name="drawer_close_action">Close Drawer</string>
     <string name="location_services_error_dialog_title">Unable to start location services</string>
+    <string name="no_bolus_found">No Bolus Found</string>
 </resources>

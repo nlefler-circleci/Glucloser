@@ -191,11 +191,6 @@ public class MealDetailActivity extends Activity {
 		transaction.commit();
 	}
 
-	public void popFragmentStack() {
-		FragmentManager manager = getFragmentManager();
-		manager.popBackStack();
-	}
-
 	@SuppressLint("SetJavaScriptEnabled")
 	private void setupViews() {
 		placeNameView.setText(meal.placeToMeal.place.name);
@@ -310,11 +305,12 @@ public class MealDetailActivity extends Activity {
 
 	private void createNoBolusMessages() {
 		TextView noBolusView = new TextView(getApplicationContext());
-		noBolusView.setText("No boluses found");
+		noBolusView.setText(R.string.no_bolus_found);
 		noBolusView.setTextAppearance(getApplicationContext(), android.R.style.TextAppearance_DeviceDefault_Medium);
+        noBolusView.setTextColor(getResources().getColor(R.color.black));
 
 		bolusLayout.addView(noBolusView);
-		bolusStartedView.setText("No boluses found");
+		bolusStartedView.setText(R.string.no_bolus_found);
 	}
 
 	private void createViewForBolus(Bolus bolus) {
