@@ -22,7 +22,6 @@ import android.webkit.WebView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.nlefler.hnotificationcenter.NotificationCenter;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.fragments.add.AddPlaceFragment;
 import com.nlefler.glucloser.types.Meal;

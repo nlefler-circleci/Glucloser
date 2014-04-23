@@ -19,7 +19,6 @@ import com.nlefler.glucloser.util.PlaceToMealUtil;
 import com.nlefler.glucloser.util.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.Tables;
-import com.nlefler.hnotificationcenter.NotificationCenter;
 
 public class SaveManager {
 	private static final String LOG_TAG = "Pump_Save_Manager";

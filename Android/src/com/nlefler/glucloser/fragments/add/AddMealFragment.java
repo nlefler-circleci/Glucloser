@@ -39,7 +39,6 @@ import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToMeal;
 import com.nlefler.glucloser.util.PlaceUtil;
-import com.nlefler.hnotificationcenter.NotificationCenter;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.util.LocationUtil;

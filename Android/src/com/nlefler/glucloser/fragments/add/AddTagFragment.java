@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.nlefler.glucloser.types.Tag;
-import com.nlefler.hnotificationcenter.NotificationCenter;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.util.TagUtil;
 import com.nlefler.glucloser.util.database.save.SaveManager;

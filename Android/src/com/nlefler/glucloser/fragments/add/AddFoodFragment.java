@@ -37,7 +37,6 @@ import com.nlefler.glucloser.types.Barcode;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.Tag;
 import com.nlefler.glucloser.util.BarcodeUtil;
-import com.nlefler.hnotificationcenter.NotificationCenter;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.thirdparty.zxing.IntentIntegrator;
 import com.nlefler.glucloser.util.FoodUtil;

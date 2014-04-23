@@ -38,7 +38,6 @@ import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.TagToFood;
 import com.nlefler.glucloser.util.RequestIdUtil;
-import com.nlefler.hnotificationcenter.NotificationCenter;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.types.Bolus;
 import com.nlefler.glucloser.types.Meal;
