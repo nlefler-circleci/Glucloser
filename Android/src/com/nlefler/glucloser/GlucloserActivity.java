@@ -25,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.nlefler.glucloser.fragments.ErrorDialogFragment;
@@ -86,9 +85,6 @@ public class GlucloserActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialize crash reporting
-        Crashlytics.start(this);
 
         Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_api_key));
 
