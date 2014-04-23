@@ -25,6 +25,9 @@ Android/.idea/dictionaries/
 .classpath
 .project
 
+# Android Studio project files
+.idea/
+
 # Gradle
 .gradle/
 
