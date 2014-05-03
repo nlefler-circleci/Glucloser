@@ -21,6 +21,7 @@
 		7857023019146E8400D00EFD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857021219146E8400D00EFD /* UIKit.framework */; };
 		7857023819146E8400D00EFD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7857023619146E8400D00EFD /* InfoPlist.strings */; };
 		7857023A19146E8400D00EFD /* GlucloserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7857023919146E8400D00EFD /* GlucloserTests.m */; };
+		7857024519146F8000D00EFD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857024419146F8000D00EFD /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		7857023519146E8400D00EFD /* GlucloserTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GlucloserTests-Info.plist"; sourceTree = "<group>"; };
 		7857023719146E8400D00EFD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7857023919146E8400D00EFD /* GlucloserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlucloserTests.m; sourceTree = "<group>"; };
+		7857024319146F3C00D00EFD /* Glucloser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Glucloser.entitlements; sourceTree = "<group>"; };
+		7857024419146F8000D00EFD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +65,7 @@
 			files = (
 				7857021119146E8400D00EFD /* CoreGraphics.framework in Frameworks */,
 				7857021319146E8400D00EFD /* UIKit.framework in Frameworks */,
+				7857024519146F8000D00EFD /* MapKit.framework in Frameworks */,
 				7857020F19146E8400D00EFD /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,6 +105,7 @@
 		7857020D19146E8400D00EFD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7857024419146F8000D00EFD /* MapKit.framework */,
 				7857020E19146E8400D00EFD /* Foundation.framework */,
 				7857021019146E8400D00EFD /* CoreGraphics.framework */,
 				7857021219146E8400D00EFD /* UIKit.framework */,
@@ -112,6 +117,7 @@
 		7857021419146E8400D00EFD /* Glucloser */ = {
 			isa = PBXGroup;
 			children = (
+				7857024319146F3C00D00EFD /* Glucloser.entitlements */,
 				7857021D19146E8400D00EFD /* GLAppDelegate.h */,
 				7857021E19146E8400D00EFD /* GLAppDelegate.m */,
 				7857022019146E8400D00EFD /* Main.storyboard */,
@@ -200,6 +206,20 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = NLefler;
 				TargetAttributes = {
+					7857020A19146E8400D00EFD = {
+						DevelopmentTeam = 2VG5X86EES;
+						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+							com.apple.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					7857022B19146E8400D00EFD = {
 						TestTargetID = 7857020A19146E8400D00EFD;
 					};
@@ -377,10 +397,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Glucloser/Glucloser.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
 				INFOPLIST_FILE = "Glucloser/Glucloser-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -390,10 +414,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Glucloser/Glucloser.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
 				INFOPLIST_FILE = "Glucloser/Glucloser-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
