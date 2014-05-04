@@ -1,578 +1,1398 @@
-// !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 46;
-	objects = {
-
-/* Begin PBXBuildFile section */
-		7857020F19146E8400D00EFD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857020E19146E8400D00EFD /* Foundation.framework */; };
-		7857021119146E8400D00EFD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857021019146E8400D00EFD /* CoreGraphics.framework */; };
-		7857021319146E8400D00EFD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857021219146E8400D00EFD /* UIKit.framework */; };
-		7857021919146E8400D00EFD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7857021719146E8400D00EFD /* InfoPlist.strings */; };
-		7857021B19146E8400D00EFD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7857021A19146E8400D00EFD /* main.m */; };
-		7857021F19146E8400D00EFD /* GLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7857021E19146E8400D00EFD /* GLAppDelegate.m */; };
-		7857022219146E8400D00EFD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7857022019146E8400D00EFD /* Main.storyboard */; };
-		7857022519146E8400D00EFD /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7857022419146E8400D00EFD /* GLViewController.m */; };
-		7857022719146E8400D00EFD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7857022619146E8400D00EFD /* Images.xcassets */; };
-		7857022E19146E8400D00EFD /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857022D19146E8400D00EFD /* XCTest.framework */; };
-		7857022F19146E8400D00EFD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857020E19146E8400D00EFD /* Foundation.framework */; };
-		7857023019146E8400D00EFD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857021219146E8400D00EFD /* UIKit.framework */; };
-		7857023819146E8400D00EFD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7857023619146E8400D00EFD /* InfoPlist.strings */; };
-		7857023A19146E8400D00EFD /* GlucloserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7857023919146E8400D00EFD /* GlucloserTests.m */; };
-		7857024519146F8000D00EFD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857024419146F8000D00EFD /* MapKit.framework */; };
-		78B0ADFF1916BD97004EEEEC /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B0ADFE1916BD97004EEEEC /* Reveal.framework */; };
-		BE0AA5C8811FB2B242EC2729 /* GLSlideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */; };
-		BE0AA911E40A415C30A1E042 /* GLPlaceHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA13081BB77766D81E181 /* GLPlaceHeaderViewController.m */; };
-		BE0AAA6D2D851DCC6FEDABE1 /* GLNewMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */; };
-		BE0AAD5D2EB93F913477E397 /* GLPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AAC27C0C50B5E01939A60 /* GLPlace.m */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		7857023119146E8400D00EFD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7857020319146E8400D00EFD /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7857020A19146E8400D00EFD;
-			remoteInfo = Glucloser;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXFileReference section */
-		7857020B19146E8400D00EFD /* Glucloser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Glucloser.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7857020E19146E8400D00EFD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		7857021019146E8400D00EFD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		7857021219146E8400D00EFD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		7857021619146E8400D00EFD /* Glucloser-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Glucloser-Info.plist"; sourceTree = "<group>"; };
-		7857021819146E8400D00EFD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		7857021A19146E8400D00EFD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		7857021C19146E8400D00EFD /* Glucloser-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Glucloser-Prefix.pch"; sourceTree = "<group>"; };
-		7857021D19146E8400D00EFD /* GLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLAppDelegate.h; sourceTree = "<group>"; };
-		7857021E19146E8400D00EFD /* GLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLAppDelegate.m; sourceTree = "<group>"; };
-		7857022119146E8400D00EFD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		7857022319146E8400D00EFD /* GLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLViewController.h; sourceTree = "<group>"; };
-		7857022419146E8400D00EFD /* GLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
-		7857022619146E8400D00EFD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		7857022C19146E8400D00EFD /* GlucloserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GlucloserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7857022D19146E8400D00EFD /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		7857023519146E8400D00EFD /* GlucloserTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GlucloserTests-Info.plist"; sourceTree = "<group>"; };
-		7857023719146E8400D00EFD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		7857023919146E8400D00EFD /* GlucloserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlucloserTests.m; sourceTree = "<group>"; };
-		7857024319146F3C00D00EFD /* Glucloser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Glucloser.entitlements; sourceTree = "<group>"; };
-		7857024419146F8000D00EFD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		78B0ADFE1916BD97004EEEEC /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reveal.framework; path = "../../../../../../../Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/Reveal.framework"; sourceTree = "<group>"; };
-		BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSlideMenuController.m; sourceTree = "<group>"; };
-		BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLNewMealViewController.m; sourceTree = "<group>"; };
-		BE0AA13081BB77766D81E181 /* GLPlaceHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPlaceHeaderViewController.m; sourceTree = "<group>"; };
-		BE0AA2138DAE0628B3485CBF /* GLPlaceHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlaceHeaderViewController.h; sourceTree = "<group>"; };
-		BE0AA7B73568EDB616D499FA /* GLSlideMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSlideMenuController.h; sourceTree = "<group>"; };
-		BE0AAA89926DDBB9F3157A4E /* GLPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlace.h; sourceTree = "<group>"; };
-		BE0AAC27C0C50B5E01939A60 /* GLPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPlace.m; sourceTree = "<group>"; };
-		BE0AAD62D3FC62AFFB7CE267 /* GLNewMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLNewMealViewController.h; sourceTree = "<group>"; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		7857020819146E8400D00EFD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7857021119146E8400D00EFD /* CoreGraphics.framework in Frameworks */,
-				7857021319146E8400D00EFD /* UIKit.framework in Frameworks */,
-				7857024519146F8000D00EFD /* MapKit.framework in Frameworks */,
-				7857020F19146E8400D00EFD /* Foundation.framework in Frameworks */,
-				78B0ADFF1916BD97004EEEEC /* Reveal.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7857022919146E8400D00EFD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7857022E19146E8400D00EFD /* XCTest.framework in Frameworks */,
-				7857023019146E8400D00EFD /* UIKit.framework in Frameworks */,
-				7857022F19146E8400D00EFD /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		7857020219146E8400D00EFD = {
-			isa = PBXGroup;
-			children = (
-				7857021419146E8400D00EFD /* Glucloser */,
-				7857023319146E8400D00EFD /* GlucloserTests */,
-				7857020D19146E8400D00EFD /* Frameworks */,
-				7857020C19146E8400D00EFD /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		7857020C19146E8400D00EFD /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				7857020B19146E8400D00EFD /* Glucloser.app */,
-				7857022C19146E8400D00EFD /* GlucloserTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		7857020D19146E8400D00EFD /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				78B0ADFE1916BD97004EEEEC /* Reveal.framework */,
-				7857024419146F8000D00EFD /* MapKit.framework */,
-				7857020E19146E8400D00EFD /* Foundation.framework */,
-				7857021019146E8400D00EFD /* CoreGraphics.framework */,
-				7857021219146E8400D00EFD /* UIKit.framework */,
-				7857022D19146E8400D00EFD /* XCTest.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		7857021419146E8400D00EFD /* Glucloser */ = {
-			isa = PBXGroup;
-			children = (
-				7857024319146F3C00D00EFD /* Glucloser.entitlements */,
-				7857021D19146E8400D00EFD /* GLAppDelegate.h */,
-				7857021E19146E8400D00EFD /* GLAppDelegate.m */,
-				7857022019146E8400D00EFD /* Main.storyboard */,
-				7857022319146E8400D00EFD /* GLViewController.h */,
-				7857022419146E8400D00EFD /* GLViewController.m */,
-				7857022619146E8400D00EFD /* Images.xcassets */,
-				7857021519146E8400D00EFD /* Supporting Files */,
-				BE0AA51A274F71BE6CA96061 /* Interface */,
-				BE0AA6B24A3BFCAA5A3BAD54 /* Models */,
-			);
-			path = Glucloser;
-			sourceTree = "<group>";
-		};
-		7857021519146E8400D00EFD /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				7857021619146E8400D00EFD /* Glucloser-Info.plist */,
-				7857021719146E8400D00EFD /* InfoPlist.strings */,
-				7857021A19146E8400D00EFD /* main.m */,
-				7857021C19146E8400D00EFD /* Glucloser-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		7857023319146E8400D00EFD /* GlucloserTests */ = {
-			isa = PBXGroup;
-			children = (
-				7857023919146E8400D00EFD /* GlucloserTests.m */,
-				7857023419146E8400D00EFD /* Supporting Files */,
-			);
-			path = GlucloserTests;
-			sourceTree = "<group>";
-		};
-		7857023419146E8400D00EFD /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				7857023519146E8400D00EFD /* GlucloserTests-Info.plist */,
-				7857023619146E8400D00EFD /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		BE0AA4AF13F5B06D62D18ECF /* Slide Menu */ = {
-			isa = PBXGroup;
-			children = (
-				BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */,
-				BE0AA7B73568EDB616D499FA /* GLSlideMenuController.h */,
-			);
-			path = "Slide Menu";
-			sourceTree = "<group>";
-		};
-		BE0AA51A274F71BE6CA96061 /* Interface */ = {
-			isa = PBXGroup;
-			children = (
-				BE0AA4AF13F5B06D62D18ECF /* Slide Menu */,
-				BE0AA69213D2EE1C6CF27E43 /* Meal */,
-				BE0AAB409EAA9AA691ECD5FC /* Place */,
-			);
-			path = Interface;
-			sourceTree = "<group>";
-		};
-		BE0AA69213D2EE1C6CF27E43 /* Meal */ = {
-			isa = PBXGroup;
-			children = (
-				BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */,
-				BE0AAD62D3FC62AFFB7CE267 /* GLNewMealViewController.h */,
-			);
-			path = Meal;
-			sourceTree = "<group>";
-		};
-		BE0AA6B24A3BFCAA5A3BAD54 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				BE0AAC27C0C50B5E01939A60 /* GLPlace.m */,
-				BE0AAA89926DDBB9F3157A4E /* GLPlace.h */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		BE0AAB409EAA9AA691ECD5FC /* Place */ = {
-			isa = PBXGroup;
-			children = (
-				BE0AA13081BB77766D81E181 /* GLPlaceHeaderViewController.m */,
-				BE0AA2138DAE0628B3485CBF /* GLPlaceHeaderViewController.h */,
-			);
-			path = Place;
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		7857020A19146E8400D00EFD /* Glucloser */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7857023D19146E8400D00EFD /* Build configuration list for PBXNativeTarget "Glucloser" */;
-			buildPhases = (
-				7857020719146E8400D00EFD /* Sources */,
-				7857020819146E8400D00EFD /* Frameworks */,
-				7857020919146E8400D00EFD /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Glucloser;
-			productName = Glucloser;
-			productReference = 7857020B19146E8400D00EFD /* Glucloser.app */;
-			productType = "com.apple.product-type.application";
-		};
-		7857022B19146E8400D00EFD /* GlucloserTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7857024019146E8400D00EFD /* Build configuration list for PBXNativeTarget "GlucloserTests" */;
-			buildPhases = (
-				7857022819146E8400D00EFD /* Sources */,
-				7857022919146E8400D00EFD /* Frameworks */,
-				7857022A19146E8400D00EFD /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				7857023219146E8400D00EFD /* PBXTargetDependency */,
-			);
-			name = GlucloserTests;
-			productName = GlucloserTests;
-			productReference = 7857022C19146E8400D00EFD /* GlucloserTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		7857020319146E8400D00EFD /* Project object */ = {
-			isa = PBXProject;
-			attributes = {
-				CLASSPREFIX = GL;
-				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = NLefler;
-				TargetAttributes = {
-					7857020A19146E8400D00EFD = {
-						DevelopmentTeam = 2VG5X86EES;
-						SystemCapabilities = {
-							com.apple.DataProtection = {
-								enabled = 1;
-							};
-							com.apple.iCloud = {
-								enabled = 1;
-							};
-							com.apple.iOS = {
-								enabled = 1;
-							};
-						};
-					};
-					7857022B19146E8400D00EFD = {
-						TestTargetID = 7857020A19146E8400D00EFD;
-					};
-				};
-			};
-			buildConfigurationList = 7857020619146E8400D00EFD /* Build configuration list for PBXProject "Glucloser" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
-			hasScannedForEncodings = 0;
-			knownRegions = (
-				en,
-				Base,
-			);
-			mainGroup = 7857020219146E8400D00EFD;
-			productRefGroup = 7857020C19146E8400D00EFD /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
-			targets = (
-				7857020A19146E8400D00EFD /* Glucloser */,
-				7857022B19146E8400D00EFD /* GlucloserTests */,
-			);
-		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		7857020919146E8400D00EFD /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7857022719146E8400D00EFD /* Images.xcassets in Resources */,
-				7857021919146E8400D00EFD /* InfoPlist.strings in Resources */,
-				7857022219146E8400D00EFD /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7857022A19146E8400D00EFD /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7857023819146E8400D00EFD /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		7857020719146E8400D00EFD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7857021B19146E8400D00EFD /* main.m in Sources */,
-				7857022519146E8400D00EFD /* GLViewController.m in Sources */,
-				7857021F19146E8400D00EFD /* GLAppDelegate.m in Sources */,
-				BE0AA5C8811FB2B242EC2729 /* GLSlideMenuController.m in Sources */,
-				BE0AAA6D2D851DCC6FEDABE1 /* GLNewMealViewController.m in Sources */,
-				BE0AAD5D2EB93F913477E397 /* GLPlace.m in Sources */,
-				BE0AA911E40A415C30A1E042 /* GLPlaceHeaderViewController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7857022819146E8400D00EFD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7857023A19146E8400D00EFD /* GlucloserTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		7857023219146E8400D00EFD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7857020A19146E8400D00EFD /* Glucloser */;
-			targetProxy = 7857023119146E8400D00EFD /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		7857021719146E8400D00EFD /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7857021819146E8400D00EFD /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		7857022019146E8400D00EFD /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7857022119146E8400D00EFD /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		7857023619146E8400D00EFD /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7857023719146E8400D00EFD /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
-/* Begin XCBuildConfiguration section */
-		7857023B19146E8400D00EFD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-			};
-			name = Debug;
-		};
-		7857023C19146E8400D00EFD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		7857023E19146E8400D00EFD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = Glucloser/Glucloser.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
-				INFOPLIST_FILE = "Glucloser/Glucloser-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Debug;
-		};
-		7857023F19146E8400D00EFD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = Glucloser/Glucloser.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
-				INFOPLIST_FILE = "Glucloser/Glucloser-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		7857024119146E8400D00EFD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Glucloser.app/Glucloser";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "GlucloserTests/GlucloserTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		7857024219146E8400D00EFD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Glucloser.app/Glucloser";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
-				INFOPLIST_FILE = "GlucloserTests/GlucloserTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		7857020619146E8400D00EFD /* Build configuration list for PBXProject "Glucloser" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7857023B19146E8400D00EFD /* Debug */,
-				7857023C19146E8400D00EFD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7857023D19146E8400D00EFD /* Build configuration list for PBXNativeTarget "Glucloser" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7857023E19146E8400D00EFD /* Debug */,
-				7857023F19146E8400D00EFD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7857024019146E8400D00EFD /* Build configuration list for PBXNativeTarget "GlucloserTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7857024119146E8400D00EFD /* Debug */,
-				7857024219146E8400D00EFD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-/* End XCConfigurationList section */
-	};
-	rootObject = 7857020319146E8400D00EFD /* Project object */;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>archiveVersion</key>
+	<string>1</string>
+	<key>classes</key>
+	<dict/>
+	<key>objectVersion</key>
+	<string>46</string>
+	<key>objects</key>
+	<dict>
+		<key>5297D7CB42014185A0274E94</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Pods Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Pods-resources.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>7857020219146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857021419146E8400D00EFD</string>
+				<string>7857023319146E8400D00EFD</string>
+				<string>7857020D19146E8400D00EFD</string>
+				<string>7857020C19146E8400D00EFD</string>
+				<string>858E629583144C7894D84092</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857020319146E8400D00EFD</key>
+		<dict>
+			<key>attributes</key>
+			<dict>
+				<key>CLASSPREFIX</key>
+				<string>GL</string>
+				<key>LastUpgradeCheck</key>
+				<string>0510</string>
+				<key>ORGANIZATIONNAME</key>
+				<string>NLefler</string>
+				<key>TargetAttributes</key>
+				<dict>
+					<key>7857020A19146E8400D00EFD</key>
+					<dict>
+						<key>DevelopmentTeam</key>
+						<string>2VG5X86EES</string>
+						<key>SystemCapabilities</key>
+						<dict>
+							<key>com.apple.DataProtection</key>
+							<dict>
+								<key>enabled</key>
+								<string>1</string>
+							</dict>
+							<key>com.apple.iCloud</key>
+							<dict>
+								<key>enabled</key>
+								<string>1</string>
+							</dict>
+							<key>com.apple.iOS</key>
+							<dict>
+								<key>enabled</key>
+								<string>1</string>
+							</dict>
+						</dict>
+					</dict>
+					<key>7857022B19146E8400D00EFD</key>
+					<dict>
+						<key>TestTargetID</key>
+						<string>7857020A19146E8400D00EFD</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>buildConfigurationList</key>
+			<string>7857020619146E8400D00EFD</string>
+			<key>compatibilityVersion</key>
+			<string>Xcode 3.2</string>
+			<key>developmentRegion</key>
+			<string>English</string>
+			<key>hasScannedForEncodings</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXProject</string>
+			<key>knownRegions</key>
+			<array>
+				<string>en</string>
+				<string>Base</string>
+			</array>
+			<key>mainGroup</key>
+			<string>7857020219146E8400D00EFD</string>
+			<key>productRefGroup</key>
+			<string>7857020C19146E8400D00EFD</string>
+			<key>projectDirPath</key>
+			<string></string>
+			<key>projectReferences</key>
+			<array/>
+			<key>projectRoot</key>
+			<string></string>
+			<key>targets</key>
+			<array>
+				<string>7857020A19146E8400D00EFD</string>
+				<string>7857022B19146E8400D00EFD</string>
+			</array>
+		</dict>
+		<key>7857020619146E8400D00EFD</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>7857023B19146E8400D00EFD</string>
+				<string>7857023C19146E8400D00EFD</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>7857020719146E8400D00EFD</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>7857021B19146E8400D00EFD</string>
+				<string>7857022519146E8400D00EFD</string>
+				<string>7857021F19146E8400D00EFD</string>
+				<string>BE0AA5C8811FB2B242EC2729</string>
+				<string>BE0AAA6D2D851DCC6FEDABE1</string>
+				<string>BE0AAD5D2EB93F913477E397</string>
+				<string>BE0AA911E40A415C30A1E042</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>7857020819146E8400D00EFD</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>7857021119146E8400D00EFD</string>
+				<string>7857021319146E8400D00EFD</string>
+				<string>7857024519146F8000D00EFD</string>
+				<string>7857020F19146E8400D00EFD</string>
+				<string>78B0ADFF1916BD97004EEEEC</string>
+				<string>D421D2D7066343E9A0C914E1</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>7857020919146E8400D00EFD</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>7857022719146E8400D00EFD</string>
+				<string>7857021919146E8400D00EFD</string>
+				<string>7857022219146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>7857020A19146E8400D00EFD</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>7857023D19146E8400D00EFD</string>
+			<key>buildPhases</key>
+			<array>
+				<string>99BBA794CE1D40F380AF8DA6</string>
+				<string>7857020719146E8400D00EFD</string>
+				<string>7857020819146E8400D00EFD</string>
+				<string>7857020919146E8400D00EFD</string>
+				<string>5297D7CB42014185A0274E94</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>Glucloser</string>
+			<key>productName</key>
+			<string>Glucloser</string>
+			<key>productReference</key>
+			<string>7857020B19146E8400D00EFD</string>
+			<key>productType</key>
+			<string>com.apple.product-type.application</string>
+		</dict>
+		<key>7857020B19146E8400D00EFD</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.application</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>Glucloser.app</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>7857020C19146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857020B19146E8400D00EFD</string>
+				<string>7857022C19146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857020D19146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>78B0ADFE1916BD97004EEEEC</string>
+				<string>7857024419146F8000D00EFD</string>
+				<string>7857020E19146E8400D00EFD</string>
+				<string>7857021019146E8400D00EFD</string>
+				<string>7857021219146E8400D00EFD</string>
+				<string>7857022D19146E8400D00EFD</string>
+				<string>DEBB7FEC97FA460D83B222D9</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857020E19146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Foundation.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/Foundation.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>7857020F19146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857020E19146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857021019146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>CoreGraphics.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/CoreGraphics.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>7857021119146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857021019146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857021219146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>UIKit.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/UIKit.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>7857021319146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857021219146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857021419146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857024319146F3C00D00EFD</string>
+				<string>7857021D19146E8400D00EFD</string>
+				<string>7857021E19146E8400D00EFD</string>
+				<string>7857022019146E8400D00EFD</string>
+				<string>7857022319146E8400D00EFD</string>
+				<string>7857022419146E8400D00EFD</string>
+				<string>7857022619146E8400D00EFD</string>
+				<string>7857021519146E8400D00EFD</string>
+				<string>BE0AA51A274F71BE6CA96061</string>
+				<string>BE0AA6B24A3BFCAA5A3BAD54</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Glucloser</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021519146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857021619146E8400D00EFD</string>
+				<string>7857021719146E8400D00EFD</string>
+				<string>7857021A19146E8400D00EFD</string>
+				<string>7857021C19146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021619146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>Glucloser-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021719146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857021819146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021819146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.strings</string>
+			<key>name</key>
+			<string>en</string>
+			<key>path</key>
+			<string>en.lproj/InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021919146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857021719146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857021A19146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>main.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021B19146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857021A19146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857021C19146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Glucloser-Prefix.pch</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021D19146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>GLAppDelegate.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021E19146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>GLAppDelegate.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857021F19146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857021E19146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857022019146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857022119146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>Main.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857022119146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>file.storyboard</string>
+			<key>name</key>
+			<string>Base</string>
+			<key>path</key>
+			<string>Base.lproj/Main.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857022219146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857022019146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857022319146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>GLViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857022419146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>GLViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857022519146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857022419146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857022619146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder.assetcatalog</string>
+			<key>path</key>
+			<string>Images.xcassets</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857022719146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857022619146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857022819146E8400D00EFD</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>7857023A19146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>7857022919146E8400D00EFD</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>7857022E19146E8400D00EFD</string>
+				<string>7857023019146E8400D00EFD</string>
+				<string>7857022F19146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>7857022A19146E8400D00EFD</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>7857023819146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>7857022B19146E8400D00EFD</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>7857024019146E8400D00EFD</string>
+			<key>buildPhases</key>
+			<array>
+				<string>7857022819146E8400D00EFD</string>
+				<string>7857022919146E8400D00EFD</string>
+				<string>7857022A19146E8400D00EFD</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>7857023219146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>GlucloserTests</string>
+			<key>productName</key>
+			<string>GlucloserTests</string>
+			<key>productReference</key>
+			<string>7857022C19146E8400D00EFD</string>
+			<key>productType</key>
+			<string>com.apple.product-type.bundle.unit-test</string>
+		</dict>
+		<key>7857022C19146E8400D00EFD</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.cfbundle</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>GlucloserTests.xctest</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>7857022D19146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>XCTest.framework</string>
+			<key>path</key>
+			<string>Library/Frameworks/XCTest.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>7857022E19146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857022D19146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857022F19146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857020E19146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857023019146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857021219146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857023119146E8400D00EFD</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>7857020319146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>7857020A19146E8400D00EFD</string>
+			<key>remoteInfo</key>
+			<string>Glucloser</string>
+		</dict>
+		<key>7857023219146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>7857020A19146E8400D00EFD</string>
+			<key>targetProxy</key>
+			<string>7857023119146E8400D00EFD</string>
+		</dict>
+		<key>7857023319146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857023919146E8400D00EFD</string>
+				<string>7857023419146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>GlucloserTests</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857023419146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857023519146E8400D00EFD</string>
+				<string>7857023619146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857023519146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>GlucloserTests-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857023619146E8400D00EFD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7857023719146E8400D00EFD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857023719146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.strings</string>
+			<key>name</key>
+			<string>en</string>
+			<key>path</key>
+			<string>en.lproj/InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857023819146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857023619146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857023919146E8400D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>GlucloserTests.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857023A19146E8400D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857023919146E8400D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7857023B19146E8400D00EFD</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
+				<string>NO</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.1</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>7857023C19146E8400D00EFD</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>YES</string>
+				<key>ENABLE_NS_ASSERTIONS</key>
+				<string>NO</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.1</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>VALIDATE_PRODUCT</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>7857023D19146E8400D00EFD</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>7857023E19146E8400D00EFD</string>
+				<string>7857023F19146E8400D00EFD</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>7857023E19146E8400D00EFD</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>858E629583144C7894D84092</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>Glucloser/Glucloser.entitlements</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Glucloser/Glucloser-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>Glucloser/Glucloser-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PROVISIONING_PROFILE</key>
+				<string></string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>app</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>7857023F19146E8400D00EFD</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>858E629583144C7894D84092</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>Glucloser/Glucloser.entitlements</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Glucloser/Glucloser-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>Glucloser/Glucloser-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PROVISIONING_PROFILE</key>
+				<string></string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>app</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>7857024019146E8400D00EFD</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>7857024119146E8400D00EFD</string>
+				<string>7857024219146E8400D00EFD</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>7857024119146E8400D00EFD</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(BUILT_PRODUCTS_DIR)/Glucloser.app/Glucloser</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Glucloser/Glucloser-Prefix.pch</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>INFOPLIST_FILE</key>
+				<string>GlucloserTests/GlucloserTests-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUNDLE_LOADER)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>xctest</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>7857024219146E8400D00EFD</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(BUILT_PRODUCTS_DIR)/Glucloser.app/Glucloser</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Glucloser/Glucloser-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>GlucloserTests/GlucloserTests-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUNDLE_LOADER)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>xctest</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>7857024319146F3C00D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xml</string>
+			<key>path</key>
+			<string>Glucloser.entitlements</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7857024419146F8000D00EFD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>MapKit.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/MapKit.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>7857024519146F8000D00EFD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7857024419146F8000D00EFD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>78B0ADFE1916BD97004EEEEC</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Reveal.framework</string>
+			<key>path</key>
+			<string>../../../../../../../Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/Reveal.framework</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>78B0ADFF1916BD97004EEEEC</key>
+		<dict>
+			<key>fileRef</key>
+			<string>78B0ADFE1916BD97004EEEEC</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>858E629583144C7894D84092</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Pods.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>99BBA794CE1D40F380AF8DA6</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Check Pods Manifest.lock</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
+if [[ $? != 0 ]] ; then
+    cat &lt;&lt; EOM
+error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
+EOM
+    exit 1
+fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>BE0AA01FBCC78E2BB1FC118E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>GLSlideMenuController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA051AB10A91957FFF518</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>GLNewMealViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA13081BB77766D81E181</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>GLPlaceHeaderViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA2138DAE0628B3485CBF</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>GLPlaceHeaderViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA4AF13F5B06D62D18ECF</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>BE0AA01FBCC78E2BB1FC118E</string>
+				<string>BE0AA7B73568EDB616D499FA</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Slide Menu</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA51A274F71BE6CA96061</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>BE0AA4AF13F5B06D62D18ECF</string>
+				<string>BE0AA69213D2EE1C6CF27E43</string>
+				<string>BE0AAB409EAA9AA691ECD5FC</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Interface</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA5C8811FB2B242EC2729</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BE0AA01FBCC78E2BB1FC118E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BE0AA69213D2EE1C6CF27E43</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>BE0AA051AB10A91957FFF518</string>
+				<string>BE0AAD62D3FC62AFFB7CE267</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Meal</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA6B24A3BFCAA5A3BAD54</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>BE0AAC27C0C50B5E01939A60</string>
+				<string>BE0AAA89926DDBB9F3157A4E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Models</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA7B73568EDB616D499FA</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>GLSlideMenuController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AA911E40A415C30A1E042</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BE0AA13081BB77766D81E181</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BE0AAA6D2D851DCC6FEDABE1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BE0AA051AB10A91957FFF518</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BE0AAA89926DDBB9F3157A4E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>GLPlace.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AAB409EAA9AA691ECD5FC</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>BE0AA13081BB77766D81E181</string>
+				<string>BE0AA2138DAE0628B3485CBF</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Place</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AAC27C0C50B5E01939A60</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>GLPlace.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BE0AAD5D2EB93F913477E397</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BE0AAC27C0C50B5E01939A60</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BE0AAD62D3FC62AFFB7CE267</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>GLNewMealViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D421D2D7066343E9A0C914E1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DEBB7FEC97FA460D83B222D9</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DEBB7FEC97FA460D83B222D9</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+	</dict>
+	<key>rootObject</key>
+	<string>7857020319146E8400D00EFD</string>
+</dict>
+</plist>

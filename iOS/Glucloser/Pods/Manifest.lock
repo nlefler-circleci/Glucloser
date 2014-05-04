@@ -1,0 +1,14 @@
+PODS:
+  - NLFoursquare (0.0.1)
+
+DEPENDENCIES:
+  - NLFoursquare (from `git@github.com:nlefler/NLFoursquare.git`)
+
+EXTERNAL SOURCES:
+  NLFoursquare:
+    :git: git@github.com:nlefler/NLFoursquare.git
+
+SPEC CHECKSUMS:
+  NLFoursquare: 2fd90d0eed220fcba0991c0a985ffaf64323c796
+
+COCOAPODS: 0.32.1
