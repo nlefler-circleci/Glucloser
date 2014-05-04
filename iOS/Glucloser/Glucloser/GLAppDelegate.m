@@ -7,13 +7,24 @@
 //
 
 #import "GLAppDelegate.h"
+#import "GLSlideMenuController.h"
+#import "GLNewMealViewController.h"
 
 @implementation GLAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    return YES;
+  GLSlideMenuController *menuController = [[GLSlideMenuController alloc] initWithMenuWidth:220.0];
+  UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:menuController];
+
+  GLNewMealViewController *newMealViewController = [[GLNewMealViewController alloc] initWithNibName:nil bundle:nil];
+  [menuController addViewControllers:@[newMealViewController]];
+
+  UIWindow *window = [application.windows firstObject];
+  window.rootViewController = navigationController;
+  [window makeKeyAndVisible];
+
+  return YES;
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

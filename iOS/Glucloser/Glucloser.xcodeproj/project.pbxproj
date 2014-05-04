@@ -22,6 +22,10 @@
 		7857023819146E8400D00EFD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7857023619146E8400D00EFD /* InfoPlist.strings */; };
 		7857023A19146E8400D00EFD /* GlucloserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7857023919146E8400D00EFD /* GlucloserTests.m */; };
 		7857024519146F8000D00EFD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857024419146F8000D00EFD /* MapKit.framework */; };
+		78B0ADFF1916BD97004EEEEC /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B0ADFE1916BD97004EEEEC /* Reveal.framework */; };
+		BE0AA5C8811FB2B242EC2729 /* GLSlideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */; };
+		BE0AAA6D2D851DCC6FEDABE1 /* GLNewMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */; };
+		BE0AAD5D2EB93F913477E397 /* GLPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AAC27C0C50B5E01939A60 /* GLPlace.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +60,13 @@
 		7857023919146E8400D00EFD /* GlucloserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlucloserTests.m; sourceTree = "<group>"; };
 		7857024319146F3C00D00EFD /* Glucloser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Glucloser.entitlements; sourceTree = "<group>"; };
 		7857024419146F8000D00EFD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		78B0ADFE1916BD97004EEEEC /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reveal.framework; path = "../../../../../../../Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/Reveal.framework"; sourceTree = "<group>"; };
+		BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSlideMenuController.m; sourceTree = "<group>"; };
+		BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLNewMealViewController.m; sourceTree = "<group>"; };
+		BE0AA7B73568EDB616D499FA /* GLSlideMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSlideMenuController.h; sourceTree = "<group>"; };
+		BE0AAA89926DDBB9F3157A4E /* GLPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlace.h; sourceTree = "<group>"; };
+		BE0AAC27C0C50B5E01939A60 /* GLPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPlace.m; sourceTree = "<group>"; };
+		BE0AAD62D3FC62AFFB7CE267 /* GLNewMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLNewMealViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +78,7 @@
 				7857021319146E8400D00EFD /* UIKit.framework in Frameworks */,
 				7857024519146F8000D00EFD /* MapKit.framework in Frameworks */,
 				7857020F19146E8400D00EFD /* Foundation.framework in Frameworks */,
+				78B0ADFF1916BD97004EEEEC /* Reveal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +117,7 @@
 		7857020D19146E8400D00EFD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				78B0ADFE1916BD97004EEEEC /* Reveal.framework */,
 				7857024419146F8000D00EFD /* MapKit.framework */,
 				7857020E19146E8400D00EFD /* Foundation.framework */,
 				7857021019146E8400D00EFD /* CoreGraphics.framework */,
@@ -125,6 +138,8 @@
 				7857022419146E8400D00EFD /* GLViewController.m */,
 				7857022619146E8400D00EFD /* Images.xcassets */,
 				7857021519146E8400D00EFD /* Supporting Files */,
+				BE0AA51A274F71BE6CA96061 /* Interface */,
+				BE0AA6B24A3BFCAA5A3BAD54 /* Models */,
 			);
 			path = Glucloser;
 			sourceTree = "<group>";
@@ -156,6 +171,42 @@
 				7857023619146E8400D00EFD /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BE0AA4AF13F5B06D62D18ECF /* Slide Menu */ = {
+			isa = PBXGroup;
+			children = (
+				BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */,
+				BE0AA7B73568EDB616D499FA /* GLSlideMenuController.h */,
+			);
+			path = "Slide Menu";
+			sourceTree = "<group>";
+		};
+		BE0AA51A274F71BE6CA96061 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				BE0AA4AF13F5B06D62D18ECF /* Slide Menu */,
+				BE0AA69213D2EE1C6CF27E43 /* Meal */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
+		BE0AA69213D2EE1C6CF27E43 /* Meal */ = {
+			isa = PBXGroup;
+			children = (
+				BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */,
+				BE0AAD62D3FC62AFFB7CE267 /* GLNewMealViewController.h */,
+			);
+			path = Meal;
+			sourceTree = "<group>";
+		};
+		BE0AA6B24A3BFCAA5A3BAD54 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BE0AAC27C0C50B5E01939A60 /* GLPlace.m */,
+				BE0AAA89926DDBB9F3157A4E /* GLPlace.h */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -273,6 +324,9 @@
 				7857021B19146E8400D00EFD /* main.m in Sources */,
 				7857022519146E8400D00EFD /* GLViewController.m in Sources */,
 				7857021F19146E8400D00EFD /* GLAppDelegate.m in Sources */,
+				BE0AA5C8811FB2B242EC2729 /* GLSlideMenuController.m in Sources */,
+				BE0AAA6D2D851DCC6FEDABE1 /* GLNewMealViewController.m in Sources */,
+				BE0AAD5D2EB93F913477E397 /* GLPlace.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +454,10 @@
 				CODE_SIGN_ENTITLEMENTS = Glucloser/Glucloser.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
 				INFOPLIST_FILE = "Glucloser/Glucloser-Info.plist";
@@ -417,6 +475,10 @@
 				CODE_SIGN_ENTITLEMENTS = Glucloser/Glucloser.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Reveal.app/Contents/SharedSupport/iOS-Libraries",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Glucloser/Glucloser-Prefix.pch";
 				INFOPLIST_FILE = "Glucloser/Glucloser-Info.plist";
@@ -485,6 +547,7 @@
 				7857023F19146E8400D00EFD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7857024019146E8400D00EFD /* Build configuration list for PBXNativeTarget "GlucloserTests" */ = {
 			isa = XCConfigurationList;
@@ -493,6 +556,7 @@
 				7857024219146E8400D00EFD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
