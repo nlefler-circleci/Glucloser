@@ -24,6 +24,7 @@
 		7857024519146F8000D00EFD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7857024419146F8000D00EFD /* MapKit.framework */; };
 		78B0ADFF1916BD97004EEEEC /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B0ADFE1916BD97004EEEEC /* Reveal.framework */; };
 		BE0AA5C8811FB2B242EC2729 /* GLSlideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */; };
+		BE0AA911E40A415C30A1E042 /* GLPlaceHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA13081BB77766D81E181 /* GLPlaceHeaderViewController.m */; };
 		BE0AAA6D2D851DCC6FEDABE1 /* GLNewMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */; };
 		BE0AAD5D2EB93F913477E397 /* GLPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0AAC27C0C50B5E01939A60 /* GLPlace.m */; };
 /* End PBXBuildFile section */
@@ -63,6 +64,8 @@
 		78B0ADFE1916BD97004EEEEC /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reveal.framework; path = "../../../../../../../Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/Reveal.framework"; sourceTree = "<group>"; };
 		BE0AA01FBCC78E2BB1FC118E /* GLSlideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSlideMenuController.m; sourceTree = "<group>"; };
 		BE0AA051AB10A91957FFF518 /* GLNewMealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLNewMealViewController.m; sourceTree = "<group>"; };
+		BE0AA13081BB77766D81E181 /* GLPlaceHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPlaceHeaderViewController.m; sourceTree = "<group>"; };
+		BE0AA2138DAE0628B3485CBF /* GLPlaceHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlaceHeaderViewController.h; sourceTree = "<group>"; };
 		BE0AA7B73568EDB616D499FA /* GLSlideMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSlideMenuController.h; sourceTree = "<group>"; };
 		BE0AAA89926DDBB9F3157A4E /* GLPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlace.h; sourceTree = "<group>"; };
 		BE0AAC27C0C50B5E01939A60 /* GLPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPlace.m; sourceTree = "<group>"; };
@@ -187,6 +190,7 @@
 			children = (
 				BE0AA4AF13F5B06D62D18ECF /* Slide Menu */,
 				BE0AA69213D2EE1C6CF27E43 /* Meal */,
+				BE0AAB409EAA9AA691ECD5FC /* Place */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -207,6 +211,15 @@
 				BE0AAA89926DDBB9F3157A4E /* GLPlace.h */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		BE0AAB409EAA9AA691ECD5FC /* Place */ = {
+			isa = PBXGroup;
+			children = (
+				BE0AA13081BB77766D81E181 /* GLPlaceHeaderViewController.m */,
+				BE0AA2138DAE0628B3485CBF /* GLPlaceHeaderViewController.h */,
+			);
+			path = Place;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -327,6 +340,7 @@
 				BE0AA5C8811FB2B242EC2729 /* GLSlideMenuController.m in Sources */,
 				BE0AAA6D2D851DCC6FEDABE1 /* GLNewMealViewController.m in Sources */,
 				BE0AAD5D2EB93F913477E397 /* GLPlace.m in Sources */,
+				BE0AA911E40A415C30A1E042 /* GLPlaceHeaderViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

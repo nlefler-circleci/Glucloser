@@ -6,4 +6,9 @@
 
 
 @interface GLPlace : NSObject
+
+@property (nonatomic, readonly) NSString *name;
+
+- (id)initWithName:(NSString *)name;
+
 @end

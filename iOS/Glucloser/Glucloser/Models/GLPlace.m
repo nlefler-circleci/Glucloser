@@ -5,8 +5,20 @@
 
 #import "GLPlace.h"
 
+@interface GLPlace ()
 
-@implementation GLPlace {
+@property (nonatomic, strong) NSString *name;
 
+@end
+
+@implementation GLPlace
+
+- (id)initWithName:(NSString *)name {
+  self = [super init];
+  if (self) {
+    _name = [name copy];
+  }
+  return self;
 }
+
 @end

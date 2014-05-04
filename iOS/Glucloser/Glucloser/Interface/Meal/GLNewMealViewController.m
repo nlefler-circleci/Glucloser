@@ -5,12 +5,13 @@
 
 #import "GLNewMealViewController.h"
 #import "GLPlace.h"
+#import "GLPlaceHeaderViewController.h"
 
 @interface GLNewMealViewController () <UITableViewDataSource>
 
 @property (nonatomic, strong) GLPlace *place;
 
-@property (nonatomic, strong) UIView *placeHeader;
+@property (nonatomic, strong) GLPlaceHeaderViewController *placeHeader;
 @property (nonatomic, strong) UITableView *foodsTableView;
 
 @end
@@ -20,8 +21,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self) {
-    _placeHeader = [[UIView alloc] initWithFrame:CGRectZero];
-    _placeHeader.backgroundColor = [UIColor greenColor];
+    _placeHeader = [[GLPlaceHeaderViewController alloc] initWithPlace:nil];
 
     _foodsTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _foodsTableView.dataSource = self;
@@ -34,13 +34,23 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  self.placeHeader.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 150.0);
-  [self.view addSubview:self.placeHeader];
+  [self.placeHeader willMoveToParentViewController:self];
+  [self.view addSubview:self.placeHeader.view];
+  [self addChildViewController:self.placeHeader];
 
-  CGFloat tableHeight = CGRectGetHeight(self.view.bounds) - CGRectGetMaxY(self.placeHeader.frame);
-  self.foodsTableView.frame = CGRectMake(0, CGRectGetMaxY(self.placeHeader.frame),
-      CGRectGetWidth(self.view.bounds), tableHeight);
   [self.view addSubview:self.foodsTableView];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+
+  CGFloat barOffset = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame) +
+      CGRectGetHeight(self.navigationController.navigationBar.frame);
+  self.placeHeader.view.frame = CGRectMake(0, barOffset, CGRectGetWidth(self.view.bounds), 100.0);
+
+  CGFloat tableHeight = CGRectGetHeight(self.view.bounds) - CGRectGetMaxY(self.placeHeader.view.frame);
+  self.foodsTableView.frame = CGRectMake(0, CGRectGetMaxY(self.placeHeader.view.frame),
+      CGRectGetWidth(self.view.bounds), tableHeight);
 
   [self.foodsTableView reloadData];
 }
