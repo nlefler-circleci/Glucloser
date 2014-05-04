@@ -20,6 +20,7 @@ Android/res/values/keys.xml
 Android/res/values/com_crashlytics_export_strings.xml
 Android/.idea/workspace.xml
 Android/.idea/dictionaries/
+Android/gradle/
 
 # Eclipse project files
 .classpath
