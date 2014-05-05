@@ -36,3 +36,7 @@ xcshareddata/
 
 # Other
 .DS_Store
+
+# CocoaPods
+Pods/
+Podfile.lock
