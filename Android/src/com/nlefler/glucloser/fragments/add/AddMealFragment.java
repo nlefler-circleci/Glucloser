@@ -124,8 +124,6 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		LocationUtil.addLocationListener(savedPlacesLocationListener);
 		updateNearbyPlacesAndShowSelectDialog(LocationUtil.getLastKnownLocation(), false);
 
-        SaveManager.getPlaceUpdatedBus().register(this);
-
 		super.onCreate(savedInstanceState);
 	}
 
@@ -235,6 +233,8 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
         super.onResume();
 
         SaveManager.getPlaceUpdatedBus().register(this);
+        SaveManager.getFoodUpdatedBus().register(this);
+        SaveManager.getMealUpdatedBus().register(this);
     }
 
     @Override
@@ -242,12 +242,14 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
         super.onStop();
 
         SaveManager.getPlaceUpdatedBus().unregister(this);
+        SaveManager.getFoodUpdatedBus().unregister(this);
+        SaveManager.getMealUpdatedBus().unregister(this);
     }
 
 	@Override
 	public void onDestroy() {
 		LocationUtil.removeLocationListener(savedPlacesLocationListener);
-        SaveManager.getPlaceUpdatedBus().unregister(this);
+
 		super.onDestroy();
 	}
 

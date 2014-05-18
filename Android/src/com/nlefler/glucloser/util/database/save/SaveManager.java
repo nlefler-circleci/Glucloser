@@ -34,6 +34,7 @@ public class SaveManager {
         _placeUpdatedBus = new Bus();
         _placeSavedBus = new Bus();
         _mealUpdatedBus = new Bus();
+        _foodUpdatedBus = new Bus();
 	}
 	
 	public static synchronized void initialize() {

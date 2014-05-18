@@ -71,7 +71,6 @@ public class MealDetailActivity extends Activity {
 	private WebView plotView;
 	private LinearLayout foodLayout;
 	private LinearLayout bolusLayout;
-	private LinearLayout tagsLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +87,6 @@ public class MealDetailActivity extends Activity {
 		
 		setupState(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
 
-        SaveManager.getPlaceUpdatedBus().register(this);
 	}
 	
 	@Override
@@ -97,6 +95,7 @@ public class MealDetailActivity extends Activity {
 		LocationUtil.shutdown();
 
         SaveManager.getPlaceUpdatedBus().unregister(this);
+        SaveManager.getFoodUpdatedBus().unregister(this);
 
 		super.onStop();
 	}
@@ -110,6 +109,7 @@ public class MealDetailActivity extends Activity {
 				this.getApplicationContext());
 
         SaveManager.getPlaceUpdatedBus().register(this);
+        SaveManager.getFoodUpdatedBus().register(this);
 
 		super.onResume();
 	}
@@ -146,7 +146,6 @@ public class MealDetailActivity extends Activity {
 		plotView = (WebView)findViewById(R.id.meal_detail_view_plot_view);
 		foodLayout = (LinearLayout)findViewById(R.id.meal_detail_view_food_table_list_layout);
 		bolusLayout = (LinearLayout)findViewById(R.id.meal_detail_view_bolus_list_layout);
-		tagsLayout = (LinearLayout)findViewById(R.id.meal_detail_view_tags_list_layout);
 	}
 
 	private void setupState(Bundle state) {

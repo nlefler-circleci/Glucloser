@@ -74,7 +74,6 @@ public class PlaceDetailActivity extends Activity {
 
 		setupMemberVars(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
 
-        SaveManager.getPlaceUpdatedBus().register(this);
 		super.onCreate(savedInstanceState);
 	}
 
