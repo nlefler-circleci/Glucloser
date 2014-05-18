@@ -11,7 +11,6 @@ import android.util.Log;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
 import com.nlefler.glucloser.types.PlaceToMeal;
-import com.nlefler.glucloser.types.TagToPlace;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.Tables;
 import com.parse.ParseException;
@@ -62,25 +61,6 @@ public class ParsePlacePusher extends SyncPusher {
 							PlaceToMeal.PLACE_DB_COLUMN_KEY + "=?", new String[] {place.id});
 					if (code == -1) {
 						Log.e(LOG_TAG, "Unable to update PlaceToMeal entry with new object id");
-						// TODO clean up
-						DatabaseUtil.instance().getWritableDatabase().endTransaction();
-						continue;
-					}
-				}
-				
-				
-				// Update TagToPlace
-				values.clear();
-				if (objId != null) {
-					values.put(TagToPlace.PLACE_DB_COLUMN_KEY, objId);
-					values.put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, true);
-
-					values.put(DatabaseUtil.UPDATED_AT_COLUMN_NAME,
-							DatabaseUtil.parseDateFormat.format(new Date(System.currentTimeMillis())));
-					code = db.update(Tables.TAG_TO_PLACE_DB_NAME, values,
-							TagToPlace.PLACE_DB_COLUMN_KEY + "=?", new String[] {place.id});
-					if (code == -1) {
-						Log.e(LOG_TAG, "Unable to update TagToPlace entry with new object id");
 						// TODO clean up
 						DatabaseUtil.instance().getWritableDatabase().endTransaction();
 						continue;

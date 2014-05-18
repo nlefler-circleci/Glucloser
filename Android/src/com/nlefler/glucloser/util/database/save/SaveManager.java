@@ -8,7 +8,6 @@ import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.types.MealToFoodsHash;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.types.Tag;
 import com.nlefler.glucloser.util.BarcodeUtil;
 import com.nlefler.glucloser.util.FoodUtil;
 import com.nlefler.glucloser.util.MealToFoodUtil;
@@ -19,47 +18,48 @@ import com.nlefler.glucloser.util.PlaceToMealUtil;
 import com.nlefler.glucloser.util.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.Tables;
-import com.nlefler.hnotificationcenter.NotificationCenter;
+import com.squareup.otto.Bus;
 
 public class SaveManager {
-	private static final String LOG_TAG = "Pump_Save_Manager";
-	
-	public static final String SAVE_PLACE_NOTIFICATION = "SAVE_PLACE_NOTIFICATION";
-	public static final String SAVE_MEAL_NOTIFICATION = "SAVE_MEAL_NOTIFICATION";
-	public static final String SAVE_FOOD_NOTIFICATION = "SAVE_FOOD_NOTIFICATION";
-	public static final String SAVE_TAG_NOTIFICATION = "SAVE_TAG_NOTIFICATION";
-	
-	public static final String SAVE_FAILED_NOTIFICATION = "SAVE_FAILED_NOTIFICATION";
-	
-	public static final String PLACE_UPDATED_NOTIFICATION = "PLACE_UPDATED_NOTIFICATION";
-	public static final String MEAL_UPDATED_NOTIFICATION = "MEAL_UPDATED_NOTIFICATION";
-	public static final String FOOD_UPDATED_NOTIFICATION = "FOOD_UPDATED_NOTIFICATION";
-	public static final String TAG_UPDATED_NOTIFICATION = "TAG_UPDATED_NOTIFICATION";
+	private static final String LOG_TAG = "Glucloser_Save_Manager";
 	
 	private static SaveManager _instance;
+
+    private static Bus _placeUpdatedBus;
+    private static Bus _placeSavedBus;
+    private static Bus _mealUpdatedBus;
+    private static Bus _foodUpdatedBus;
 	
-	public SaveManager() throws NoSuchMethodException {
-		NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-				this, SAVE_PLACE_NOTIFICATION, SaveManager.class.getDeclaredMethod("savePlace", Place.class));
-		NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-				this, SAVE_MEAL_NOTIFICATION, SaveManager.class.getDeclaredMethod("saveMeal", Meal.class));
-		NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-				this, SAVE_FOOD_NOTIFICATION, SaveManager.class.getDeclaredMethod("saveFood", Food.class));
-		NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-				this, SAVE_TAG_NOTIFICATION, SaveManager.class.getDeclaredMethod("saveTag", Tag.class));
+	public SaveManager() {
+        _placeUpdatedBus = new Bus();
+        _placeSavedBus = new Bus();
+        _mealUpdatedBus = new Bus();
+        _foodUpdatedBus = new Bus();
 	}
 	
 	public static synchronized void initialize() {
 		if (_instance == null) {
-			try {
-				_instance = new SaveManager();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            _instance = new SaveManager();
 		}
 	}
-	private void savePlace(Place place) {
+
+    public static Bus getPlaceUpdatedBus() {
+        return _placeUpdatedBus;
+    }
+
+    public static Bus getPlaceSavedBus() {
+        return _placeSavedBus;
+    }
+
+    public static Bus getMealUpdatedBus() {
+        return _mealUpdatedBus;
+    }
+
+    public static Bus getFoodUpdatedBus() {
+        return _foodUpdatedBus;
+    }
+
+	public static void savePlace(Place place) {
 		(new AsyncTask<Place, Void, Place>() {
 
 			@Override
@@ -84,16 +84,16 @@ public class SaveManager {
 			@Override
 			protected void onPostExecute(Place place) {
 				if (place != null) {
-					NotificationCenter.getInstance().postNotificationWithArguments(PLACE_UPDATED_NOTIFICATION, place);
+                    _placeUpdatedBus.post(new PlaceUpdatedEvent(place));
 				} else {
-					NotificationCenter.getInstance().postNotificationWithArguments(SAVE_FAILED_NOTIFICATION, place);
+//					NotificationCenter.getInstance().postNotificationWithArguments(SAVE_FAILED_NOTIFICATION, place);
 				}
 			}
 
 		}).execute(place);
 	}
 	
-	private void saveMeal(Meal meal) {
+	public static void saveMeal(Meal meal) {
 		(new AsyncTask<Meal, Void, Meal>() {
 
 			@Override
@@ -197,16 +197,16 @@ public class SaveManager {
 			@Override
 			protected void onPostExecute(Meal meal) {
 				if (meal != null) {
-					NotificationCenter.getInstance().postNotificationWithArguments(MEAL_UPDATED_NOTIFICATION, meal);
+                    _mealUpdatedBus.post(new MealUpdatedEvent(meal));
 				} else {
-					NotificationCenter.getInstance().postNotificationWithArguments(SAVE_FAILED_NOTIFICATION, meal);					
+//					NotificationCenter.getInstance().postNotificationWithArguments(SAVE_FAILED_NOTIFICATION, meal);
 				}
 			}
 
 		}).execute(meal);
 	}
 	
-	private void saveFood(Food food) {
+	public static void saveFood(Food food) {
 		(new AsyncTask<Food, Void, Food>() {
 
 			@Override
@@ -231,16 +231,12 @@ public class SaveManager {
 			@Override
 			protected void onPostExecute(Food food) {
 				if (food != null) {
-					NotificationCenter.getInstance().postNotificationWithArguments(FOOD_UPDATED_NOTIFICATION, food);
+                    _foodUpdatedBus.post(new FoodUpdatedEvent(food));
 				} else {
-					NotificationCenter.getInstance().postNotificationWithArguments(SAVE_FAILED_NOTIFICATION, food);
+//					NotificationCenter.getInstance().postNotificationWithArguments(SAVE_FAILED_NOTIFICATION, food);
 				}
 			}
 
 		}).execute(food);
-	}
-	
-	private void saveTag(Tag tag) {
-		NotificationCenter.getInstance().postNotificationWithArguments(TAG_UPDATED_NOTIFICATION, tag);
 	}
 }

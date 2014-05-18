@@ -16,7 +16,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.util.LocationUtil;
-import com.nlefler.hnotificationcenter.NotificationCenter;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.util.database.save.SaveManager;
 
@@ -221,7 +220,7 @@ public class AddPlaceFragment extends Fragment {
 			}
 		}
 
-		NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_PLACE_NOTIFICATION, place);
+        SaveManager.savePlace(place);
 
 		getActivity().getFragmentManager().popBackStack();
 	}

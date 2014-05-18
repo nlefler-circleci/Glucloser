@@ -39,11 +39,14 @@ import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToMeal;
 import com.nlefler.glucloser.util.PlaceUtil;
-import com.nlefler.hnotificationcenter.NotificationCenter;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.util.LocationUtil;
+import com.nlefler.glucloser.util.database.save.FoodUpdatedEvent;
+import com.nlefler.glucloser.util.database.save.MealUpdatedEvent;
+import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.SaveManager;
+import com.squareup.otto.Subscribe;
 
 @SuppressLint("ValidFragment")
 public class AddMealFragment extends Fragment 
@@ -120,18 +123,6 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		};
 		LocationUtil.addLocationListener(savedPlacesLocationListener);
 		updateNearbyPlacesAndShowSelectDialog(LocationUtil.getLastKnownLocation(), false);
-
-		try {
-			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-					this, SaveManager.PLACE_UPDATED_NOTIFICATION, AddMealFragment.class.getDeclaredMethod("placeUpdated", Place.class));
-			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-					this, SaveManager.FOOD_UPDATED_NOTIFICATION, AddMealFragment.class.getDeclaredMethod("foodUpdated", Food.class));
-			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-					this, SaveManager.MEAL_UPDATED_NOTIFICATION, AddMealFragment.class.getDeclaredMethod("mealUpdated", Meal.class));
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			Log.e(LOG_TAG, "Got error when registering for notifications " + e.getMessage());
-		}
 
 		super.onCreate(savedInstanceState);
 	}
@@ -237,9 +228,28 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		}
 	}
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SaveManager.getPlaceUpdatedBus().register(this);
+        SaveManager.getFoodUpdatedBus().register(this);
+        SaveManager.getMealUpdatedBus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        SaveManager.getPlaceUpdatedBus().unregister(this);
+        SaveManager.getFoodUpdatedBus().unregister(this);
+        SaveManager.getMealUpdatedBus().unregister(this);
+    }
+
 	@Override
 	public void onDestroy() {
 		LocationUtil.removeLocationListener(savedPlacesLocationListener);
+
 		super.onDestroy();
 	}
 
@@ -283,21 +293,23 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		}
 	}
 
-	public void foodUpdated(Food food) {
-		if (foodMap.containsKey(food.id)) {
-			boolean replaceFoodView = foodViewList.contains(food.id);
-			addFood(food, /*new ArrayList<TagToFood>(),*/ true, replaceFoodView);
+	@Subscribe public void foodUpdated(FoodUpdatedEvent event) {
+		if (foodMap.containsKey(event.getFood().id)) {
+			boolean replaceFoodView = foodViewList.contains(event.getFood().id);
+			addFood(event.getFood(), /*new ArrayList<TagToFood>(),*/ true, replaceFoodView);
 		} else {
-			Log.v(LOG_TAG, "Ignoring updated food with id " + food.id + ". Not in our map");
+			Log.v(LOG_TAG, "Ignoring updated food with id " + event.getFood().id + ". Not in our map");
 		}
 	}
 
-	public void placeUpdated(Place place) {
-		if (addingPlace || selectedPlace == place || selectedPlace.id.equals(place.id)) {
+	@Subscribe public void placeUpdated(PlaceUpdatedEvent event) {
+		if (addingPlace
+                || selectedPlace.equals(event.getPlace())
+                || selectedPlace.id.equals(event.getPlace().id)) {
 			addingPlace = false;
-			setSelectedPlace(place);
+			setSelectedPlace(event.getPlace());
 		} else {
-			Log.v(LOG_TAG, "Ignoring updated place with id " + place.id + ". Not selected");
+			Log.v(LOG_TAG, "Ignoring updated place with id " + event.getPlace().id + ". Not selected");
 		}
 	}
 
@@ -594,12 +606,12 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 			meal.addFood(mealToFood);
 		}
 
-
-		NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_MEAL_NOTIFICATION, meal);
+        SaveManager.saveMeal(meal);
 	}
 	
-	private void mealUpdated(Meal updatedMeal) {
-		if (meal == updatedMeal || meal.id.equals(updatedMeal.id)) {
+	@Subscribe public void mealUpdated(MealUpdatedEvent event) {
+		if (meal.equals(event.getMeal())
+                || meal.id.equals(event.getMeal().id)) {
 			clearViews();
 		}
 	}

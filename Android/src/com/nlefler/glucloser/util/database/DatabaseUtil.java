@@ -27,8 +27,6 @@ import com.nlefler.glucloser.util.database.importers.ParseMealImporter;
 import com.nlefler.glucloser.util.database.importers.ParseMealToFoodImporter;
 import com.nlefler.glucloser.util.database.importers.ParsePlaceToFoodsHashImporter;
 import com.nlefler.glucloser.util.database.importers.ParsePlaceToMealImporter;
-import com.nlefler.glucloser.util.database.importers.ParseTagImporter;
-import com.nlefler.glucloser.util.database.importers.ParseTagToPlaceImporter;
 import com.nlefler.glucloser.util.database.importers.SyncImporter;
 import com.nlefler.glucloser.util.database.pushers.ParseMealToFoodPusher;
 import com.nlefler.glucloser.util.database.pushers.ParseMealToFoodsHashPusher;
@@ -40,22 +38,15 @@ import com.nlefler.glucloser.util.database.fetchers.ParseMealToFoodFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMealToFoodsHashFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceToFoodsHashFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceToMealFetcher;
-import com.nlefler.glucloser.util.database.fetchers.ParseTagFetcher;
-import com.nlefler.glucloser.util.database.fetchers.ParseTagToFoodFetcher;
-import com.nlefler.glucloser.util.database.fetchers.ParseTagToPlaceFetcher;
 import com.nlefler.glucloser.util.database.importers.ParseFoodImporter;
 import com.nlefler.glucloser.util.database.importers.ParseMealToFoodsHashImporter;
 import com.nlefler.glucloser.util.database.importers.ParseMeterDataImporter;
 import com.nlefler.glucloser.util.database.importers.ParsePlaceImporter;
-import com.nlefler.glucloser.util.database.importers.ParseTagToFoodImporter;
 import com.nlefler.glucloser.util.database.pushers.NoOpPusher;
 import com.nlefler.glucloser.util.database.pushers.ParseFoodPusher;
 import com.nlefler.glucloser.util.database.pushers.ParseMealPusher;
 import com.nlefler.glucloser.util.database.pushers.ParsePlacePusher;
 import com.nlefler.glucloser.util.database.pushers.ParsePlaceToMealPusher;
-import com.nlefler.glucloser.util.database.pushers.ParseTagPusher;
-import com.nlefler.glucloser.util.database.pushers.ParseTagToFoodPusher;
-import com.nlefler.glucloser.util.database.pushers.ParseTagToPlacePusher;
 import com.nlefler.glucloser.util.database.upgrade.DatabaseUpgrader;
 import com.nlefler.glucloser.util.database.upgrade.ThreeToFour;
 import com.nlefler.glucloser.util.database.upgrade.TwoToThree;
@@ -318,24 +309,12 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 				new ParsePlaceFetcher(), new ParsePlaceImporter(), new ParsePlacePusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
-		syncHelper(Tables.TAG_DB_NAME,
-				new ParseTagFetcher(), new ParseTagImporter(), new ParseTagPusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
-
 		syncHelper(Tables.MEAL_TO_FOOD_DB_NAME,
 				new ParseMealToFoodFetcher(), new ParseMealToFoodImporter(), new ParseMealToFoodPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
 		syncHelper(Tables.PLACE_TO_MEAL_DB_NAME,
 				new ParsePlaceToMealFetcher(), new ParsePlaceToMealImporter(), new ParsePlaceToMealPusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
-
-		syncHelper(Tables.TAG_TO_FOOD_DB_NAME,
-				new ParseTagToFoodFetcher(), new ParseTagToFoodImporter(), new ParseTagToFoodPusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
-
-		syncHelper(Tables.TAG_TO_PLACE_DB_NAME,
-				new ParseTagToPlaceFetcher(), new ParseTagToPlaceImporter(), new ParseTagToPlacePusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
 		syncHelper(Tables.PLACE_TO_FOODS_HASH_DB_NAME,
