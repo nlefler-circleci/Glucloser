@@ -220,7 +220,7 @@ public class AddPlaceFragment extends Fragment {
 			}
 		}
 
-		NotificationCenter.getInstance().postNotificationWithArguments(SaveManager.SAVE_PLACE_NOTIFICATION, place);
+        SaveManager.savePlace(place);
 
 		getActivity().getFragmentManager().popBackStack();
 	}

@@ -32,7 +32,9 @@ import com.nlefler.glucloser.util.MeterDataUtil;
 import com.nlefler.glucloser.util.PlaceUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.util.MeterDataUtil.BloodSugarDataResults;
+import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.SaveManager;
+import com.squareup.otto.Subscribe;
 
 public class PlaceDetailActivity extends Activity {
 	private static final String LOG_TAG = "Pump_Place_Detail_Activity";
@@ -72,20 +74,14 @@ public class PlaceDetailActivity extends Activity {
 
 		setupMemberVars(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
 
-		try {
-			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-					this, SaveManager.PLACE_UPDATED_NOTIFICATION, PlaceDetailActivity.class.getDeclaredMethod("updatePlace", Place.class));
-		} catch (NoSuchMethodException e) {
-			Log.e(LOG_TAG, "Can't listener to place updated notification, no handler method found");
-			e.printStackTrace();
-		}
-
+        SaveManager.getPlaceUpdatedBus().register(this);
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onStop() {
 		Log.i(LOG_TAG, "Stop");
+        SaveManager.getPlaceUpdatedBus().unregister(this);
 		LocationUtil.shutdown();
 
 		super.onStop();
@@ -99,14 +95,15 @@ public class PlaceDetailActivity extends Activity {
 				(LocationManager) this.getSystemService(Context.LOCATION_SERVICE),
 				this.getApplicationContext());
 
+        SaveManager.getPlaceUpdatedBus().register(this);
+
 		super.onResume();
 	}
 	
 	@Override
 	protected void onDestroy() {
 		Log.i(LOG_TAG, "Destroy");
-		NotificationCenter.getInstance().removeObserver(this);
-		
+
 		super.onDestroy();
 	}
 
@@ -163,12 +160,12 @@ public class PlaceDetailActivity extends Activity {
 		}
 	}
 
-	private void updatePlace(Place updatedPlace) {
+	@Subscribe public void placeUpdated(PlaceUpdatedEvent event) {
 		Log.v(LOG_TAG, "Got notification to update place");
-		if (place == updatedPlace || place.id.equals(updatedPlace.id)) {
+		if (place.equals(event.getPlace())|| place.id.equals(event.getPlace().id)) {
 			Log.v(LOG_TAG, "Place matches, updating");
 
-			place = updatedPlace;
+			place = event.getPlace();
 			
 			(new Handler()).post(new Runnable() {
 

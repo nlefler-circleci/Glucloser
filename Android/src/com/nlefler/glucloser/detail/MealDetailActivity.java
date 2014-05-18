@@ -47,7 +47,10 @@ import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.MeterDataUtil;
 import com.nlefler.glucloser.util.TagToFoodUtil;
 import com.nlefler.glucloser.util.MeterDataUtil.BloodSugarDataResults;
+import com.nlefler.glucloser.util.database.save.FoodUpdatedEvent;
+import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.SaveManager;
+import com.squareup.otto.Subscribe;
 
 public class MealDetailActivity extends Activity {
 	private static final String LOG_TAG = "Pump_Meal_Detail_Activity";
@@ -89,21 +92,15 @@ public class MealDetailActivity extends Activity {
 		
 		setupState(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
 
-		try {
-			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-					this, SaveManager.FOOD_UPDATED_NOTIFICATION, MealDetailActivity.class.getDeclaredMethod("foodUpdated", Food.class));
-			NotificationCenter.getInstance().addObserverForNotificationCallingMethod(
-					this, SaveManager.PLACE_UPDATED_NOTIFICATION, MealDetailActivity.class.getDeclaredMethod("placeUpdated", Place.class));
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			Log.e(LOG_TAG, "Error when registering for notifications " + e);
-		}
+        SaveManager.getPlaceUpdatedBus().register(this);
 	}
 	
 	@Override
 	protected void onStop() {
 		Log.i(LOG_TAG, "Stop");
 		LocationUtil.shutdown();
+
+        SaveManager.getPlaceUpdatedBus().unregister(this);
 
 		super.onStop();
 	}
@@ -115,6 +112,8 @@ public class MealDetailActivity extends Activity {
 		LocationUtil.initialize(
 				(LocationManager) this.getSystemService(Context.LOCATION_SERVICE),
 				this.getApplicationContext());
+
+        SaveManager.getPlaceUpdatedBus().register(this);
 
 		super.onResume();
 	}
@@ -371,13 +370,11 @@ public class MealDetailActivity extends Activity {
 		}.execute(meal);
 	}
 	
-	@SuppressWarnings("unused")
-	private void foodUpdated(Food food) {
-		Log.v(LOG_TAG, "Got food updated notification for food " + food);
+	@Subscribe public void foodUpdated(FoodUpdatedEvent event) {
+		Log.v(LOG_TAG, "Got food updated notification for food " + event.getFood());
 	}
 	
-	@SuppressWarnings("unused")
-	private void placeUpdated(Place place) {
-		Log.v(LOG_TAG, "Got place updated notification for place " + place);
+	@Subscribe public void placeUpdated(PlaceUpdatedEvent event) {
+		Log.v(LOG_TAG, "Got place updated notification for place " + event.getPlace());
 	}
 }
