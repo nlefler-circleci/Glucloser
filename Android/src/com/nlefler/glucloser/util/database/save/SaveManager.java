@@ -8,7 +8,6 @@ import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.types.MealToFoodsHash;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.types.Tag;
 import com.nlefler.glucloser.util.BarcodeUtil;
 import com.nlefler.glucloser.util.FoodUtil;
 import com.nlefler.glucloser.util.MealToFoodUtil;

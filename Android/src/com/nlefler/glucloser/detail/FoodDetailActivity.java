@@ -18,7 +18,6 @@ import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.Tag;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.FoodUtil;
 import com.nlefler.glucloser.util.MeterDataUtil;
@@ -91,7 +90,6 @@ public class FoodDetailActivity extends Activity {
 			Food food;
 			float carbs;
 			List<Meal> meals;
-			List<Tag> tags;
 
 			@Override
 			protected Void doInBackground(Void... params) {
@@ -99,7 +97,6 @@ public class FoodDetailActivity extends Activity {
 				publishProgress(food.name);
 				carbs = FoodUtil.getAverageCarbsForFoodNamed(food.name);
 				meals = FoodUtil.getAllMealsForFoodName(food.name);
-				tags = FoodUtil.getAllTagsForFoodNamed(food.name);
 
 				setupViewForCarbs(carbs);
 
@@ -116,7 +113,6 @@ public class FoodDetailActivity extends Activity {
 				hideSpinnerIfNecessary(spinner);
 				setupViewForCarbs(carbs);
 				setupViewForMeals(meals);
-				setupViewForTags(tags);
 			}
 
 		}.execute();
@@ -177,10 +173,6 @@ public class FoodDetailActivity extends Activity {
 		plotView.loadUrl("file:///android_asset/blood_sugar_plots/stats_graph.html");
 
 		getBloodSugarDataForMeal(meals, graphHandler);	
-	}
-
-	private void setupViewForTags(List<Tag> tags) {
-
 	}
 
 	private void setupView(String foodName) {

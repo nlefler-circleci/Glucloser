@@ -18,8 +18,6 @@ import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.types.MealToFoodsHash;
 import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.types.Tag;
-import com.nlefler.glucloser.types.TagToFood;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.Tables;
 
@@ -327,51 +325,6 @@ public class FoodUtil {
 		}
 
 		return meals;
-	}
-
-	// SELECT * FROM Tag WHERE objectId IN (
-	// 	SELECT tag FROM TagToFood WHERE food IN (
-	//		SELECT objectId FROM Food WHERE name = /foodName/
-	//	)
-	// )
-	private static final String whereClauseForGetAllTagsForFood = 
-			DatabaseUtil.OBJECT_ID_COLUMN_NAME + " IN ( " +
-					"SELECT " + TagToFood.TAG_DB_COLUMN_KEY + " FROM " +
-					Tables.TAG_TO_FOOD_DB_NAME + " WHERE " +
-					TagToFood.FOOD_DB_COLUMN_KEY + " IN ( " +
-					"SELECT " + DatabaseUtil.OBJECT_ID_COLUMN_NAME + " FROM " +
-					Tables.FOOD_DB_NAME + " WHERE " + Food.NAME_DB_COLUMN_KEY +
-					" =?))";
-	/**
-	 * Gets all tags for all foods whose name matches the provided string.
-	 * 
-	 * @note This method is synchronous. It should not be called on the
-	 * main thread.
-	 * 
-	 * @param foodName The name of the food to get tags for
-	 * @return A List<Tag> of all tags for all foods with matching name
-	 */
-	public static List<Tag> getAllTagsForFoodNamed(String foodName) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.FOOD_DB_NAME, null,
-				whereClauseForGetAllTagsForFood,
-				new String[] {foodName}, null, null, null);
-		List<Tag> tags = new ArrayList<Tag>();
-
-		if (!cursor.moveToFirst()) {
-			return tags;
-		}
-
-		Map<String, Object> record = new HashMap<String, Object>();
-		while (!cursor.isAfterLast()) {
-			record.clear();
-			record = DatabaseUtil.getRecordFromCursorIntoMap(cursor, Tag.COLUMN_TYPES, record);					
-			tags.add(Tag.fromMap(record));
-
-			cursor.moveToNext();
-		}
-
-		return tags;
 	}
 
 	/**

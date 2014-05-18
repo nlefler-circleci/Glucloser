@@ -21,7 +21,6 @@ import com.nlefler.glucloser.GlucloserActivity;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.types.TagToPlace;
 import com.nlefler.glucloser.util.database.Tables;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.PlaceToMeal;
@@ -543,26 +542,13 @@ public class PlaceUtil {
 
 		long code = db.insertWithOnConflict(
 				Tables.PLACE_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-		if (code != -1) {
-			for (TagToPlace tag : place.tagToPlaces) {
-				if (!TagToPlaceUtil.saveTagToPlace(tag)) {
-					if (transaction) db.endTransaction();
-
-					return code;
-				}
-			}
-			if (transaction) {
-				db.setTransactionSuccessful();
-				db.endTransaction();
-			}
-			return code;
-		} else {
+	    if (code == -1) {
 			Log.i(LOG_TAG, "Error code received from insert: " + code);
 			Log.i(LOG_TAG, "Values are: " + values);
 			if (transaction) db.endTransaction();
 
-			return code;
 		}
+        return code;
 	}
 
 	/**

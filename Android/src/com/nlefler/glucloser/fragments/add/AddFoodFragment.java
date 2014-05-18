@@ -35,7 +35,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.nlefler.glucloser.thirdparty.zxing.IntentResult;
 import com.nlefler.glucloser.types.Barcode;
 import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.Tag;
 import com.nlefler.glucloser.util.BarcodeUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.thirdparty.zxing.IntentIntegrator;
@@ -54,7 +53,6 @@ public class AddFoodFragment extends Fragment {
 	List<String> foodNamesForAutoComplete = new ArrayList<String>();
 
 	private EditText carbValueInput;
-	private ArrayList<Tag> tagList = new ArrayList<Tag>();
 
 	private LinearLayout tagListLayout;
 	private TextView addTagListItem;
@@ -322,13 +320,6 @@ public class AddFoodFragment extends Fragment {
 		}.execute();
 	}
 
-	private void addViewForTag(Tag tag) {
-		tagList.add(tag);
-		TextView newTagName = (TextView)getActivity().getLayoutInflater().inflate(R.layout.tag_list_item, null);
-		newTagName.setText(tag.name);
-		tagListLayout.addView(newTagName, tagListLayout.getChildCount() - 1);
-	}
-
 	private void populateFieldsForFoodName(String foodName) {
 		if (foodName == null || foodName.equals("")) {
 			Log.i(LOG_TAG, "Can't populate fields with foodName of " + foodName);
@@ -345,13 +336,6 @@ public class AddFoodFragment extends Fragment {
 
 				String carbValue = String.valueOf(FoodUtil.getAverageCarbsForFoodNamed(name));
 				carbValueInput.setText(carbValue);
-
-				List<Tag> tags = FoodUtil.getAllTagsForFoodNamed(name);
-				tagList.clear();
-				tagListLayout.removeAllViews();
-				for (Tag tag : tags) {
-					addViewForTag(tag);
-				}
 
 				return null;
 			}
@@ -425,21 +409,6 @@ public class AddFoodFragment extends Fragment {
 		});
 		if (food != null && food.carbs >= 0) {
 			carbValueInput.setText(String.valueOf(food.carbs));
-		}
-
-		// Tag List
-		//		addTagListItem.setClickable(true);
-		//		addTagListItem.setOnClickListener(new OnClickListener() {
-		//			@Override
-		//			public void onClick(View arg0) {
-		//				AddTagFragment fragment = new AddTagFragment();
-		//
-		//				GlucloserActivity.getPumpActivity().showFragment(fragment, "ADDTAG");
-		//			}
-		//
-		//		});
-		for (Tag tag : tagList) {
-			addViewForTag(tag);
 		}
 
 		// Correction

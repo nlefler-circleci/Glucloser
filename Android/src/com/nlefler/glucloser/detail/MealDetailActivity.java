@@ -35,17 +35,13 @@ import android.widget.TextView;
 import com.nlefler.glucloser.fragments.add.AddMealFragment;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.types.TagToFood;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.types.Bolus;
 import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.Tag;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.MeterDataUtil;
-import com.nlefler.glucloser.util.TagToFoodUtil;
 import com.nlefler.glucloser.util.MeterDataUtil.BloodSugarDataResults;
 import com.nlefler.glucloser.util.database.save.FoodUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
@@ -225,21 +221,6 @@ public class MealDetailActivity extends Activity {
 						}
 
 					});
-
-
-					Log.v(LOG_TAG, "Adding food to detail view");
-					List<TagToFood> tagToFoods = TagToFoodUtil.getAllTagToFoodsForFood(food);
-					for (TagToFood tagToFood : tagToFoods) {
-						final Tag tag = tagToFood.tag;
-						handler.post(new Runnable() {
-
-							@Override
-							public void run() {
-								createViewForTag(tag);
-							}
-
-						});
-					}
 				}
 				final Collection<Bolus> bolusList = MeterDataUtil.getBolusDataForMeal(meal, carbTotal);
 				Log.v(LOG_TAG, "Got " + bolusList.size() + " boluses for meal");
@@ -339,15 +320,6 @@ public class MealDetailActivity extends Activity {
 		Calendar print = Calendar.getInstance(TimeZone.getDefault());
 		print.setTime(bolusStarted);
 		bolusStartedView.setText(bolusStartFormatter.format(print.getTime()));
-	}
-
-	private void createViewForTag(Tag tag) {
-		Log.i(LOG_TAG, "Adding tag to detail view");
-		TextView newTag = (TextView)getLayoutInflater().inflate(R.layout.tag_list_item, null);
-		newTag.setTag(tag);
-
-		newTag.setText(tag.name);
-		tagsLayout.addView(newTag);
 	}
 
 	private void getBloodSugarData(Meal meal, final BloodSugarPlotHandler graphHandler) {

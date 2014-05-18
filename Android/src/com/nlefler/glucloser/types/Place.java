@@ -59,7 +59,6 @@ public class Place implements Serializable {
 	public String id;
 	public String name;
 	public transient Location location;
-	public List<TagToPlace> tagToPlaces;
 	public Calendar lastVisited;
 	public String readableAddress;
 	public Date createdAt;
@@ -70,7 +69,6 @@ public class Place implements Serializable {
 	public Place() {
 		this.id = UUID.randomUUID().toString();
 
-		this.tagToPlaces = new ArrayList<TagToPlace>();
 		this.lastVisited = Calendar.getInstance();
 
 		if (LocationUtil.haveValidLocation()) {
@@ -211,16 +209,6 @@ public class Place implements Serializable {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-
-	public void addTag(TagToPlace tag) {
-		tag.place = this;
-		this.tagToPlaces.add(tag);
-	}
-
-	public void removeTag(TagToPlace tag) {
-		tag.place = this;
-		this.tagToPlaces.remove(tag);
 	}
 
 	public Calendar getLastVisited() {
