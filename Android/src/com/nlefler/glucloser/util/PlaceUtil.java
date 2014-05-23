@@ -30,7 +30,8 @@ import com.nlefler.glucloser.util.database.DatabaseUtil;
 public class PlaceUtil {
 	private static final String LOG_TAG = "Pump_Place_Util";
 
-	private static final double NEARBY_PLACES_DISTANCE_LIMIT = 100.0; // Distance in meters before a place is too far to be considered a 'nearby places'
+    // Distance in meters before a place is too far to be considered a 'nearby places'
+ 	private static final double NEARBY_PLACES_DISTANCE_LIMIT = 100.0;
 
 	/**
 	 * Get a place in the database with the provided id.
@@ -119,7 +120,6 @@ public class PlaceUtil {
 		Log.i(LOG_TAG, "Get recent meals");
 
 		return _getAllMealsForPlace(place, mealLimit);
-
 	}
 
 	private static String whereClauseForGetPlacesNear = 
@@ -408,6 +408,9 @@ public class PlaceUtil {
 	 */
 	public static List<List<Food>> getMostPopularMealsForPlace(Place place,
 			int mealLimit) {
+        if (place == null || place.id == null) {
+            return new ArrayList<List<Food>>();
+        }
 		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
 				Tables.PLACE_TO_FOODS_HASH_DB_NAME, 
 				new String[] {PlaceToFoodsHash.FOODS_HASH_DB_COLUMN_KEY},
@@ -545,9 +548,11 @@ public class PlaceUtil {
 	    if (code == -1) {
 			Log.i(LOG_TAG, "Error code received from insert: " + code);
 			Log.i(LOG_TAG, "Values are: " + values);
-			if (transaction) db.endTransaction();
-
 		}
+        else {
+            if (transaction) db.setTransactionSuccessful();
+        }
+        if (transaction) db.endTransaction();
         return code;
 	}
 

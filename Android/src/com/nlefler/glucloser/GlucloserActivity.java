@@ -39,6 +39,8 @@ import com.nlefler.glucloser.util.database.save.SaveManager;
 
 import com.parse.Parse;
 
+import java.util.List;
+
 public class GlucloserActivity extends Activity {
 	private static final String LOG_TAG = "Glucloser_MainActivity";
 	public static final int LOG_LEVEL = Log.VERBOSE;
@@ -141,7 +143,6 @@ public class GlucloserActivity extends Activity {
 		// Turn off syncing on startup. Without any other clients
 		// it serves no purpose.
 		//DatabaseUtil.instance().startNetworkSyncServiceUsingContext(this);
-		
 	}
 
     @Override
