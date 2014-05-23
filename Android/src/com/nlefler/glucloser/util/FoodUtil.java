@@ -447,11 +447,10 @@ public class FoodUtil {
 		if (code == -1) {
 			Log.i(LOG_TAG, "Error code recieved from insert: " + code);
 			Log.i(LOG_TAG, "Values are: " + values);
-			DatabaseUtil.instance().getWritableDatabase().endTransaction();
 		} else {
 			DatabaseUtil.instance().getWritableDatabase().setTransactionSuccessful();
-			DatabaseUtil.instance().getWritableDatabase().endTransaction();
 		}
+        DatabaseUtil.instance().getWritableDatabase().endTransaction();
 
 		return code;
 	}
