@@ -19,6 +19,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nlefler.glucloser.NetworkSyncService;
+import com.nlefler.glucloser.types.MeterData;
 import com.nlefler.glucloser.util.database.fetchers.ParseFoodFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMeterDataFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceFetcher;
@@ -59,25 +60,8 @@ public class DatabaseUtil {
 	private static int DATABASE_VERSION = 1;
     private static Sprinkles sprinklesInstance = null;
 
-    // Some columns used by Medtronic are reserved by parse.
-    // Append a string to make them unique.
-    // TODO: Refactor
-	public static final String RESERVED_WORD_APPEND_TOKEN = "_GLUCLOSER_";
-    // Mapping of DB name to (Network Column Name to Local Column Name)
-	private static final Map<String, Map<String, String>> localKeyToNetworkKeyMap =
-            new HashMap<String, Map<String, String>>() {{
-		put(Tables.METER_DATA_DB_NAME, new HashMap<String, String>() {{
-            put("Index" + RESERVED_WORD_APPEND_TOKEN, "Index"); }});
-	}};
-    // Reverse of localKeyToNetworkKeyMap
-    // TODO: Use reverse of above map
-	private static final Map<String, Map<String, String>> networkKeyToLocalKeyMap =
-            new HashMap<String, Map<String, String>>() {{
-		put(Tables.METER_DATA_DB_NAME, new HashMap<String, String>() {{
-            put("Index", "Index" + RESERVED_WORD_APPEND_TOKEN); }});
-	}};
-
     public static final String ID_COLUMN_NAME = "id";
+    public static final String GLUCLOSER_ID_COLUMN_NAME = "glucloserId";
 	public static final String PARSE_ID_COLUMN_NAME = "parseId";
 	public static final String UPDATED_AT_COLUMN_NAME = "updatedAt";
 	public static final String CREATED_AT_COLUMN_NAME = "createdAt";
@@ -419,52 +403,6 @@ public class DatabaseUtil {
 			onPartialSync.onPartialUpSync(zulu.getTime());
 		}
 		return newDate;
-	}
-
-	/**
-	 * Since meter data contains a key name 'Index', and this is a reserved word in SQLite,
-	 * we need to append some token to get it into the database. This method returns the
-	 * actual key for the modified local key.
-	 * 
-	 * e.g. 'Index' becomes 'IndexH0W81G', method will return 'Index' for 'IndexH0W81G'
-	 * 
-	 * See also localKeyForNetworkKey
-	 * 
-	 * @param localKey
-	 * @return the original key if localKey is a modified key, otherwise localKey
-	 */
-	public static String networkKeyForLocalKey(String databaseName, String localKey) {
-		Map<String, String> dbMap = localKeyToNetworkKeyMap.get(databaseName);
-		boolean haveOriginalKey = dbMap != null && dbMap.containsKey(localKey);
-
-		if (haveOriginalKey) {
-			return dbMap.get(localKey);
-		} else {
-			return localKey;
-		}
-	}
-
-	/**
-	 * Since meter data contains a key name 'Index', and this is a reserved word in SQLite,
-	 * we need to append some token to get it into the database. This method returns the
-	 * modified local key for the network key.
-	 * 
-	 * e.g. 'Index' becomes 'IndexH0W81G'
-	 * 
-	 * See also networkKeyForLocalKey
-	 * 
-	 * @param networkKey
-	 * @return the modified local key if networkKey needs to be modified, otherwise networkKey
-	 */
-	public static String localKeyForNetworkKey(String databaseName, String networkKey) {
-		Map<String, String> dbMap = networkKeyToLocalKeyMap.get(databaseName);
-		boolean haveOriginalKey = dbMap != null && dbMap.containsKey(networkKey);
-
-		if (haveOriginalKey) {
-			return dbMap.get(networkKey);
-		} else {
-			return networkKey;
-		}
 	}
 
 	private PartialSyncCallback generatePartialSyncCallbackForTable(final String tableName,

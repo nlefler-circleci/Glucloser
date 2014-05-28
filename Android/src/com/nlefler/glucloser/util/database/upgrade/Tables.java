@@ -1,5 +1,8 @@
 package com.nlefler.glucloser.util.database.upgrade;
 
+import com.nlefler.glucloser.types.Meal;
+import com.nlefler.glucloser.types.MeterData;
+import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 public class Tables {
@@ -28,75 +31,14 @@ public class Tables {
 
 	protected static String[] syncingTableNames = new String[] {
 		FOOD_DB_NAME, 
-		MEAL_DB_NAME, 
-		PLACE_DB_NAME, 
-		TAG_DB_NAME, 
-		METER_DATA_DB_NAME, 
+		Meal.MEAL_DB_NAME,
+		Place.PLACE_DB_NAME,
+		MeterData.METER_DATA_DB_NAME,
 		MEAL_TO_FOOD_DB_NAME, 
 		PLACE_TO_MEAL_DB_NAME,
-		TAG_TO_FOOD_DB_NAME, 
-		TAG_TO_PLACE_DB_NAME, 
 		PLACE_TO_FOODS_HASH_DB_NAME,
 		MEAL_TO_FOODS_HASH_DB_NAME,
-		BARCODE_TO_FOOD_NAME_DB_NAME
 	};
-
-	// Table creation queries
-	// GeoPoints as separate lat and lon floats
-	protected static final String FOOD_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + FOOD_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, photo BLOB," +
-			" name TEXT, carbs INTEGER, dateEaten TEXT, " +
-			"tags TEXT, live BOOLEAN, correction BOOLEAN, createdAt TEXT, updatedAt TEXT, "+
-			" needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-	protected static final String MEAL_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + MEAL_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, " +
-			"live BOOLEAN,  dateEaten TEXT, createdAt TEXT, updatedAt TEXT, " +
-			" needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-	protected static final String METER_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + METER_DATA_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, createdAt TEXT, updatedAt TEXT, " +
-			"Index" + DatabaseUtil.RESERVED_WORD_APPEND_TOKEN + " INTEGER, Date TEXT, Time TEXT, Timestamp TEXT, New_Device_Time TEXT, " +
-			"BG_Reading__mg_dL_ INTEGER, Linked_BG_Meter_ID TEXT, Temp_Basal_Amount__U_h_ FLOAT, " + 
-			"Temp_Basal_Type TEXT, Temp_Basal_Duration__hh_mm_ss_ TEXT, Bolus_Type TEXT, " +
-			"Bolus_Volume_Selected__U_ FLOAT, Bolus_Volume_Delivered__U_ FLOAT, " +
-			"Programmed_Bolus_Duration__hh_mm_ss_ TEXT, Prime_Type TEXT, " +
-			"Prime_Volume_Delivered__U_ FLOAT, Suspend TEXT, Rewind TEXT, BWZ_Estimate__U_ FLOAT, " +
-			"BWZ_Target_High_BG__mg_dL_ INTEGER, BWZ_Target_Low_BG__mg_dL_ INTEGER, BWZ_Carb_Ratio__grams_ FLOAT, " +
-			"BWZ_Insulin_Sensitivity__mg_dL_ INTEGER, BWZ_Carb_Input__grams_ FLOAT, BWZ_BG_Input__mg_dL_ INTEGER, " +
-			"BWZ_Correction_Estimate__U_ FLOAT, BWZ_Food_Estimate__U_ FLOAT, BWZ_Active_Insulin__U_ FLOAT, " +
-			"Alarm TEXT, Sensor_Calibration_BG__mg_dL_ INTEGER, Sensor_Glucose__mg_dL_ INTEGER, ISIG_Value FLOAT, " +
-			"Daily_Insulin_Total__U_ FLOAT, Raw_Type TEXT, Raw_Values TEXT, Raw_ID FLOAT, Raw_Upload_ID FLOAT, " +
-			"Raw_Seq_Num FLOAT, Raw_Device_Type TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-	protected static final String PLACE_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " +  PLACE_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, location_latitude FLOAT, location_longitude FLOAT, name TEXT, " +
-			"tags TEXT, live BOOLEAN, createdAt TEXT, updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-	protected static final String TAG_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + TAG_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, name TEXT, " +
-			"live BOOLEAN, createdAt TEXT, updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-
-	protected static final String MEAL_TO_FOOD_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + MEAL_TO_FOOD_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, meal TEXT, food TEXT UNIQUE, " +
-			" createdAt TEXT, updatedAt TEXT, needsUpload BOOLEAN  DEFAULT 0, dataVersion INTEGER DEFAULT 0);";
-	protected static final String PLACE_TO_MEAL_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + PLACE_TO_MEAL_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, place TEXT, meal TEXT UNIQUE, " +
-			" createdAt TEXT, updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-	protected static final String TAG_TO_FOOD_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + TAG_TO_FOOD_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, tag TEXT, food TEXT UNIQUE, " +
-			" createdAt TEXT, updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-	protected static final String TAG_TO_PLACE_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " + TAG_TO_PLACE_DB_NAME + " (" +
-			"ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, tag TEXT, place TEXT, " +
-			" createdAt TEXT, updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER  DEFAULT 1);";
-	protected static final String PLACE_TO_FOODS_HASH_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " +
-			PLACE_TO_FOODS_HASH_DB_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, " +
-			" updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER DEFAULT 1, " +
-			" createdAt TEXT, place TEXT, foodsHash TEXT);";
-	protected static final String MEAL_TO_FOODS_HASH_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " +
-			MEAL_TO_FOODS_HASH_DB_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, " +
-			" updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER DEFAULT 1, " +
-			" createdAt TEXT, meal TEXT, foodsHash TEXT);";
-	protected static final String BARCODE_TO_FOOD_CREATION_SQL = "CREATE TABLE IF NOT EXISTS " +
-			BARCODE_TO_FOOD_NAME_DB_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, objectId TEXT UNIQUE, " +
-			" updatedAt TEXT, needsUpload BOOLEAN DEFAULT 0, dataVersion INTEGER DEFAULT 1, " +
-			" createdAt TEXT, barCode TEXT UNIQUE, foodName TEXT UNIQUE);";
 
     protected static final String PLACE_TO_MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             PLACE_TO_MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +

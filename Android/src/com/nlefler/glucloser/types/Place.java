@@ -18,13 +18,15 @@ import se.emilsjolander.sprinkles.Model;
 import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
+import se.emilsjolander.sprinkles.annotations.Table;
 
+@Table(Place.PLACE_DB_NAME)
 public class Place extends Model implements Serializable {
 	private static final long serialVersionUID = -7803318132865386549L;
 
 	private static final String LOG_TAG = "Glucloser_Place";
 
-    public static final String GLUCLOSER_ID_COLUMN_KEY = "glucloser_id";
+    public static final String PLACE_DB_NAME = "place";
     public static final String FOURSQUARE_ID_COLUMN_KEY = "foursquare_id";
 	public static final String NAME_DB_COLUMN_KEY = "name";
 	public static final String LOCATION_DB_COLUMN_KEY = "location";
@@ -48,7 +50,7 @@ public class Place extends Model implements Serializable {
 	public String parseId;
 
     @Key
-    @Column(GLUCLOSER_ID_COLUMN_KEY)
+    @Column(DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME)
     public String glucloserId;
 
     @Key
@@ -99,7 +101,7 @@ public class Place extends Model implements Serializable {
 		}
 
         if (glucloserId != null) {
-            pobj.put(GLUCLOSER_ID_COLUMN_KEY, glucloserId);
+            pobj.put(DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME, glucloserId);
         }
         if (foursquareId != null) {
             pobj.put(FOURSQUARE_ID_COLUMN_KEY, foursquareId);
@@ -111,10 +113,10 @@ public class Place extends Model implements Serializable {
 	public ParseObject toParseObject() {
 		ParseObject ret;
 		try {
-			ParseQuery query = new ParseQuery(Tables.PLACE_DB_NAME);
+			ParseQuery query = new ParseQuery(PLACE_DB_NAME);
 			ret = populateParseObject(query.get(parseId));
 		} catch (ParseException e) {
-			ret = populateParseObject(new ParseObject(Tables.PLACE_DB_NAME));
+			ret = populateParseObject(new ParseObject(PLACE_DB_NAME));
 		}
 
 		return ret;

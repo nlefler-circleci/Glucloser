@@ -6,8 +6,13 @@ import java.util.Map;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 import se.emilsjolander.sprinkles.Model;
+import se.emilsjolander.sprinkles.annotations.Table;
 
+@Table(MeterData.METER_DATA_DB_NAME)
 public class MeterData extends Model {
+
+    public static final String METER_DATA_DB_NAME = "meter_data";
+
 	public static final String INDEX_DB_COLUMN_NAME									= "Index"; 
 	public static final String DATE_DB_COLUMN_NAME_DB_COLUMN_NAME					= "Date";
 	public static final String TIME_DB_COLUMN_NAME_DB_COLUMN_NAME					= "Time";

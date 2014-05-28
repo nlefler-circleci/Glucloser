@@ -31,6 +31,8 @@ import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.Query;
+import se.emilsjolander.sprinkles.Sprinkles;
+import se.emilsjolander.sprinkles.Transaction;
 import se.emilsjolander.sprinkles.annotations.Table;
 
 
@@ -42,6 +44,10 @@ public class PlaceUtil {
 
     private static String placeTableName() {
         return Place.class.getAnnotation(Table.class).toString();
+    }
+
+    private static String mealTableName() {
+        return Meal.class.getAnnotation(Table.class).toString();
     }
 
 	/**
@@ -110,11 +116,6 @@ public class PlaceUtil {
 		return _getAllMealsForPlace(place, mealLimit);
 	}
 
-	private static String whereClauseForGetPlacesNear = 
-			Place.LATITUDE_DB_COLUMN_KEY + ">=? AND " +
-					Place.LATITUDE_DB_COLUMN_KEY + "<=? AND " +
-					Place.LONGITUDE_DB_COLUMN_KEY + ">=? AND " + 
-					Place.LONGITUDE_DB_COLUMN_KEY + "<=?";
 	private static double LATITUDE_DELTA = 0.018; // Approx. 2.001km
 	private static double LONGITUDE_DELTA = 0.0230; // Approx. 2.0664km
 	/**
@@ -133,7 +134,10 @@ public class PlaceUtil {
         }
 
         String selectCause = "SELECT * FROM " + placeTableName() + " WHERE " +
-                whereClauseForGetAllMealsForPlace;
+                Place.LATITUDE_DB_COLUMN_KEY + ">=? AND " +
+                Place.LATITUDE_DB_COLUMN_KEY + "<=? AND " +
+                Place.LONGITUDE_DB_COLUMN_KEY + ">=? AND " +
+                Place.LONGITUDE_DB_COLUMN_KEY + "<=?";
 
 		double maxDistance = 1;
 		double latitude = location.getLatitude();
@@ -259,21 +263,10 @@ public class PlaceUtil {
 	 * provided name
 	 */
 	public static Place getPlaceWithName(String name) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.PLACE_DB_NAME, null,
-				"lower(" + Place.NAME_DB_COLUMN_KEY + ") = lower(?)", new String[] {name}, 
-				null, null, Place.NAME_DB_COLUMN_KEY + " DESC", null);
-		Place place = null;
-
-		if (!cursor.moveToFirst()) {
-			return place;
-		}
-
-		while (!cursor.isAfterLast()) {
-			place = Place.fromMap(DatabaseUtil.getRecordFromCursor(cursor, Place.COLUMN_TYPES));
-
-			cursor.moveToNext();
-		}
+        String selectClause = "SELECT * FROM " + placeTableName() + " WHERE lower(" + Place.NAME_DB_COLUMN_KEY +
+                ") = lower(?)";
+        Place place = Query.one(Place.class, selectClause, name).get();
+        // TODO: Multiple places with the same name
 
 		return place;
 	}
@@ -289,88 +282,11 @@ public class PlaceUtil {
 	 * @return A List<Place> of matching places
 	 */	
 	public static List<Place> getAllPlacesWithNameContaining(String name) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.PLACE_DB_NAME, null,
-				"lower(" + Place.NAME_DB_COLUMN_KEY + ") LIKE lower(?)", new String[] {"%" + name + "%"}, 
-				null, null, Place.NAME_DB_COLUMN_KEY + " DESC", null);
-		List<Place> matchingPlaces = new ArrayList<Place>();
-
-		if (!cursor.moveToFirst()) {
-			return matchingPlaces;
-		}
-
-		while (!cursor.isAfterLast()) {
-			matchingPlaces.add(Place.fromMap(DatabaseUtil.getRecordFromCursor(cursor, Place.COLUMN_TYPES)));
-
-			cursor.moveToNext();
-		}
+        String selectClause = "SELECT * FROM " + placeTableName() + " WHERE lower(" +
+                Place.NAME_DB_COLUMN_KEY + ") = lower(%?%) DESC";
+		List<Place> matchingPlaces = Query.many(Place.class, selectClause, name).get().asList();
 
 		return matchingPlaces;
-	}
-
-	// SELECT count(id) FROM PlaceToMeal WHERE place = ?
-	private static final String selectClauseForGetNumberOfMealsForPlace =
-			"SELECT count(id) FROM " + Tables.PLACE_TO_MEAL_DB_NAME;
-	private static final String whereClauseForGetNumberOfMealsForPlace =
-			" WHERE " + PlaceToMeal.PLACE_DB_COLUMN_KEY + "=?";
-
-	/**
-	 * Get the number of meals saved for the provided @ref Place.
-	 * 
-	 * @note This method is synchronous. It should not be called
-	 * in the main thread.
-	 * 
-	 * @param place The place to get a meal count for
-	 */
-	public static int getNumberOfMealsForPlace(Place place) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().rawQuery(
-				selectClauseForGetNumberOfMealsForPlace + whereClauseForGetNumberOfMealsForPlace,
-				new String[] {place.id});
-
-		int count = 0;
-
-		if (cursor.moveToFirst()) {
-			count = cursor.getInt(0);
-		}
-
-		return count;
-	}
-
-	/**
-	 * Returns the most popular meals for the provided @ref Place.
-	 * The meals are represented by a @ref List of @ref Food objects.
-	 * 
-	 * @param place The @ref Place to retrieve the most popular meals for
-	 * @param mealLimit An upper bound on the number of meals to retrieve
-	 * @return A list of lists of @ref Food objects.
-	 */
-	public static List<List<Food>> getMostPopularMealsForPlace(Place place,
-			int mealLimit) {
-        if (place == null || place.id == null) {
-            return new ArrayList<List<Food>>();
-        }
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.PLACE_TO_FOODS_HASH_DB_NAME, 
-				new String[] {PlaceToFoodsHash.FOODS_HASH_DB_COLUMN_KEY},
-				PlaceToFoodsHash.PLACE_DB_COLUMN_KEY + "=?", new String[] {place.id}, 
-				PlaceToFoodsHash.FOODS_HASH_DB_COLUMN_KEY, null,
-				"COUNT(" + DatabaseUtil.PARSE_ID_COLUMN_NAME + ") DESC",
-				String.valueOf(mealLimit));
-		List<List<Food>> meals = new ArrayList<List<Food>>();
-		if (!cursor.moveToFirst()) {
-			return meals;
-		}
-
-		Map<String, Object> record = new HashMap<String, Object>();
-		while (!cursor.isAfterLast()) {
-			DatabaseUtil.getRecordFromCursorIntoMap(cursor,
-					PlaceToFoodsHash.COLUMN_TYPES, record);
-			meals.add(FoodUtil.getFoodsForFoodHash(
-					(String)record.get(PlaceToFoodsHash.FOODS_HASH_DB_COLUMN_KEY)));
-			cursor.moveToNext();
-		}
-
-		return meals;
 	}
 
 	/**
@@ -384,15 +300,6 @@ public class PlaceUtil {
 		return _getAllMealsForPlace(place, 0);
 	}
 
-	// SELECT * FROM Meal WHERE objectId IN (
-	// 	SELECT meal FROM PlaceToMeal WHERE place = /place.id/
-	// ) ORDER BY strftime('%Y-%m-%dT%H:%M:%fZ', updatedAt) DESC
-	// LIMIT /mealLimit/
-	private static final String whereClauseForGetAllMealsForPlace =
-			DatabaseUtil.PARSE_ID_COLUMN_NAME + " IN " +
-					"(SELECT " + PlaceToMeal.MEAL_DB_COLUMN_KEY + " FROM " +
-					Tables.PLACE_TO_MEAL_DB_NAME + " WHERE " + 
-					PlaceToMeal.PLACE_DB_COLUMN_KEY + "=?)";
 	/**
 	 * Retrieves a number of meals for a given place.
 	 * The list will be ordered by date eaten descending.
@@ -402,24 +309,17 @@ public class PlaceUtil {
 	 * @return List<Meal> The list of meals
 	 */
 	private static List<Meal> _getAllMealsForPlace(Place place, int limit) {
-		String limitValue = limit > 0 ? String.valueOf(limit) : null;
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.MEAL_DB_NAME, null, whereClauseForGetAllMealsForPlace,
-				new String[] {place.id}, null, null,
-				DatabaseUtil.UPDATED_AT_COLUMN_NAME + 
-				" DESC", limitValue);
-		List<Meal> meals = new ArrayList<Meal>();
+        String selectClause = "SELECT * FROM " + mealTableName() + " WHERE " +
+                DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " IN " +
+                " (SELECT " + PlaceToMeal.MEAL_DB_COLUMN_KEY + " WHERE " +
+                PlaceToMeal.PLACE_DB_COLUMN_KEY + " = ?) ORDERED BY " +
+                DatabaseUtil.UPDATED_AT_COLUMN_NAME + " DESC";
+        List<Meal> meals = Query.many(Meal.class, selectClause, place.glucloserId).get().asList();
 
-		if (!cursor.moveToFirst()) {
-			return meals;
-		}
-
-		while (!cursor.isAfterLast()) {
-			meals.add(
-					Meal.fromMap(
-							DatabaseUtil.getRecordFromCursor(cursor, Meal.COLUMN_TYPES)));
-			cursor.moveToNext();
-		}
+        if (limit > 0) {
+            limit = Math.min(limit, meals.size());
+            meals.subList(0, limit);
+        }
 
 		return meals;
 	}
@@ -429,26 +329,12 @@ public class PlaceUtil {
 	 * Saves the provided @ref Place using the default database using a transaction.
 	 * 
 	 * @param place The place to save
-	 * @return The value of @ref savePlaceIntoDatabaseWithTransaction()
+	 * @return True if the save succeeded
 	 */
-	public static long savePlace(Place place) {
-		return savePlaceIntoDatabaseWithTransaction(place,
-				DatabaseUtil.instance().getWritableDatabase(),
-				true);
-	}
-
-	/**
-	 * Inserts the provided @ref Place into the provided database.
-	 * If a conflicting record exists in the database it is replaced.
-	 * 
-	 * @param place The place to insert
-	 * @param db The database to insert into
-	 * @param transaction Should the insert be executed in a transaction
-	 * @return The new id if the insert was successful or -1
-	 */
-	public static long savePlaceIntoDatabaseWithTransaction(Place place,
-			SQLiteDatabase db, boolean transaction) {
-		ContentValues values = new ContentValues();
+	public static boolean savePlace(Place place) {
+        if (place == null) {
+            return false;
+        }
 
 		if (place.createdAt == null) {
 			place.createdAt = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu")).getTime());
@@ -457,41 +343,7 @@ public class PlaceUtil {
 			place.updatedAt = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu")).getTime());
 		}
 
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				DatabaseUtil.PARSE_ID_COLUMN_NAME), place.id);
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
-				DatabaseUtil.parseDateFormat.format(place.createdAt));
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				DatabaseUtil.UPDATED_AT_COLUMN_NAME), 
-				DatabaseUtil.parseDateFormat.format(place.updatedAt));
-
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				Place.NAME_DB_COLUMN_KEY), place.name);
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				Place.LATITUDE_DB_COLUMN_KEY), place.location.getLatitude());
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				Place.LONGITUDE_DB_COLUMN_KEY), place.location.getLongitude());
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				Place.READABLE_ADDRESS_COLUMN_KEY), place.readableAddress);
-
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
-				place.needsUpload);
-
-		if (transaction) db.beginTransactionNonExclusive();
-
-		long code = db.insertWithOnConflict(
-				Tables.PLACE_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-	    if (code == -1) {
-			Log.i(LOG_TAG, "Error code received from insert: " + code);
-			Log.i(LOG_TAG, "Values are: " + values);
-		}
-        else {
-            if (transaction) db.setTransactionSuccessful();
-        }
-        if (transaction) db.endTransaction();
-        return code;
+        return place.save();
 	}
 
 	/**
@@ -514,10 +366,6 @@ public class PlaceUtil {
 	}
 
     public static void deletePlace(Place place) {
-        SQLiteDatabase db = DatabaseUtil.instance().getWritableDatabase();
-        db.beginTransactionNonExclusive();
-        db.delete(Tables.PLACE_DB_NAME, DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?", new String[] {place.id});
-        db.setTransactionSuccessful();
-        db.endTransaction();
+        place.delete();
     }
 }

@@ -23,11 +23,14 @@ import se.emilsjolander.sprinkles.Model;
 import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
+import se.emilsjolander.sprinkles.annotations.Table;
 
 
+@Table(Meal.MEAL_DB_NAME)
 public class Meal extends Model implements Serializable {
 	private static final String LOG_TAG = "Glucloser_Meal";
 
+    public static final String MEAL_DB_NAME = "meal";
 	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
 
     @Key
@@ -76,10 +79,10 @@ public class Meal extends Model implements Serializable {
 	public ParseObject toParseObject() {
 		ParseObject ret;
 		try {
-			ParseQuery query = new ParseQuery(Tables.MEAL_DB_NAME);
+			ParseQuery query = new ParseQuery(MEAL_DB_NAME);
 			ret = populateParseObject(query.get(parseId));
 		} catch (ParseException e) {
-			ret = populateParseObject(new ParseObject(Tables.MEAL_DB_NAME));
+			ret = populateParseObject(new ParseObject(MEAL_DB_NAME));
 		}
 		
 		return ret;
