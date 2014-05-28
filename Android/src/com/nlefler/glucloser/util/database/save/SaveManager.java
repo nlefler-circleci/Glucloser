@@ -5,19 +5,16 @@ import android.os.AsyncTask;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.MealToFoodsHash;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.util.BarcodeUtil;
 import com.nlefler.glucloser.util.FoodUtil;
 import com.nlefler.glucloser.util.MealToFoodUtil;
-import com.nlefler.glucloser.util.MealToFoodsHashUtil;
 import com.nlefler.glucloser.util.MealUtil;
 import com.nlefler.glucloser.util.PlaceToFoodsHashUtil;
 import com.nlefler.glucloser.util.PlaceToMealUtil;
 import com.nlefler.glucloser.util.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.squareup.otto.Bus;
 
 public class SaveManager {
@@ -109,10 +106,6 @@ public class SaveManager {
 					mealToFood.needsUpload = true;
 					mealToFood.food.needsUpload = true;
 				}
-//				for (TagToFood tagToFood : foodTags) {
-//					tagToFood.needsUpload = true;
-//					tagToFood.tag.needsUpload = true;
-//				}
 				meal.placeToMeal.needsUpload = true;
 				meal.placeToMeal.place.needsUpload = true;
 
@@ -135,17 +128,14 @@ public class SaveManager {
 				// MealToFoods, Foods, and Barcodes
 				long mealToFoodIds[] = new long[meal.mealToFoods.size()];
 				long foodIds[] = new long[meal.mealToFoods.size()];
-				long barcodeIds[] = new long[meal.mealToFoods.size()];
 				boolean foodSaveFail = false;
 				for (int i = 0; i < meal.mealToFoods.size(); ++i) {
 					MealToFood mealToFood = meal.mealToFoods.get(i);
 					
 					mealToFoodIds[i] = MealToFoodUtil.saveMealToFood(mealToFood);
 					foodIds[i] = FoodUtil.saveFood(mealToFood.food);
-					if (mealToFood.food.getBarcode().needsUpload) {
-						barcodeIds[i] = BarcodeUtil.saveBarcode(mealToFood.food.getBarcode());
-					}
-					if (mealToFoodIds[i] == -1 || foodIds[i] == -1 || barcodeIds[i] == -1) {
+
+					if (mealToFoodIds[i] == -1 || foodIds[i] == -1) {
 						foodSaveFail = true;
 					}
 				}
@@ -153,22 +143,9 @@ public class SaveManager {
 				// Meal
 				long mealId = MealUtil.saveMeal(meal);
 
-				// MealToFoodsHash
-				MealToFoodsHash mtfh = new MealToFoodsHash();
-				mtfh.meal = meal;
-				mtfh.foodsHash = ptfh.foodsHash;
-				mtfh.needsUpload = true;
-				long mealToFoodHashId = MealToFoodsHashUtil.saveMealToFoodsHash(mtfh);
-
-//				for (TagToFood tagToFood : foodTags) {
-//					success &= TagToFoodUtil.saveTagToFood(tagToFood);
-//					success &= TagUtil.saveTag(tagToFood.tag);
-//				}
-
 				// Transaction successful?
 				if (placeToMealId == -1 || placeId == -1 || placeToFoodsHashId == -1 ||
-						mealId == -1 || mealToFoodHashId == -1 ||
-						foodSaveFail) {
+						mealId == -1 ||	foodSaveFail) {
 					DatabaseUtil.instance().getWritableDatabase().endTransaction();
 					return null;
 				}
@@ -187,7 +164,6 @@ public class SaveManager {
 					
 					m2f.id = DatabaseUtil.instance().objectIdForRowId(Tables.MEAL_TO_FOOD_DB_NAME, mealToFoodIds[i]);
 					m2f.food.id = DatabaseUtil.instance().objectIdForRowId(Tables.FOOD_DB_NAME, foodIds[i]);
-					m2f.food.getBarcode().id = DatabaseUtil.instance().objectIdForRowId(Tables.BARCODE_TO_FOOD_NAME_DB_NAME, barcodeIds[i]);
 				}
 				
 				

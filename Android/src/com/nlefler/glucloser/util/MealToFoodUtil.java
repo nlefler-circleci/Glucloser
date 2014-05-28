@@ -13,7 +13,7 @@ import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 public class MealToFoodUtil {
 	private static final String LOG_TAG = "Pump_Meal_To_Food_Util";
@@ -29,7 +29,7 @@ public class MealToFoodUtil {
 		}
 
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.MEAL_TO_FOOD_DB_NAME,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME), mealToFood.id);
+				DatabaseUtil.PARSE_ID_COLUMN_NAME), mealToFood.id);
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.MEAL_TO_FOOD_DB_NAME,
 				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
 				DatabaseUtil.parseDateFormat.format(mealToFood.createdAt));

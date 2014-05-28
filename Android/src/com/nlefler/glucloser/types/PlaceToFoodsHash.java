@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
@@ -27,7 +27,7 @@ public class PlaceToFoodsHash {
 	public static final Map<String, Class> COLUMN_TYPES = new HashMap<String, Class>() {{
 		put(PlaceToFoodsHash.PLACE_DB_COLUMN_KEY, String.class);
 		put(PlaceToFoodsHash.FOODS_HASH_DB_COLUMN_KEY, String.class);
-		put(DatabaseUtil.OBJECT_ID_COLUMN_NAME, String.class);
+		put(DatabaseUtil.PARSE_ID_COLUMN_NAME, String.class);
 		put(DatabaseUtil.CREATED_AT_COLUMN_NAME, String.class);
 		put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, String.class);
 		put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, Boolean.class);
@@ -65,7 +65,7 @@ public class PlaceToFoodsHash {
 		placeToFoodsHash.place = PlaceUtil.getPlaceById((String)map.get(PLACE_DB_COLUMN_KEY));
 		placeToFoodsHash.foodsHash = (String)map.get(FOODS_HASH_DB_COLUMN_KEY);
 		
-		placeToFoodsHash.id = (String)map.get(DatabaseUtil.OBJECT_ID_COLUMN_NAME);
+		placeToFoodsHash.id = (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME);
 
 		placeToFoodsHash.needsUpload = (Boolean)map.get(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME);
 		placeToFoodsHash.dataVersion = (Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME);

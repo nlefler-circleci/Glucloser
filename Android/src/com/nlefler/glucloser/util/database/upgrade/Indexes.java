@@ -1,6 +1,5 @@
-package com.nlefler.glucloser.util.database;
+package com.nlefler.glucloser.util.database.upgrade;
 
-import com.nlefler.glucloser.types.Barcode;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.MeterData;
 
@@ -22,12 +21,9 @@ public class Indexes {
 	protected static final String INDEX_METER_DATA_TIMESTAMP_CREATION_SQL = "CREATE INDEX IF NOT EXISTS " +
 			INDEX_METER_DATA_TIMESTAMP + " ON " + Tables.METER_DATA_DB_NAME + 
 			" (" + MeterData.TIMESTAMP_DB_COLUMN_NAME + " ASC);";
-	protected static final String INDEX_BARCODE_CREATION_SQL = "CREATE INDEX IF NOT EXISTS " +
-			INDEX_BARCODE + " ON " + Tables.BARCODE_TO_FOOD_NAME_DB_NAME + " (" + Barcode.BARCODE_DB_COLUMN_KEY + ");";
-	
+
 	protected static final String[] indexCreationSQLs = new String[] {
 		INDEX_FOOD_NAME_CREATION_SQL,
-		INDEX_METER_DATA_TIMESTAMP_CREATION_SQL,
-		INDEX_BARCODE_CREATION_SQL
+		INDEX_METER_DATA_TIMESTAMP_CREATION_SQL
 	};
 }

@@ -161,7 +161,7 @@ public class PlaceDetailActivity extends Activity {
 
 	@Subscribe public void placeUpdated(PlaceUpdatedEvent event) {
 		Log.v(LOG_TAG, "Got notification to update place");
-		if (place.equals(event.getPlace())|| place.id.equals(event.getPlace().id)) {
+		if (place.equals(event.getPlace())|| place.equals(event.getPlace())) {
 			Log.v(LOG_TAG, "Place matches, updating");
 
 			place = event.getPlace();

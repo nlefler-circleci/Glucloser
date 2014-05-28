@@ -9,7 +9,7 @@ import java.util.Map;
 import android.util.Log;
 
 import com.nlefler.glucloser.types.PlaceToMeal;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseObject;
 
 public class ParsePlaceToMealFetcher extends SyncFetcher {

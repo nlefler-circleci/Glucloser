@@ -12,7 +12,7 @@ import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
 import com.nlefler.glucloser.types.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
@@ -41,7 +41,7 @@ public class ParsePlacePusher extends SyncPusher {
 				
 				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.PLACE_DB_NAME, values,
-						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {place.id});
+						DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?", new String[] {place.id});
 				if (code == -1) {
 					Log.e(LOG_TAG, "Unable to update PlaceToMeal entry with new object id");
 					// TODO clean up

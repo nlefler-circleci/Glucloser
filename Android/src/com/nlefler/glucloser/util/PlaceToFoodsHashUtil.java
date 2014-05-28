@@ -12,7 +12,7 @@ import android.util.Log;
 
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 public class PlaceToFoodsHashUtil {
 	private static final String LOG_TAG = "Pump_Place_To_Foods_Hash_Util";
@@ -51,7 +51,7 @@ public class PlaceToFoodsHashUtil {
 		}
 
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_TO_FOODS_HASH_DB_NAME,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME), ptfh.id);
+				DatabaseUtil.PARSE_ID_COLUMN_NAME), ptfh.id);
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_TO_FOODS_HASH_DB_NAME,
 				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
 				DatabaseUtil.parseDateFormat.format(ptfh.createdAt));

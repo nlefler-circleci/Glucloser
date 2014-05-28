@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -41,7 +41,7 @@ public class ParsePlaceToFoodsHashPusher extends SyncPusher {
 				
 				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.PLACE_TO_FOODS_HASH_DB_NAME, values,
-						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {placeToFoodsHash.id});
+						DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?", new String[] {placeToFoodsHash.id});
 				if (code == -1) {
 					Log.e(LOG_TAG, "Unable to update PlaceToFoodsHash entry with new object id");
 					// TODO clean up

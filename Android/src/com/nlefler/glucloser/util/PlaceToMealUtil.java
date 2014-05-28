@@ -12,7 +12,7 @@ import android.util.Log;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.types.Meal;
 
 public class PlaceToMealUtil {
@@ -29,7 +29,7 @@ public class PlaceToMealUtil {
 		}
 
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_TO_MEAL_DB_NAME,
-                DatabaseUtil.OBJECT_ID_COLUMN_NAME), placeToMeal.id);
+                DatabaseUtil.PARSE_ID_COLUMN_NAME), placeToMeal.id);
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_TO_MEAL_DB_NAME,
 				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
 				DatabaseUtil.parseDateFormat.format(placeToMeal.createdAt));

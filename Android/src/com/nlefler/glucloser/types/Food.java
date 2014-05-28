@@ -1,32 +1,26 @@
 package com.nlefler.glucloser.types;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import com.nlefler.glucloser.util.database.Tables;
-import com.nlefler.glucloser.util.BarcodeUtil;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import se.emilsjolander.sprinkles.annotations.AutoIncrement;
+import se.emilsjolander.sprinkles.annotations.Column;
+import se.emilsjolander.sprinkles.annotations.Key;
+
 public class Food implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5496857563408300668L;
 
-	private static final String LOG_TAG = "Pump_Food";
+	private static final String LOG_TAG = "Glucloser_Food";
 
 	public static final String NAME_DB_COLUMN_KEY = "name";
 	public static final String CARBS_DB_COLUMN_KEY = "carbs";
@@ -34,34 +28,42 @@ public class Food implements Serializable {
 	public static final String CORRECTION_DB_COLUMN_KEY = "correction";
 	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
 
-	public static final Map<String, Class> COLUMN_TYPES = new HashMap<String, Class>() {{
-		put(NAME_DB_COLUMN_KEY, String.class);
-		put(CARBS_DB_COLUMN_KEY, Integer.class);
-		put(IMAGE_DB_COLUMN_KEY, Byte[].class);
-		put(CORRECTION_DB_COLUMN_KEY, Boolean.class);
-		put(DATE_EATEN_DB_COLUMN_NAME, String.class);
-		put(DatabaseUtil.OBJECT_ID_COLUMN_NAME, String.class);
-		put(DatabaseUtil.CREATED_AT_COLUMN_NAME, String.class);
-		put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, String.class);
-		put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, Boolean.class);
-		put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, Integer.class);
-	}};
+    @Key
+    @AutoIncrement
+    @Column(DatabaseUtil.ID_COLUMN_NAME)
+    private int id;
+    public int getId() {
+        return id;
+    }
 
-	public String id;
+    @Key
+    @Column("parseId")
+	public String parseId;
+
+    @Key
+    @Column(NAME_DB_COLUMN_KEY)
 	public String name;
+
+    @Column(CARBS_DB_COLUMN_KEY)
 	public int carbs;
-	public Bitmap foodImage;
+
+    @Column(DATE_EATEN_DB_COLUMN_NAME)
 	public Date dateEaten;
+
+    @Column(CORRECTION_DB_COLUMN_KEY)
 	public boolean isCorrection;
+
+    @Column(DatabaseUtil.CREATED_AT_COLUMN_NAME)
 	public Date createdAt;
+    @Column(DatabaseUtil.UPDATED_AT_COLUMN_NAME)
 	public Date updatedAt;
+    @Column(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME)
 	public boolean needsUpload;
+    @Column(DatabaseUtil.DATA_VERSION_COLUMN_NAME)
 	public int dataVersion;
 	
-	private Barcode barCode;
-	
 	public Food() {
-		this.id = UUID.randomUUID().toString();
+		this.parseId = UUID.randomUUID().toString();
 
 		this.carbs = -1;
 		this.isCorrection = false;
@@ -80,13 +82,6 @@ public class Food implements Serializable {
 		pobj.put(CORRECTION_DB_COLUMN_KEY, this.isCorrection);
 		pobj.put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, dataVersion);
 
-		if (this.foodImage != null) {
-			byte[] data = getImage();
-			ParseFile imageFile = new ParseFile("food_photo_" + UUID.randomUUID(), data);
-
-			pobj.put(IMAGE_DB_COLUMN_KEY, imageFile);
-		}
-
 		return pobj;
 	}
 	
@@ -94,7 +89,7 @@ public class Food implements Serializable {
 		ParseObject ret;
 		try {
 			ParseQuery query = new ParseQuery(Tables.FOOD_DB_NAME);
-			ret = populateParseObject(query.get(id));
+			ret = populateParseObject(query.get(parseId));
 		} catch (ParseException e) {
 			ret = populateParseObject(new ParseObject(Tables.FOOD_DB_NAME));
 		}
@@ -105,17 +100,13 @@ public class Food implements Serializable {
 	public static Food fromMap(Map<String, Object> map) {
 		Food food = new Food();
 
-		food.id = (String)map.get(DatabaseUtil.OBJECT_ID_COLUMN_NAME);
+		food.parseId = (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME);
 		food.needsUpload = (Boolean)map.get(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME);
 		food.dataVersion = (Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME);
 		food.name = (String)map.get(NAME_DB_COLUMN_KEY);
 		food.carbs = (Integer)map.get(CARBS_DB_COLUMN_KEY);
 		food.isCorrection = (Boolean)map.get(CORRECTION_DB_COLUMN_KEY);
-		
-		if (map.get(IMAGE_DB_COLUMN_KEY) != null) {
-			food.setImageFromBytes((byte[]) map.get(IMAGE_DB_COLUMN_KEY));
-		}
-		
+
 		try {
 			food.dateEaten = DatabaseUtil.parseDateFormat.parse((String)map.get(Food.DATE_EATEN_DB_COLUMN_NAME));
 		} catch (java.text.ParseException e) {
@@ -166,36 +157,4 @@ public class Food implements Serializable {
 		this.dateEaten = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu"))).getTime();
 	}
 
-	public void setImageFromBytes(byte[] data) {
-		this.foodImage = BitmapFactory.decodeByteArray(data, 0, data.length);
-	}
-	
-	public byte[] getImage() {
-		if (this.foodImage == null) {
-			return null;
-		}
-		
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();  
-		this.foodImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		
-		return stream.toByteArray();
-	}
-	
-	public Barcode getBarcode() {
-		if (barCode != null) {
-			return barCode;
-		}
-		
-		barCode = BarcodeUtil.barCodeForFoodName(this.name);
-		if (barCode == null) {
-			barCode = new Barcode();
-			barCode.foodName = this.name;
-		}
-		return this.barCode;
-	}
-	
-	public void setBarcodeValue(String value) {
-		getBarcode().barCode = value;
-	}
-	
 }

@@ -18,7 +18,7 @@ import com.nlefler.glucloser.types.Bolus;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.MeterData;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 
 public class MeterDataUtil {

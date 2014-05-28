@@ -24,8 +24,8 @@ public abstract class SyncImporter {
 	
 	protected ContentValues getCommonValuesForTableIntoValuesFromMap(
 			String tableName, ContentValues values, Map<String, Object> map) {
-		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.OBJECT_ID_COLUMN_NAME),
-				(String)map.get(DatabaseUtil.OBJECT_ID_COLUMN_NAME));
+		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.PARSE_ID_COLUMN_NAME),
+				(String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME));
 		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.CREATED_AT_COLUMN_NAME), 
 				DatabaseUtil.parseDateFormat.format(((Date)map.get(DatabaseUtil.CREATED_AT_COLUMN_NAME))));
 		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME), 
@@ -39,19 +39,19 @@ public abstract class SyncImporter {
 	}
 	
 	private static final String firstHalfOfWhereClause = 
-			DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=? AND " +
+			DatabaseUtil.PARSE_ID_COLUMN_NAME + "=? AND " +
 					"?>coalesce((SELECT " +
 					DatabaseUtil.DATA_VERSION_COLUMN_NAME + " FROM ";
 	private static final String secondHalfOfWhereClause =
 			" WHERE " +
-					DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?), -1)";
+					DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?), -1)";
 	protected static String getUpsertWhereClauseForTable(String tableName) {
 		return firstHalfOfWhereClause + tableName + secondHalfOfWhereClause;
 	}
 	
 	protected String[] getArgsForUpsertWhereClauseFromMapForTable(Map<String, Object> map, String tableName) {
 		String id = (String)map.get(DatabaseUtil.localKeyForNetworkKey(
-				tableName, DatabaseUtil.OBJECT_ID_COLUMN_NAME));
+				tableName, DatabaseUtil.PARSE_ID_COLUMN_NAME));
 		String version = String.valueOf((Integer)map.get(
 				DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.DATA_VERSION_COLUMN_NAME)));
 		

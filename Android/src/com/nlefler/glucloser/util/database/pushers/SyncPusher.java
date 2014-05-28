@@ -74,7 +74,7 @@ public abstract class SyncPusher {
 		if (withNewId != null) {
 			// replace temp id with parse id
 			values.put(
-					DatabaseUtil.networkKeyForLocalKey(tableName, DatabaseUtil.OBJECT_ID_COLUMN_NAME)
+					DatabaseUtil.networkKeyForLocalKey(tableName, DatabaseUtil.PARSE_ID_COLUMN_NAME)
 					, withNewId);
 		}
 		values.put(

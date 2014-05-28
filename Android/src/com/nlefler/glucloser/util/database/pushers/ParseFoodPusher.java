@@ -11,7 +11,7 @@ import android.util.Log;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.MealToFood;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
@@ -44,7 +44,7 @@ public class ParseFoodPusher extends SyncPusher {
 				
 				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.FOOD_DB_NAME, values,
-						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?",
+						DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?",
 						new String[] {food.id});
 				if (code == -1) {
 					Log.e(LOG_TAG, "Unable to update Food entry with new object id");

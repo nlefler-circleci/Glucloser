@@ -10,10 +10,9 @@ import android.util.Log;
 
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.MealToFoodsHash;
 import com.nlefler.glucloser.types.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
@@ -35,14 +34,14 @@ public class ParseMealPusher extends SyncPusher {
 			try {
 				// Save to Parse
 				parseObject.save();
-				String objId = meal.id.equals(parseObject.getObjectId()) ? null : parseObject.getObjectId();
+				String objId = meal.parseId.equals(parseObject.getObjectId()) ? null : parseObject.getObjectId();
 				
 				values.clear();
 				getCommonValuesIntoValuesForTable(values, Tables.MEAL_DB_NAME, objId, false);
 				
 				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
 				code = db.update(Tables.MEAL_DB_NAME, values,
-						DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {meal.id});
+						DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?", new String[] {meal.parseId});
 				if (code == -1) {
 					Log.e(LOG_TAG, "Unable to update Meal entry with new object id");
 					// TODO clean up
@@ -60,7 +59,7 @@ public class ParseMealPusher extends SyncPusher {
 					values.put(DatabaseUtil.UPDATED_AT_COLUMN_NAME,
 							DatabaseUtil.parseDateFormat.format(new Date(System.currentTimeMillis())));
 					code = db.update(Tables.MEAL_TO_FOOD_DB_NAME, values,
-							MealToFood.MEAL_DB_COLUMN_KEY + "=?", new String[] {meal.id});
+							MealToFood.MEAL_DB_COLUMN_KEY + "=?", new String[] {meal.parseId});
 					if (code == -1) {
 						Log.e(LOG_TAG, "Unable to update MealToFood entry with new object id");
 						// TODO clean up
@@ -80,7 +79,7 @@ public class ParseMealPusher extends SyncPusher {
 					values.put(DatabaseUtil.UPDATED_AT_COLUMN_NAME,
 							DatabaseUtil.parseDateFormat.format(new Date(System.currentTimeMillis())));
 					code = db.update(Tables.PLACE_TO_MEAL_DB_NAME, values,
-							PlaceToMeal.MEAL_DB_COLUMN_KEY + "=?", new String[] {meal.id});
+							PlaceToMeal.MEAL_DB_COLUMN_KEY + "=?", new String[] {meal.parseId});
 					if (code == -1) {
 						Log.e(LOG_TAG, "Unable to update PlaceToMeal entry with new object id");
 						// TODO clean up
@@ -88,25 +87,7 @@ public class ParseMealPusher extends SyncPusher {
 						continue;
 					}
 				}
-				
-				// Update MealToFoodsHash
-				values.clear();
-				if (objId != null) {
-					// replace temp id with parse id
-					values.put(MealToFoodsHash.MEAL_DB_COLUMN_KEY, objId);
-					values.put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, true);
 
-					values.put(DatabaseUtil.UPDATED_AT_COLUMN_NAME,
-							DatabaseUtil.parseDateFormat.format(new Date(System.currentTimeMillis())));
-					code = db.update(Tables.MEAL_TO_FOODS_HASH_DB_NAME, values,
-							MealToFoodsHash.MEAL_DB_COLUMN_KEY + "=?", new String[] {meal.id});
-					if (code == -1) {
-						Log.e(LOG_TAG, "Unable to update MealToFoodsHash entry with new object id");
-						// TODO clean up
-						DatabaseUtil.instance().getWritableDatabase().endTransaction();
-						continue;
-					}
-				}
 				DatabaseUtil.instance().getWritableDatabase().setTransactionSuccessful();
 				DatabaseUtil.instance().getWritableDatabase().endTransaction();
 			} catch (ParseException e) {

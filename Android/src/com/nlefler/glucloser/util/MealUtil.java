@@ -1,7 +1,5 @@
 package com.nlefler.glucloser.util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,8 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.MealToFoodsHash;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
@@ -42,11 +39,11 @@ public class MealUtil {
 		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
 				Tables.MEAL_TO_FOOD_DB_NAME, null,
 				whereClauseForGetFoodsForMeal, 
-				new String[] {meal.id}, null, null, null);
+				new String[] {String.valueOf(meal.getId())}, null, null, null);
 		List<MealToFood> foods = new ArrayList<MealToFood>();
 
 		if (!cursor.moveToFirst()) {
-			Log.i(LOG_TAG, "No foods for meal with id " + meal.id + " in local db");
+			Log.i(LOG_TAG, "No foods for meal with id " + meal.getId() + " in local db");
 			return foods;
 		}
 
@@ -132,7 +129,7 @@ public class MealUtil {
 	public static Meal getMealById(String id) {
 		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
 				Tables.MEAL_DB_NAME, null,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", 
+				DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?",
 				new String[] {id}, null, null, null, "1");
 		Meal meal = null;
 
@@ -185,47 +182,6 @@ public class MealUtil {
 		return place;
 	}
 
-	/**
-	 * Generate the hash representing the foods in this meal.
-	 * 
-	 * @note This method is synchronous. It should not be called
-	 * on the main thread.
-	 * 
-	 * @param meal The meal whose foods should be hashed
-	 * @return The hash, or null on failure
-	 */
-	public static String generateHashForFoods(Meal meal) {
-		meal.linkFoods();
-		try {
-			MessageDigest digest = MessageDigest.getInstance("MD5");
-			for (MealToFood mtf : meal.mealToFoods) {
-				digest.update(mtf.food.name.trim().getBytes());
-			}
-			return new String(digest.digest());
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Get the wrapper for a foods hash.
-	 * 
-	 * @note This method is synchronous. It should not be called
-	 * on the main thread.
-	 * 
-	 * @param meal
-	 * @return The MealToFoodsHash for this meal and it's hash
-	 */
-	public static MealToFoodsHash getMealToFoodsHash(Meal meal) {
-		MealToFoodsHash mtfh = new MealToFoodsHash();
-		mtfh.meal = meal;
-		mtfh.foodsHash = generateHashForFoods(meal);;
-
-		return mtfh;
-	}
-
 	public static long saveMeal(Meal meal) {
 		ContentValues values = new ContentValues();
 
@@ -239,7 +195,7 @@ public class MealUtil {
 
 		values.clear();
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.MEAL_DB_NAME,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME), meal.id);
+				DatabaseUtil.PARSE_ID_COLUMN_NAME), meal.id);
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.MEAL_DB_NAME,
 				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
 				DatabaseUtil.parseDateFormat.format(meal.createdAt));

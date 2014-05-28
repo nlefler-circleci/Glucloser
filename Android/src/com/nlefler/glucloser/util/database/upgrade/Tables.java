@@ -1,28 +1,30 @@
-package com.nlefler.glucloser.util.database;
+package com.nlefler.glucloser.util.database.upgrade;
+
+import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 public class Tables {
 	// Table names
-	public static final String FOOD_DB_NAME = "Food";
-	public static final String MEAL_DB_NAME = "Meal";
-	public static final String PLACE_DB_NAME = "Place";
-	public static final String TAG_DB_NAME = "Tag";
-	public static final String METER_DATA_DB_NAME = "MedtronicMinimedParadigmRevel755PumpData";
-
-	public static final String MEAL_TO_FOOD_DB_NAME= "MealToFood";
-	public static final String PLACE_TO_MEAL_DB_NAME = "PlaceToMeal";
-	public static final String PLACE_TO_FOODS_HASH_DB_NAME = "PlaceToFoodsHash";
-	public static final String MEAL_TO_FOODS_HASH_DB_NAME = "MealToFoodsHash";
-	public static final String TAG_TO_FOOD_DB_NAME = "TagToFood";
-	public static final String TAG_TO_PLACE_DB_NAME = "TagToPlace";
-	public static final String BARCODE_TO_FOOD_NAME_DB_NAME = "BarCodeToFoodName";
-
-    public static final String PLACE_TO_MEAL_DELETE_TRIGGER_NAME = "PlaceToMealDeleteTrigger";
-    public static final String MEAL_DELETE_TRIGGER_NAME = "MealDeleteTrigger";
-    public static final String MEAL_TO_FOOD_DELETE_TRIGGER_NAME = "MealToFoodDeleteTrigger";
-    public static final String FOOD_DELETE_TRIGGER_NAME = "FoodDeleteTrigger";
-
-	public static final String SYNC_INFO_DOWN_DB_NAME = "SyncInfoDown";
-	public static final String SYNC_INFO_UP_DB_NAME = "SyncInfoUp";
+//	public static final String FOOD_DB_NAME = "Food";
+//	public static final String MEAL_DB_NAME = "Meal";
+//	public static final String PLACE_DB_NAME = "Place";
+//	public static final String TAG_DB_NAME = "Tag";
+//	public static final String METER_DATA_DB_NAME = "MedtronicMinimedParadigmRevel755PumpData";
+//
+//	public static final String MEAL_TO_FOOD_DB_NAME= "MealToFood";
+//	public static final String PLACE_TO_MEAL_DB_NAME = "PlaceToMeal";
+//	public static final String PLACE_TO_FOODS_HASH_DB_NAME = "PlaceToFoodsHash";
+//	public static final String MEAL_TO_FOODS_HASH_DB_NAME = "MealToFoodsHash";
+//	public static final String TAG_TO_FOOD_DB_NAME = "TagToFood";
+//	public static final String TAG_TO_PLACE_DB_NAME = "TagToPlace";
+//	public static final String BARCODE_TO_FOOD_NAME_DB_NAME = "BarCodeToFoodName";
+//
+//    public static final String PLACE_TO_MEAL_DELETE_TRIGGER_NAME = "PlaceToMealDeleteTrigger";
+//    public static final String MEAL_DELETE_TRIGGER_NAME = "MealDeleteTrigger";
+//    public static final String MEAL_TO_FOOD_DELETE_TRIGGER_NAME = "MealToFoodDeleteTrigger";
+//    public static final String FOOD_DELETE_TRIGGER_NAME = "FoodDeleteTrigger";
+//
+//	public static final String SYNC_INFO_DOWN_DB_NAME = "SyncInfoDown";
+//	public static final String SYNC_INFO_UP_DB_NAME = "SyncInfoUp";
 
 	protected static String[] syncingTableNames = new String[] {
 		FOOD_DB_NAME, 
@@ -99,22 +101,22 @@ public class Tables {
     protected static final String PLACE_TO_MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             PLACE_TO_MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
             PLACE_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + PLACE_TO_MEAL_DB_NAME + " WHERE " +
-            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'" + DatabaseUtil.PARSE_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.PARSE_ID_COLUMN_NAME +
             "'; END;";
     protected static final String MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
             MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + MEAL_DB_NAME + " WHERE " +
-            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'" + DatabaseUtil.PARSE_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.PARSE_ID_COLUMN_NAME +
             "'; END;";
     protected static final String MEAL_TO_FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             MEAL_TO_FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
             MEAL_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + MEAL_TO_FOOD_DB_NAME + " WHERE " +
-            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'" + DatabaseUtil.PARSE_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.PARSE_ID_COLUMN_NAME +
             "'; END;";
     protected static final String FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
             MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + FOOD_DB_NAME + " WHERE " +
-            "'" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.OBJECT_ID_COLUMN_NAME +
+            "'" + DatabaseUtil.PARSE_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.PARSE_ID_COLUMN_NAME +
             "'; END;";
 
 	private static String syncInfoDownBuild = "CREATE TABLE IF NOT EXISTS " + SYNC_INFO_DOWN_DB_NAME +

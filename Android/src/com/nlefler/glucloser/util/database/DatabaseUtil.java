@@ -1,5 +1,6 @@
 package com.nlefler.glucloser.util.database;
 
+import java.lang.annotation.Annotation;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.nlefler.glucloser.NetworkSyncService;
@@ -29,17 +29,13 @@ import com.nlefler.glucloser.util.database.importers.ParsePlaceToFoodsHashImport
 import com.nlefler.glucloser.util.database.importers.ParsePlaceToMealImporter;
 import com.nlefler.glucloser.util.database.importers.SyncImporter;
 import com.nlefler.glucloser.util.database.pushers.ParseMealToFoodPusher;
-import com.nlefler.glucloser.util.database.pushers.ParseMealToFoodsHashPusher;
 import com.nlefler.glucloser.util.database.pushers.ParsePlaceToFoodsHashPusher;
 import com.nlefler.glucloser.util.database.pushers.SyncPusher;
-import com.nlefler.glucloser.util.database.upgrade.OneToTwo;
 import com.nlefler.glucloser.util.database.fetchers.ParseMealFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMealToFoodFetcher;
-import com.nlefler.glucloser.util.database.fetchers.ParseMealToFoodsHashFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceToFoodsHashFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceToMealFetcher;
 import com.nlefler.glucloser.util.database.importers.ParseFoodImporter;
-import com.nlefler.glucloser.util.database.importers.ParseMealToFoodsHashImporter;
 import com.nlefler.glucloser.util.database.importers.ParseMeterDataImporter;
 import com.nlefler.glucloser.util.database.importers.ParsePlaceImporter;
 import com.nlefler.glucloser.util.database.pushers.NoOpPusher;
@@ -48,20 +44,25 @@ import com.nlefler.glucloser.util.database.pushers.ParseMealPusher;
 import com.nlefler.glucloser.util.database.pushers.ParsePlacePusher;
 import com.nlefler.glucloser.util.database.pushers.ParsePlaceToMealPusher;
 import com.nlefler.glucloser.util.database.upgrade.DatabaseUpgrader;
-import com.nlefler.glucloser.util.database.upgrade.ThreeToFour;
-import com.nlefler.glucloser.util.database.upgrade.TwoToThree;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.database.upgrade.ZeroToOne;
 
+import se.emilsjolander.sprinkles.Query;
+import se.emilsjolander.sprinkles.Sprinkles;
+import se.emilsjolander.sprinkles.annotations.Table;
 
-public class DatabaseUtil extends SQLiteOpenHelper {
-	private static final String LOG_TAG = "Pump_Database_Util";
+
+public class DatabaseUtil {
+	private static final String LOG_TAG = "Glucloser_Database_Util";
 
     public static String DATABASE_NAME = "GLUCLOSER_DB";
-	private static int DATABASE_VERSION = 4;
+	private static int DATABASE_VERSION = 1;
+    private static Sprinkles sprinklesInstance = null;
 
     // Some columns used by Medtronic are reserved by parse.
     // Append a string to make them unique.
-	protected static final String RESERVED_WORD_APPEND_TOKEN = "_HAGIA_";
+    // TODO: Refactor
+	public static final String RESERVED_WORD_APPEND_TOKEN = "_GLUCLOSER_";
     // Mapping of DB name to (Network Column Name to Local Column Name)
 	private static final Map<String, Map<String, String>> localKeyToNetworkKeyMap =
             new HashMap<String, Map<String, String>>() {{
@@ -76,77 +77,28 @@ public class DatabaseUtil extends SQLiteOpenHelper {
             put("Index", "Index" + RESERVED_WORD_APPEND_TOKEN); }});
 	}};
 
-	public static final String OBJECT_ID_COLUMN_NAME = "objectId";
+    public static final String ID_COLUMN_NAME = "id";
+	public static final String PARSE_ID_COLUMN_NAME = "parseId";
 	public static final String UPDATED_AT_COLUMN_NAME = "updatedAt";
 	public static final String CREATED_AT_COLUMN_NAME = "createdAt";
 	public static final String NEEDS_UPLOAD_COLUMN_NAME = "needsUpload";
 	public static final String DATA_VERSION_COLUMN_NAME = "dataVersion";
 	public static SimpleDateFormat parseDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'H:mm:ss.SSS'Z'");
 
-	// Convert Parse format to SQLite
-	// "yyyy-MM-dd'T'H:mm:ss.SSS'Z'"
-	//private static String strfString = "strftime('%Y-%m-%dT%H:%M:%fZ', ";
-	private static String strfString = "(";
-
 	private static DatabaseUtil instance;
 	private static AtomicBoolean okToContinueSyncing = new AtomicBoolean(true);
 	private static AtomicBoolean needsSync = new AtomicBoolean(false);
 
 	private static DatabaseUpgrader[] dbUpgraders = new DatabaseUpgrader[] {
-		new ZeroToOne(), new OneToTwo(), new TwoToThree(), new ThreeToFour()
+		new ZeroToOne()
 	};
 
-	public DatabaseUtil(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	}
-
-    @Override
-	public void onCreate(SQLiteDatabase db) {
-		createBaseTablesAndIndexes(db);
-		onUpgrade(db, db.getVersion(), DATABASE_VERSION);
-	}
-
-    @Override
-    public void onConfigure(SQLiteDatabase db) {
-        db.setForeignKeyConstraintsEnabled(true);
-        db.enableWriteAheadLogging();
-    }
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		DatabaseUpgrader upgrader;
-		while (oldVersion < newVersion) {
-			upgrader = dbUpgraders[oldVersion];
-			if (upgrader.upgrade(db)) {
-				db.setVersion(oldVersion + 1);
-				upgrader.updateData(db);
-				Log.i(LOG_TAG, "Upgraded database from " + oldVersion + " to " + (oldVersion + 1));
-			} else {
-				Log.e(LOG_TAG, "Unable to upgrade database from " + oldVersion);
-				break;
-			}
-
-			oldVersion += 1;
-		}
-	}
-
-	private boolean createBaseTablesAndIndexes(SQLiteDatabase db) {
-		db.beginTransaction();
-		for (String sql : Tables.tableCreationSQLs) {
-			db.execSQL(sql);
-		}
-
-		for (String sql : Indexes.indexCreationSQLs) {
-			db.execSQL(sql);
-		}
-
-        for (String sql : Tables.triggerCreationSQLs) {
-            db.execSQL(sql);
+	private DatabaseUtil(Context context) {
+        // TODO: Enable foreign key constraints and WAL
+        sprinklesInstance = Sprinkles.init(context, DATABASE_NAME, DATABASE_VERSION);
+        for (int i = 0; i < DATABASE_VERSION && i < dbUpgraders.length; i++) {
+            sprinklesInstance.addMigration(dbUpgraders[i]);
         }
-		db.setTransactionSuccessful();
-		db.endTransaction();
-
-		return true;
 	}
 
 	public static void initialize(Context context) {
@@ -155,92 +107,6 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 
 	public static DatabaseUtil instance() {
 		return instance;
-	}
-
-	public static Map<String, Object> getRecordFromCursor(Cursor cursor, Map<String, Class> typeMap) {
-		return getRecordFromCursorIntoMap(cursor, typeMap, new HashMap<String, Object>());		
-	}
-
-	public static Map<String, Object> getRecordFromCursorIntoMap(Cursor cursor, Map<String, Class> typeMap, Map<String, Object> record) {
-		String[] colNames = cursor.getColumnNames();
-		String colName = null;
-		Class type = null;
-		Object value = null;
-
-		record.clear();
-
-		for (int i = 0; i < colNames.length; ++i) {
-			colName = cursor.getColumnName(i);
-			type = typeMap.get(colName);
-			value = null;
-			if (type == String.class) {
-				value = cursor.isNull(i) ? null : cursor.getString(i);
-			} else if (type == Double.class) {
-				value = cursor.isNull(i) ? null : cursor.getDouble(i);
-			} else if (type == Integer.class) {
-				value = cursor.isNull(i) ? null : cursor.getInt(i);
-			} else if (type == Boolean.class) {
-				value = cursor.isNull(i) ? null : cursor.getInt(i) == 1;
-			} else if (type == Byte[].class) {
-				value = cursor.isNull(i) ? null : cursor.getBlob(i);
-			}
-			record.put(colName, value);
-		}
-
-		return record;
-	}
-
-	public static String getStrfStringForDate(Date param) {
-		return getStrfStringForString(parseDateFormat.format(param));
-	}
-
-	public static String getStrfStringForString(String param) {
-		return strfString + param + ")";
-	}
-
-	public long upsert(String table, ContentValues values, String whereClause, String[] whereArgs) {
-		// if SELECT then UPDATE else INSERT
-		long retCode;
-		Cursor cursor = getReadableDatabase().query(table, null, whereClause, whereArgs,
-				null, null, null);
-		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
-		if (cursor.moveToFirst()) {
-			cursor.close();
-			Log.v(LOG_TAG, "Upsert found record, updating");
-			retCode = getWritableDatabase().updateWithOnConflict(table, values, 
-					whereClause, whereArgs, SQLiteDatabase.CONFLICT_REPLACE);
-		} else {
-			Log.v(LOG_TAG, "Upsert did not find record, inserting");
-			retCode = getWritableDatabase().insert(table, null, values);
-		}
-
-		if (retCode != -1) {
-			DatabaseUtil.instance().getWritableDatabase().setTransactionSuccessful();
-		}
-		DatabaseUtil.instance().getWritableDatabase().endTransaction();
-
-		return retCode;
-	}
-
-	private String whereClauseForObjectIdForRowId = "id = ?";
-	public String objectIdForRowId(String table, long rowId) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				table, new String[] {OBJECT_ID_COLUMN_NAME},
-				whereClauseForObjectIdForRowId, 
-				new String[] {String.valueOf(rowId)}, null, null, null);
-
-		if (!cursor.moveToFirst()) {
-			Log.i(LOG_TAG, "No rows in table '" + table + "' with id " + rowId + " in local db");
-			return null;
-		}
-
-		String objectId = null;
-		while (!cursor.isAfterLast()) {
-			objectId = cursor.getString(0);
-			cursor.moveToNext();
-		}
-
-		return objectId;
 	}
 
 	public static void setNeedsSync() {
@@ -295,8 +161,6 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 		Map<String, Date> lastDownSyncTimes = lastSyncTimes[0];
 		Map<String, Date> lastUpSyncTimes = lastSyncTimes[1];
 
-		//this.getWritableDatabase().beginTransaction();
-
 		syncHelper(Tables.FOOD_DB_NAME,
 				new ParseFoodFetcher(), new ParseFoodImporter(), new ParseFoodPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
@@ -321,17 +185,10 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 				new ParsePlaceToFoodsHashFetcher(), new ParsePlaceToFoodsHashImporter(), new ParsePlaceToFoodsHashPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
-		syncHelper(Tables.MEAL_TO_FOODS_HASH_DB_NAME,
-				new ParseMealToFoodsHashFetcher(), new ParseMealToFoodsHashImporter(), new ParseMealToFoodsHashPusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
-
 		// Doing this last because it's slow (42.5k records and counting)
 		syncHelper(Tables.METER_DATA_DB_NAME,
 				new ParseMeterDataFetcher(), new ParseMeterDataImporter(), new NoOpPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
-
-		//this.getWritableDatabase().setTransactionSuccessful();
-		//this.getWritableDatabase().endTransaction();
 
 		Log.i(LOG_TAG, "Sync with Parse complete");
 

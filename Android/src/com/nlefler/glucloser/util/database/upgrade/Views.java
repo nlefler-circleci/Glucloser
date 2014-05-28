@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.util.database;
+package com.nlefler.glucloser.util.database.upgrade;
 
 
 public class Views {

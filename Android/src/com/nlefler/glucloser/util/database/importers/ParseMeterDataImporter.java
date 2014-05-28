@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.util.Log;
 
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.types.MeterData;
 
 public class ParseMeterDataImporter extends SyncImporter {

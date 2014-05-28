@@ -2,7 +2,6 @@ package com.nlefler.glucloser.util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -12,14 +11,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.nlefler.glucloser.GlucloserActivity;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.MealToFoodsHash;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 
 public class FoodUtil {
@@ -144,7 +141,7 @@ public class FoodUtil {
 	public static Food getFoodById(String id) {
 		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
 				Tables.FOOD_DB_NAME, null,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", 
+				DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?",
 				new String[] {id}, null, null, null, "1");
 		Food food = null;
 
@@ -253,11 +250,11 @@ public class FoodUtil {
 	//	)
 	// )
 	private static final String baseWhereClauseForGetAllMealsForFoodName = 
-			DatabaseUtil.OBJECT_ID_COLUMN_NAME + " IN ( " +
+			DatabaseUtil.PARSE_ID_COLUMN_NAME + " IN ( " +
 					"SELECT " + MealToFood.MEAL_DB_COLUMN_KEY + 
 					" FROM " + Tables.MEAL_TO_FOOD_DB_NAME + 
 					" WHERE " + MealToFood.FOOD_DB_COLUMN_KEY + " IN ( " +
-					"SELECT " + DatabaseUtil.OBJECT_ID_COLUMN_NAME + 
+					"SELECT " + DatabaseUtil.PARSE_ID_COLUMN_NAME +
 					" FROM "  + Tables.FOOD_DB_NAME + " WHERE ";
 	private static final String whereClauseForGetAllMealsForFoodName = 
 			baseWhereClauseForGetAllMealsForFoodName +
@@ -351,49 +348,6 @@ public class FoodUtil {
 
 	}
 
-	private static final String whereClauseForGetFoodsForFoodHash =
-			DatabaseUtil.OBJECT_ID_COLUMN_NAME + " IN (" +
-					"SELECT " + MealToFood.FOOD_DB_COLUMN_KEY + " FROM " +
-					Tables.MEAL_TO_FOOD_DB_NAME + " WHERE " +
-					MealToFood.MEAL_DB_COLUMN_KEY + " = (SELECT " +
-					MealToFoodsHash.MEAL_DB_COLUMN_KEY + " FROM " +
-					Tables.MEAL_TO_FOODS_HASH_DB_NAME + " WHERE " +
-					MealToFoodsHash.FOODS_HASH_DB_COLUMN_KEY + " = ? LIMIT 1))";
-	/**
-	 * Gets the foods that match the provided hash.
-	 * 
-	 * @note This method is synchronous. It should not be called
-	 * on the main thread.
-	 * 
-	 * @param foodHash The hash representing a set of foods
-	 * @return A List<Food> of the foods for the hash
-	 */
-	public static List<Food> getFoodsForFoodHash(String foodHash) {
-		long start;
-		if (GlucloserActivity.LOG_LEVEL >= Log.VERBOSE) {
-			start = System.currentTimeMillis();
-		}
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.FOOD_DB_NAME, null, whereClauseForGetFoodsForFoodHash,
-				new String[] {foodHash}, null, null, null);
-		List<Food> foods = new ArrayList<Food>();
-
-		if (!cursor.moveToFirst()) {
-			return foods;
-		}
-
-		while (!cursor.isAfterLast()) {
-			foods.add(Food.fromMap(DatabaseUtil.getRecordFromCursor(
-					cursor, Food.COLUMN_TYPES)));
-			cursor.moveToNext();
-		}
-
-		if (GlucloserActivity.LOG_LEVEL >= Log.VERBOSE) {
-			Log.v(LOG_TAG, "GetFoodsForFoodHash took " + (System.currentTimeMillis() - start));
-		}
-		return foods;
-	}
-
 	/**
 	 * Save the food to the database.
 	 * Updates the updatedAt time.
@@ -412,7 +366,7 @@ public class FoodUtil {
 		}
 
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME), food.id);
+				DatabaseUtil.PARSE_ID_COLUMN_NAME), food.id);
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
 				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
 				DatabaseUtil.parseDateFormat.format(food.createdAt));
@@ -425,11 +379,6 @@ public class FoodUtil {
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
 				Food.CARBS_DB_COLUMN_KEY), food.carbs);
 
-		byte[] image = food.getImage();
-		if (image != null) {
-			values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-					Food.IMAGE_DB_COLUMN_KEY), image);
-		}
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
 				Food.CORRECTION_DB_COLUMN_KEY), food.isCorrection);
 

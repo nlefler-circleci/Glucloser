@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 public class ParseFoodImporter extends SyncImporter {
 	private static final String LOG_TAG = "Pump_Parse_Food_Importer";

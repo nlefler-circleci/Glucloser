@@ -56,7 +56,7 @@ public abstract class SyncFetcher {
 	
 	protected Map<String, Object> getCommonValuesFromParseObjectIntoMap(ParseObject parseObject,
 			Map<String, Object> map) {
-		map.put(DatabaseUtil.OBJECT_ID_COLUMN_NAME, parseObject.getObjectId());
+		map.put(DatabaseUtil.PARSE_ID_COLUMN_NAME, parseObject.getObjectId());
 		map.put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, parseObject.getUpdatedAt());
 		map.put(DatabaseUtil.CREATED_AT_COLUMN_NAME, parseObject.getCreatedAt());
 		map.put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, 

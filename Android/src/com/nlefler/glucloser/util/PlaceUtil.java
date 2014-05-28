@@ -1,10 +1,13 @@
 package com.nlefler.glucloser.util;
 
 import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,44 +24,40 @@ import com.nlefler.glucloser.GlucloserActivity;
 import com.nlefler.glucloser.types.Food;
 import com.nlefler.glucloser.types.Place;
 import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.types.Meal;
 import com.nlefler.glucloser.types.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
+import se.emilsjolander.sprinkles.CursorList;
+import se.emilsjolander.sprinkles.Query;
+import se.emilsjolander.sprinkles.annotations.Table;
+
 
 public class PlaceUtil {
-	private static final String LOG_TAG = "Pump_Place_Util";
+	private static final String LOG_TAG = "Glucloser_Place_Util";
 
     // Distance in meters before a place is too far to be considered a 'nearby places'
  	private static final double NEARBY_PLACES_DISTANCE_LIMIT = 100.0;
 
+    private static String placeTableName() {
+        return Place.class.getAnnotation(Table.class).toString();
+    }
+
 	/**
-	 * Get a place in the database with the provided id.
+	 * Get a place in the database with the provided Parse id.
 	 * 
 	 * @note This method is synchronous. It should not be called
 	 * on the main thread.
 	 * 
-	 * @param id The id to search for
+	 * @param parseId The id to search for
 	 * @return A @ref Place representing the place in the database,
 	 * or null if no place was found with the given id
 	 */
-	public static Place getPlaceById(String id) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.PLACE_DB_NAME, null,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", 
-				new String[] {id}, null, null, null, "1");
-		Place place = null;
-
-		if (!cursor.moveToFirst()) {
-			Log.i(LOG_TAG, "No places with id " + id + " in local db");
-			return place;
-		}
-
-		while (!cursor.isAfterLast()) {
-			place = Place.fromMap(DatabaseUtil.getRecordFromCursor(cursor, Place.COLUMN_TYPES));
-			cursor.moveToNext();
-		}
+	public static Place getPlaceById(String parseId) {
+        String selectClause = "SELECT * FROM " + placeTableName() +
+                " WHERE " + DatabaseUtil.PARSE_ID_COLUMN_NAME + " = ?";
+        Place place = Query.one(Place.class, selectClause, parseId).get();
 
 		return place;
 	}
@@ -72,7 +71,7 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */
 	public static List<Place> getAllPlacesSortedByName() {
-		return getAllPlacesSortedBy(Food.NAME_DB_COLUMN_KEY, true);
+		return getAllPlacesSortedBy(Place.NAME_DB_COLUMN_KEY, true);
 	}
 
 	/**
@@ -86,22 +85,11 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */
 	public static List<Place> getAllPlacesSortedBy(String columnName, boolean asc) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.PLACE_DB_NAME, null,
-				null, null, null, null, columnName + " " + (asc ? "ASC" : "DESC"));
-		List<Place> places = new ArrayList<Place>();
+        String selectClause = "SELECT * FROM " + placeTableName() + " SORTED BY " +
+                columnName + (asc ? " ASC " : " DESC ");
+		CursorList<Place> places = Query.many(Place.class, selectClause, columnName, null).get();
 
-		if (!cursor.moveToFirst()) {
-			Log.i(LOG_TAG, "No places in local db");
-			return places;
-		}
-
-		while (!cursor.isAfterLast()) {
-			places.add(Place.fromMap(DatabaseUtil.getRecordFromCursor(cursor, Place.COLUMN_TYPES)));
-			cursor.moveToNext();
-		}
-
-		return places;
+		return places.asList();
 	}
 
 
@@ -140,11 +128,12 @@ public class PlaceUtil {
 	 * @return A List<Place> of nearby places.
 	 */
 	public static List<Place> getPlacesNear(final Location location) {
-		List<Place> sortedList = new ArrayList<Place>();
+        if (location == null) {
+            return new ArrayList<Place>();
+        }
 
-		if (location == null) {
-			return sortedList;
-		}
+        String selectCause = "SELECT * FROM " + placeTableName() + " WHERE " +
+                whereClauseForGetAllMealsForPlace;
 
 		double maxDistance = 1;
 		double latitude = location.getLatitude();
@@ -157,41 +146,9 @@ public class PlaceUtil {
 		String maxLat = String.valueOf(latitude + LATITUDE_DELTA);
 		String minLon = String.valueOf(longitude - LONGITUDE_DELTA);
 		String maxLon = String.valueOf(longitude + LONGITUDE_DELTA);
-		long dbStart;
-		if (GlucloserActivity.LOG_LEVEL >= Log.VERBOSE) {
-			dbStart = System.currentTimeMillis();
-		}
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.PLACE_DB_NAME,
-				null, whereClauseForGetPlacesNear,
-				new String[] {minLat, maxLat, minLon, maxLon},
-				null, null, null);
-		if (GlucloserActivity.LOG_LEVEL >= Log.VERBOSE) {
-			Log.v(LOG_TAG, "GetPlacesNear db get took " + (System.currentTimeMillis() - dbStart));
-		}
-		if (!cursor.moveToFirst()) {
-			return sortedList;
-		}
 
-		Map<String, Object> map;
-		double distance = 0;
-		Location recordLocation = new Location(LocationUtil.NO_PROVIDER);
-		while (!cursor.isAfterLast()) {
-			map = DatabaseUtil.getRecordFromCursor(cursor, Place.COLUMN_TYPES);
-			cursor.moveToNext();
-
-			recordLocation.setLatitude((Double)map.get(Place.LATITUDE_DB_COLUMN_KEY));
-			recordLocation.setLongitude((Double)map.get(Place.LONGITUDE_DB_COLUMN_KEY));
-			distance = location.distanceTo(recordLocation);
-
-			if (distance > NEARBY_PLACES_DISTANCE_LIMIT) {
-				continue;
-			}
-			Log.v(LOG_TAG, "Accepting " + map.get(Place.NAME_DB_COLUMN_KEY) + 
-					" for nearby places query. It is " + 
-					distance + " meters away.");
-			sortedList.add(Place.fromMap(map));
-		}
+        CursorList<Place> places = Query.many(Place.class, selectCause, minLat, maxLat, minLon, maxLon).get();
+        List<Place> sortedList = places.asList();
 
 		Collections.sort(sortedList, new Comparator<Place>() {
 			@Override
@@ -225,31 +182,12 @@ public class PlaceUtil {
 		recentDate.set(Calendar.MILLISECOND, 0);
 		recentDate.add(Calendar.HOUR, -72);
 
-		Log.i("Place Util", "Asking for recent places as of " + DateFormat.getDateInstance().format(recentDate.getTime()));
-
 		String boundDate = recentDate.getTime().toGMTString();
+        String selectClause = "SELECT * FROM " + placeTableName() + " WHERE " +
+                Place.LAST_VISITED_COLUMN_KEY + " >= strftime('%Y-%m-%dT%H:%M:%fZ', ?) " +
+                "ORDERED BY " + Place.LAST_VISITED_COLUMN_KEY + " DESC LIMIT ?";
 
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.PLACE_DB_NAME, null,
-				DatabaseUtil.UPDATED_AT_COLUMN_NAME +
-				" >= strftime('%Y-%m-%dT%H:%M:%fZ', ?)", 
-				new String[] {boundDate}, null, null,
-				DatabaseUtil.UPDATED_AT_COLUMN_NAME + " DESC", String.valueOf(limit));
-		List<Place> recentPlaces = new ArrayList<Place>();
-
-		if (!cursor.moveToFirst()) {
-			return recentPlaces;
-		}
-
-		while (!cursor.isAfterLast()) {
-			Place place = Place.fromMap(DatabaseUtil.getRecordFromCursor(cursor, Place.COLUMN_TYPES));
-
-			recentPlaces.add(place);
-
-			cursor.moveToNext();
-		}
-
-		Log.v("Place Util", "Found " + recentPlaces.size() + " recent dates");
+		List<Place> recentPlaces = Query.many(Place.class, selectClause, boundDate, limit).get().asList();
 
 		return recentPlaces;
 	}
@@ -416,7 +354,7 @@ public class PlaceUtil {
 				new String[] {PlaceToFoodsHash.FOODS_HASH_DB_COLUMN_KEY},
 				PlaceToFoodsHash.PLACE_DB_COLUMN_KEY + "=?", new String[] {place.id}, 
 				PlaceToFoodsHash.FOODS_HASH_DB_COLUMN_KEY, null,
-				"COUNT(" + DatabaseUtil.OBJECT_ID_COLUMN_NAME + ") DESC",
+				"COUNT(" + DatabaseUtil.PARSE_ID_COLUMN_NAME + ") DESC",
 				String.valueOf(mealLimit));
 		List<List<Food>> meals = new ArrayList<List<Food>>();
 		if (!cursor.moveToFirst()) {
@@ -451,7 +389,7 @@ public class PlaceUtil {
 	// ) ORDER BY strftime('%Y-%m-%dT%H:%M:%fZ', updatedAt) DESC
 	// LIMIT /mealLimit/
 	private static final String whereClauseForGetAllMealsForPlace =
-			DatabaseUtil.OBJECT_ID_COLUMN_NAME  + " IN " +
+			DatabaseUtil.PARSE_ID_COLUMN_NAME + " IN " +
 					"(SELECT " + PlaceToMeal.MEAL_DB_COLUMN_KEY + " FROM " +
 					Tables.PLACE_TO_MEAL_DB_NAME + " WHERE " + 
 					PlaceToMeal.PLACE_DB_COLUMN_KEY + "=?)";
@@ -520,7 +458,7 @@ public class PlaceUtil {
 		}
 
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
-				DatabaseUtil.OBJECT_ID_COLUMN_NAME), place.id);
+				DatabaseUtil.PARSE_ID_COLUMN_NAME), place.id);
 		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.PLACE_DB_NAME,
 				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
 				DatabaseUtil.parseDateFormat.format(place.createdAt));
@@ -578,7 +516,7 @@ public class PlaceUtil {
     public static void deletePlace(Place place) {
         SQLiteDatabase db = DatabaseUtil.instance().getWritableDatabase();
         db.beginTransactionNonExclusive();
-        db.delete(Tables.PLACE_DB_NAME, DatabaseUtil.OBJECT_ID_COLUMN_NAME + "=?", new String[] {place.id});
+        db.delete(Tables.PLACE_DB_NAME, DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?", new String[] {place.id});
         db.setTransactionSuccessful();
         db.endTransaction();
     }

@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
-public class MeterData {
+import se.emilsjolander.sprinkles.Model;
+
+public class MeterData extends Model {
 	public static final String INDEX_DB_COLUMN_NAME									= "Index"; 
 	public static final String DATE_DB_COLUMN_NAME_DB_COLUMN_NAME					= "Date";
 	public static final String TIME_DB_COLUMN_NAME_DB_COLUMN_NAME					= "Time";
@@ -57,7 +59,7 @@ public class MeterData {
 		put(MeterData.BWZ_ACTIVE_INSULIN__U__DB_COLUMN_NAME, Double.class);
 		put(MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME, Double.class);
 		put(MeterData.PROGRAMMED_BOLUS_DURATION__HH_MM_SS__DB_COLUMN_NAME, String.class);
-		put(DatabaseUtil.OBJECT_ID_COLUMN_NAME, String.class);
+		put(DatabaseUtil.PARSE_ID_COLUMN_NAME, String.class);
 		put(DatabaseUtil.CREATED_AT_COLUMN_NAME, String.class);
 		put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, String.class);
 		put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, Boolean.class);

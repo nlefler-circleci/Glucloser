@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -15,37 +14,52 @@ import android.util.Log;
 
 import com.nlefler.glucloser.util.MealUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import se.emilsjolander.sprinkles.Model;
+import se.emilsjolander.sprinkles.annotations.AutoIncrement;
+import se.emilsjolander.sprinkles.annotations.Column;
+import se.emilsjolander.sprinkles.annotations.Key;
 
-public class Meal implements Serializable {
-	private static final String LOG_TAG = "Pump_Meal";
+
+public class Meal extends Model implements Serializable {
+	private static final String LOG_TAG = "Glucloser_Meal";
 
 	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
 
-	public static final Map<String, Class> COLUMN_TYPES = new HashMap<String, Class>() {{
-		put(DATE_EATEN_DB_COLUMN_NAME, String.class);
-		put(DatabaseUtil.OBJECT_ID_COLUMN_NAME, String.class);
-		put(DatabaseUtil.CREATED_AT_COLUMN_NAME, String.class);
-		put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, String.class);
-		put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, Boolean.class);
-		put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, Integer.class);
-	}};
+    @Key
+    @AutoIncrement
+    @Column(DatabaseUtil.ID_COLUMN_NAME)
+    private int id;
+    public int getId() {
+        return id;
+    }
 
-	public String id;
+    @Key
+    @Column(DatabaseUtil.PARSE_ID_COLUMN_NAME)
+	public String parseId;
+
+    // TODO: Relationship
 	public PlaceToMeal placeToMeal;
 	public List<MealToFood> mealToFoods;
+
+    @Column(DATE_EATEN_DB_COLUMN_NAME)
 	public Date dateEaten;
+
+    @Column(DatabaseUtil.CREATED_AT_COLUMN_NAME)
 	public Date createdAt;
+    @Column(DatabaseUtil.UPDATED_AT_COLUMN_NAME)
 	public Date updatedAt;
+    @Column(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME)
 	public boolean needsUpload;
+    @Column(DatabaseUtil.DATA_VERSION_COLUMN_NAME)
 	public int dataVersion;
 
 	public Meal() {
-		this.id = UUID.randomUUID().toString();
+		this.parseId = UUID.randomUUID().toString();
 
 		this.mealToFoods = new ArrayList<MealToFood>();
 
@@ -63,7 +77,7 @@ public class Meal implements Serializable {
 		ParseObject ret;
 		try {
 			ParseQuery query = new ParseQuery(Tables.MEAL_DB_NAME);
-			ret = populateParseObject(query.get(id));
+			ret = populateParseObject(query.get(parseId));
 		} catch (ParseException e) {
 			ret = populateParseObject(new ParseObject(Tables.MEAL_DB_NAME));
 		}
@@ -74,7 +88,7 @@ public class Meal implements Serializable {
 	public static Meal fromMap(Map<String, Object> map) {
 		Meal meal = new Meal();
 
-		meal.id = (String)map.get(DatabaseUtil.OBJECT_ID_COLUMN_NAME);
+		meal.parseId = (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME);
 
 		meal.needsUpload = (Boolean)map.get(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME);
 		meal.dataVersion = (Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME);
@@ -120,7 +134,7 @@ public class Meal implements Serializable {
 				meal.placeToMeal.place != null &&
 				meal.placeToMeal.place != null &&
 				meal.mealToFoods != null &&
-				meal.id != null;
+				meal.parseId != null;
 	}
 	
 	@Override

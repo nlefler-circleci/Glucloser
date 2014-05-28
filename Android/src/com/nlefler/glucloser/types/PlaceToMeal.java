@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import com.nlefler.glucloser.util.MealUtil;
 import com.nlefler.glucloser.util.PlaceUtil;
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -34,7 +34,7 @@ public class PlaceToMeal implements Serializable {
 	public static final Map<String, Class> COLUMN_TYPES = new HashMap<String, Class>() {{
 		put(PlaceToMeal.PLACE_DB_COLUMN_KEY, String.class);
 		put(PlaceToMeal.MEAL_DB_COLUMN_KEY, String.class);
-		put(DatabaseUtil.OBJECT_ID_COLUMN_NAME, String.class);
+		put(DatabaseUtil.PARSE_ID_COLUMN_NAME, String.class);
 		put(DatabaseUtil.CREATED_AT_COLUMN_NAME, String.class);
 		put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, String.class);
 		put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, Boolean.class);
@@ -72,7 +72,7 @@ public class PlaceToMeal implements Serializable {
 		placeToMeal.place = PlaceUtil.getPlaceById((String) map.get(PLACE_DB_COLUMN_KEY));
 		placeToMeal.meal = MealUtil.getMealById((String) map.get(MEAL_DB_COLUMN_KEY));
 		
-		placeToMeal.id = (String)map.get(DatabaseUtil.OBJECT_ID_COLUMN_NAME);
+		placeToMeal.id = (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME);
 
 		placeToMeal.needsUpload = (Boolean)map.get(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME);
 		placeToMeal.dataVersion = (Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME);

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import android.util.Log;
 
-import com.nlefler.glucloser.util.database.Tables;
+import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.types.MeterData;
 import com.parse.ParseObject;
 

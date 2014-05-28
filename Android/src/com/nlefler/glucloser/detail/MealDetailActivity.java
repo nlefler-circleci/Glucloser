@@ -273,7 +273,6 @@ public class MealDetailActivity extends Activity {
 			public void onClick(View v) {
 				Intent detailIntent = new Intent(MealDetailActivity.this, FoodDetailActivity.class);
 				detailIntent.putExtra(FoodDetailActivity.FOOD_EXTRA_KEY, food.id);
-				//detailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				MealDetailActivity.this.startActivity(detailIntent);
 			}
 		});
