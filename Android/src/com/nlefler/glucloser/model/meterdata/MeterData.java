@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.types;
+package com.nlefler.glucloser.model.meterdata;
 
 import java.util.HashMap;
 import java.util.Map;

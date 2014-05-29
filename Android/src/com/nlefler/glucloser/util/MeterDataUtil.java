@@ -14,15 +14,16 @@ import java.util.TreeMap;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.nlefler.glucloser.types.Bolus;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.MeterData;
+import com.nlefler.glucloser.model.bolus.Bolus;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.meterdata.MeterData;
+import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 
 public class MeterDataUtil {
-	private static final String LOG_TAG = "Pump_Blood_Sugar_Util";
+	private static final String LOG_TAG = "Glucloser_Blood_Sugar_Util";
 
 	private static Map<Long, Integer> borderDatesForBloodSugarPagination = 
 			new HashMap<Long, Integer>();

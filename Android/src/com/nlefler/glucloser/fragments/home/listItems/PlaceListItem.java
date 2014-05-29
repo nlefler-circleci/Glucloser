@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.internal.w;
 import com.nlefler.glucloser.R;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.LocationUtil;
 
 import java.util.List;

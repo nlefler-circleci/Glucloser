@@ -19,22 +19,24 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nlefler.glucloser.NetworkSyncService;
-import com.nlefler.glucloser.types.MeterData;
+import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.meterdata.MeterData;
+import com.nlefler.glucloser.model.PlaceToMeal;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.database.fetchers.ParseFoodFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMeterDataFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceFetcher;
 import com.nlefler.glucloser.util.database.fetchers.SyncFetcher;
 import com.nlefler.glucloser.util.database.importers.ParseMealImporter;
 import com.nlefler.glucloser.util.database.importers.ParseMealToFoodImporter;
-import com.nlefler.glucloser.util.database.importers.ParsePlaceToFoodsHashImporter;
 import com.nlefler.glucloser.util.database.importers.ParsePlaceToMealImporter;
 import com.nlefler.glucloser.util.database.importers.SyncImporter;
 import com.nlefler.glucloser.util.database.pushers.ParseMealToFoodPusher;
-import com.nlefler.glucloser.util.database.pushers.ParsePlaceToFoodsHashPusher;
 import com.nlefler.glucloser.util.database.pushers.SyncPusher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMealFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMealToFoodFetcher;
-import com.nlefler.glucloser.util.database.fetchers.ParsePlaceToFoodsHashFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceToMealFetcher;
 import com.nlefler.glucloser.util.database.importers.ParseFoodImporter;
 import com.nlefler.glucloser.util.database.importers.ParseMeterDataImporter;
@@ -48,7 +50,6 @@ import com.nlefler.glucloser.util.database.upgrade.DatabaseUpgrader;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.database.upgrade.ZeroToOne;
 
-import se.emilsjolander.sprinkles.Query;
 import se.emilsjolander.sprinkles.Sprinkles;
 import se.emilsjolander.sprinkles.annotations.Table;
 
@@ -92,6 +93,14 @@ public class DatabaseUtil {
 	public static DatabaseUtil instance() {
 		return instance;
 	}
+
+    public static String tableNameForModel(Class modelClass) {
+        Annotation tableAnnotation = modelClass.getAnnotation(Table.class);
+        if (tableAnnotation != null) {
+            return tableAnnotation.toString();
+        }
+        return null;
+    }
 
 	public static void setNeedsSync() {
 		needsSync.set(true);
@@ -145,32 +154,28 @@ public class DatabaseUtil {
 		Map<String, Date> lastDownSyncTimes = lastSyncTimes[0];
 		Map<String, Date> lastUpSyncTimes = lastSyncTimes[1];
 
-		syncHelper(Tables.FOOD_DB_NAME,
+		syncHelper(tableNameForModel(Food.class),
 				new ParseFoodFetcher(), new ParseFoodImporter(), new ParseFoodPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
-		syncHelper(Tables.MEAL_DB_NAME,
+		syncHelper(tableNameForModel(Meal.class),
 				new ParseMealFetcher(), new ParseMealImporter(), new ParseMealPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
-		syncHelper(Tables.PLACE_DB_NAME,
-				new ParsePlaceFetcher(), new ParsePlaceImporter(), new ParsePlacePusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
+		syncHelper(tableNameForModel(Place.class),
+                new ParsePlaceFetcher(), new ParsePlaceImporter(), new ParsePlacePusher(),
+                lastDownSyncTimes, lastUpSyncTimes);
 
-		syncHelper(Tables.MEAL_TO_FOOD_DB_NAME,
+		syncHelper(tableNameForModel(MealToFood.class),
 				new ParseMealToFoodFetcher(), new ParseMealToFoodImporter(), new ParseMealToFoodPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
-		syncHelper(Tables.PLACE_TO_MEAL_DB_NAME,
+		syncHelper(tableNameForModel(PlaceToMeal.class),
 				new ParsePlaceToMealFetcher(), new ParsePlaceToMealImporter(), new ParsePlaceToMealPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
-		syncHelper(Tables.PLACE_TO_FOODS_HASH_DB_NAME,
-				new ParsePlaceToFoodsHashFetcher(), new ParsePlaceToFoodsHashImporter(), new ParsePlaceToFoodsHashPusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
-
 		// Doing this last because it's slow (42.5k records and counting)
-		syncHelper(Tables.METER_DATA_DB_NAME,
+		syncHelper(tableNameForModel(MeterData.class),
 				new ParseMeterDataFetcher(), new ParseMeterDataImporter(), new NoOpPusher(),
 				lastDownSyncTimes, lastUpSyncTimes);
 
@@ -209,7 +214,7 @@ public class DatabaseUtil {
 		Map<String, Date> lastDown = new HashMap<String, Date>();
 		Map<String, Date> lastUp = new HashMap<String, Date>();
 
-		for (String tableName : Tables.syncingTableNames) {
+		for (Class modelClass : Tables.syncingTableNames) {
 			lastDown.put(tableName, null);
 			lastUp.put(tableName, null);
 		}

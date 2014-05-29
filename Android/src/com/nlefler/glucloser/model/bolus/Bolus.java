@@ -1,9 +1,18 @@
-package com.nlefler.glucloser.types;
+package com.nlefler.glucloser.model.bolus;
+
+import com.nlefler.glucloser.model.GlucloserBaseModel;
 
 import java.util.Date;
 
-public class Bolus {
-	private static final String LOG_TAG = "Pump_Bolus";
+import se.emilsjolander.sprinkles.annotations.Column;
+import se.emilsjolander.sprinkles.annotations.Table;
+
+
+@Table(Bolus.BOLUS_DB_NAME)
+public class Bolus extends GlucloserBaseModel {
+	private static final String LOG_TAG = "Glucloser_Bolus";
+
+    protected static final String BOLUS_DB_NAME = "bolus";
 
 	public static final String TYPE_NORMAL = "Normal";
 	public static final String TYPE_DUAL_NORMAL = "Dual/Normal";

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import android.util.Log;
 
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;

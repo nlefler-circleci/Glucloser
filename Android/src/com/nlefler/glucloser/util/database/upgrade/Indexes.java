@@ -1,7 +1,7 @@
 package com.nlefler.glucloser.util.database.upgrade;
 
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.MeterData;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meterdata.MeterData;
 
 public class Indexes {
 	// Index names

@@ -11,10 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.util.LocationUtil;
-import com.nlefler.glucloser.util.PlaceUtil;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;

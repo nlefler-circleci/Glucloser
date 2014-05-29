@@ -7,7 +7,7 @@ import java.util.Map;
 import android.content.ContentValues;
 import android.util.Log;
 
-import com.nlefler.glucloser.types.Food;
+import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 

@@ -1,13 +1,11 @@
-package com.nlefler.glucloser.types;
+package com.nlefler.glucloser.model.place;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 import android.location.Location;
 
-import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
@@ -26,7 +24,7 @@ public class Place extends Model implements Serializable {
 
 	private static final String LOG_TAG = "Glucloser_Place";
 
-    public static final String PLACE_DB_NAME = "place";
+    protected static final String PLACE_DB_NAME = "place";
     public static final String FOURSQUARE_ID_COLUMN_KEY = "foursquare_id";
 	public static final String NAME_DB_COLUMN_KEY = "name";
 	public static final String LOCATION_DB_COLUMN_KEY = "location";
@@ -34,6 +32,10 @@ public class Place extends Model implements Serializable {
 	public static final String LONGITUDE_DB_COLUMN_KEY = "location_longitude";
 	public static final String READABLE_ADDRESS_COLUMN_KEY = "readable_address";
     public static final String LAST_VISITED_COLUMN_KEY = "last_visited";
+
+    public static String getDatabaseTableName() {
+        return PLACE_DB_NAME;
+    }
 
     @Column(LATITUDE_DB_COLUMN_KEY)
 	private double latitudeForSerializing;

@@ -20,11 +20,11 @@ import com.nlefler.glucloser.fragments.home.listItems.HistoricMealItem;
 import com.nlefler.glucloser.fragments.home.listItems.HomeListItem;
 import com.nlefler.glucloser.fragments.home.listItems.PlaceListItem;
 import com.nlefler.glucloser.fragments.home.listItems.PopularMealListItem;
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.FoodUtil;
-import com.nlefler.glucloser.util.PlaceUtil;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 
 public class HomeListAdapter extends BaseAdapter implements ListAdapter {
 	private static final String LOG_TAG = "Glucloser_Home_List_Adapter";

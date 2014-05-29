@@ -8,7 +8,7 @@ import java.util.Map;
 
 import android.util.Log;
 
-import com.nlefler.glucloser.types.Food;
+import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;
 import com.parse.ParseFile;

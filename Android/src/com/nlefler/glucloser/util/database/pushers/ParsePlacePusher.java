@@ -8,9 +8,9 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.types.PlaceToMeal;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.PlaceToFoodsHash;
+import com.nlefler.glucloser.model.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;

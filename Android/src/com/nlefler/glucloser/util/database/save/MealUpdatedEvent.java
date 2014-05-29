@@ -1,6 +1,6 @@
 package com.nlefler.glucloser.util.database.save;
 
-import com.nlefler.glucloser.types.Meal;
+import com.nlefler.glucloser.model.meal.Meal;
 
 /**
  * Created by nathan on 5/18/14.

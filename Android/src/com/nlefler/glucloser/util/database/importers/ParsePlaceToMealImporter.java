@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.util.Log;
 
 import com.nlefler.glucloser.util.database.upgrade.Tables;
-import com.nlefler.glucloser.types.PlaceToMeal;
+import com.nlefler.glucloser.model.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 public class ParsePlaceToMealImporter extends SyncImporter {

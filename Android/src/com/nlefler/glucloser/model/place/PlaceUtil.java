@@ -1,38 +1,23 @@
-package com.nlefler.glucloser.util;
+package com.nlefler.glucloser.model.place;
 
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Location;
 import android.util.Log;
 
-import com.nlefler.glucloser.GlucloserActivity;
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.types.PlaceToFoodsHash;
-import com.nlefler.glucloser.util.database.upgrade.Tables;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.PlaceToMeal;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.PlaceToMeal;
+import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.Query;
-import se.emilsjolander.sprinkles.Sprinkles;
-import se.emilsjolander.sprinkles.Transaction;
 import se.emilsjolander.sprinkles.annotations.Table;
 
 
@@ -41,14 +26,6 @@ public class PlaceUtil {
 
     // Distance in meters before a place is too far to be considered a 'nearby places'
  	private static final double NEARBY_PLACES_DISTANCE_LIMIT = 100.0;
-
-    private static String placeTableName() {
-        return Place.class.getAnnotation(Table.class).toString();
-    }
-
-    private static String mealTableName() {
-        return Meal.class.getAnnotation(Table.class).toString();
-    }
 
 	/**
 	 * Get a place in the database with the provided Parse id.
@@ -61,7 +38,7 @@ public class PlaceUtil {
 	 * or null if no place was found with the given id
 	 */
 	public static Place getPlaceById(String parseId) {
-        String selectClause = "SELECT * FROM " + placeTableName() +
+        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() +
                 " WHERE " + DatabaseUtil.PARSE_ID_COLUMN_NAME + " = ?";
         Place place = Query.one(Place.class, selectClause, parseId).get();
 
@@ -77,7 +54,7 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */
 	public static List<Place> getAllPlacesSortedByName() {
-		return getAllPlacesSortedBy(Place.NAME_DB_COLUMN_KEY, true);
+		return getAllPlacesSortedBy(DatabaseUtil.tableNameForModel(Place.class), true);
 	}
 
 	/**
@@ -91,7 +68,7 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */
 	public static List<Place> getAllPlacesSortedBy(String columnName, boolean asc) {
-        String selectClause = "SELECT * FROM " + placeTableName() + " SORTED BY " +
+        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() + " SORTED BY " +
                 columnName + (asc ? " ASC " : " DESC ");
 		CursorList<Place> places = Query.many(Place.class, selectClause, columnName, null).get();
 
@@ -133,7 +110,7 @@ public class PlaceUtil {
             return new ArrayList<Place>();
         }
 
-        String selectCause = "SELECT * FROM " + placeTableName() + " WHERE " +
+        String selectCause = "SELECT * FROM " + Place.getDatabaseTableName() + " WHERE " +
                 Place.LATITUDE_DB_COLUMN_KEY + ">=? AND " +
                 Place.LATITUDE_DB_COLUMN_KEY + "<=? AND " +
                 Place.LONGITUDE_DB_COLUMN_KEY + ">=? AND " +
@@ -187,7 +164,7 @@ public class PlaceUtil {
 		recentDate.add(Calendar.HOUR, -72);
 
 		String boundDate = recentDate.getTime().toGMTString();
-        String selectClause = "SELECT * FROM " + placeTableName() + " WHERE " +
+        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() + " WHERE " +
                 Place.LAST_VISITED_COLUMN_KEY + " >= strftime('%Y-%m-%dT%H:%M:%fZ', ?) " +
                 "ORDERED BY " + Place.LAST_VISITED_COLUMN_KEY + " DESC LIMIT ?";
 
@@ -263,7 +240,8 @@ public class PlaceUtil {
 	 * provided name
 	 */
 	public static Place getPlaceWithName(String name) {
-        String selectClause = "SELECT * FROM " + placeTableName() + " WHERE lower(" + Place.NAME_DB_COLUMN_KEY +
+        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName()
+                + " WHERE lower(" + DatabaseUtil.tableNameForModel(Place.class) +
                 ") = lower(?)";
         Place place = Query.one(Place.class, selectClause, name).get();
         // TODO: Multiple places with the same name
@@ -282,8 +260,8 @@ public class PlaceUtil {
 	 * @return A List<Place> of matching places
 	 */	
 	public static List<Place> getAllPlacesWithNameContaining(String name) {
-        String selectClause = "SELECT * FROM " + placeTableName() + " WHERE lower(" +
-                Place.NAME_DB_COLUMN_KEY + ") = lower(%?%) DESC";
+        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() + " WHERE lower(" +
+                DatabaseUtil.tableNameForModel(Place.class) + ") = lower(%?%) DESC";
 		List<Place> matchingPlaces = Query.many(Place.class, selectClause, name).get().asList();
 
 		return matchingPlaces;
@@ -309,7 +287,7 @@ public class PlaceUtil {
 	 * @return List<Meal> The list of meals
 	 */
 	private static List<Meal> _getAllMealsForPlace(Place place, int limit) {
-        String selectClause = "SELECT * FROM " + mealTableName() + " WHERE " +
+        String selectClause = "SELECT * FROM " + Meal.getDatabaseTableName() + " WHERE " +
                 DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " IN " +
                 " (SELECT " + PlaceToMeal.MEAL_DB_COLUMN_KEY + " WHERE " +
                 PlaceToMeal.PLACE_DB_COLUMN_KEY + " = ?) ORDERED BY " +

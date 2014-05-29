@@ -23,13 +23,13 @@ import com.nlefler.glucloser.fragments.home.listItems.HistoricMealItem;
 import com.nlefler.glucloser.fragments.home.listItems.HomeListItem;
 import com.nlefler.glucloser.fragments.home.listItems.PlaceListItem;
 import com.nlefler.glucloser.fragments.home.listItems.PopularMealListItem;
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.types.PlaceToMeal;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.PlaceToMeal;
 import com.nlefler.glucloser.util.LocationUtil;
-import com.nlefler.glucloser.util.MealUtil;
+import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.R;
 
 public class HomeFragment extends ListFragment {

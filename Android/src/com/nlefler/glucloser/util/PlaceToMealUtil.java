@@ -9,11 +9,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.types.PlaceToMeal;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
-import com.nlefler.glucloser.types.Meal;
+import com.nlefler.glucloser.model.meal.Meal;
 
 public class PlaceToMealUtil {
 	private static final String LOG_TAG = "Pump_Place_To_Meal_Util";

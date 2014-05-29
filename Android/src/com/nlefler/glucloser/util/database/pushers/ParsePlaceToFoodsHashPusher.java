@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.nlefler.glucloser.types.PlaceToFoodsHash;
+import com.nlefler.glucloser.model.PlaceToFoodsHash;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;

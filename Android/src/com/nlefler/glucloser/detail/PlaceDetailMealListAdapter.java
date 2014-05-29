@@ -3,10 +3,10 @@ package com.nlefler.glucloser.detail;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.util.PlaceUtil;
-import com.nlefler.glucloser.types.Meal;
+import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.place.PlaceUtil;
+import com.nlefler.glucloser.model.meal.Meal;
 
 import android.content.Context;
 import android.content.Intent;

@@ -33,12 +33,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nlefler.glucloser.fragments.add.AddMealFragment;
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.MealToFood;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.R;
-import com.nlefler.glucloser.types.Bolus;
-import com.nlefler.glucloser.types.Meal;
+import com.nlefler.glucloser.model.bolus.Bolus;
+import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.MeterDataUtil;

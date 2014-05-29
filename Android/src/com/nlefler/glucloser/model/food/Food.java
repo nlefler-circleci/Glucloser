@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.types;
+package com.nlefler.glucloser.model.food;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -7,26 +7,34 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import com.nlefler.glucloser.util.database.upgrade.Tables;
+import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import se.emilsjolander.sprinkles.Model;
 import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
+import se.emilsjolander.sprinkles.annotations.Table;
 
-public class Food implements Serializable {
+@Table(Food.FOOD_DB_NAME)
+public class Food extends GlucloserBaseModel implements Serializable {
 	private static final long serialVersionUID = -5496857563408300668L;
 
 	private static final String LOG_TAG = "Glucloser_Food";
 
+    protected static final String FOOD_DB_NAME = "food";
 	public static final String NAME_DB_COLUMN_KEY = "name";
 	public static final String CARBS_DB_COLUMN_KEY = "carbs";
 	public static final String IMAGE_DB_COLUMN_KEY = "photo";
 	public static final String CORRECTION_DB_COLUMN_KEY = "correction";
 	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
+
+    public static String getDatabaseTableName() {
+        return FOOD_DB_NAME;
+    }
 
     @Key
     @AutoIncrement
@@ -88,10 +96,10 @@ public class Food implements Serializable {
 	public ParseObject toParseObject() {
 		ParseObject ret;
 		try {
-			ParseQuery query = new ParseQuery(Tables.FOOD_DB_NAME);
+			ParseQuery query = new ParseQuery(FOOD_DB_NAME);
 			ret = populateParseObject(query.get(parseId));
 		} catch (ParseException e) {
-			ret = populateParseObject(new ParseObject(Tables.FOOD_DB_NAME));
+			ret = populateParseObject(new ParseObject(FOOD_DB_NAME));
 		}
 		
 		return ret;

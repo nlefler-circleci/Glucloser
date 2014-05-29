@@ -16,8 +16,8 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.nlefler.glucloser.detail.MealDetailActivity;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.util.MealUtil;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.R;
 

@@ -1,36 +1,33 @@
-package com.nlefler.glucloser.types;
+package com.nlefler.glucloser.model;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.FoodUtil;
-import com.nlefler.glucloser.util.MealUtil;
+import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import se.emilsjolander.sprinkles.Model;
 import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
+import se.emilsjolander.sprinkles.annotations.Table;
 
-public class MealToFood implements Serializable {
+@Table(MealToFood.MEAL_TO_FOOD_DB_NAME)
+public class MealToFood extends GlucloserBaseModel implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
+    protected static final String MEAL_TO_FOOD_DB_NAME = "meal_to_food";
 	public static final String MEAL_DB_COLUMN_KEY = "meal";
 	public static final String FOOD_DB_COLUMN_KEY = "food";
-
-    @Key
-    @AutoIncrement
-    @Column(DatabaseUtil.ID_COLUMN_NAME)
-    private int id;
-
-    @Key
-    @Column(DatabaseUtil.PARSE_ID_COLUMN_NAME)
-    public String parseId;
 
     @Key
     @Column(MEAL_DB_COLUMN_KEY)

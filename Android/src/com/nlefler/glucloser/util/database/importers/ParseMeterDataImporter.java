@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
-import com.nlefler.glucloser.types.MeterData;
+import com.nlefler.glucloser.model.meterdata.MeterData;
 
 public class ParseMeterDataImporter extends SyncImporter {
 	private static final String LOG_TAG = "Pump_Parse_Meter_Data_Importer";

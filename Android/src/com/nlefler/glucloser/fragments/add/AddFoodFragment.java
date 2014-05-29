@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,7 +32,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.nlefler.glucloser.thirdparty.zxing.IntentResult;
-import com.nlefler.glucloser.types.Food;
+import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.thirdparty.zxing.IntentIntegrator;
 import com.nlefler.glucloser.util.FoodUtil;

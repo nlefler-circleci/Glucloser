@@ -1,8 +1,8 @@
 package com.nlefler.glucloser.util.database.upgrade;
 
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.MeterData;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.meterdata.MeterData;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 public class Tables {

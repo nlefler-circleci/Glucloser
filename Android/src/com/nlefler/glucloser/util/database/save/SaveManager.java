@@ -2,17 +2,17 @@ package com.nlefler.glucloser.util.database.save;
 
 import android.os.AsyncTask;
 
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.types.PlaceToFoodsHash;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.PlaceToFoodsHash;
 import com.nlefler.glucloser.util.FoodUtil;
 import com.nlefler.glucloser.util.MealToFoodUtil;
-import com.nlefler.glucloser.util.MealUtil;
+import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.util.PlaceToFoodsHashUtil;
 import com.nlefler.glucloser.util.PlaceToMealUtil;
-import com.nlefler.glucloser.util.PlaceUtil;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.squareup.otto.Bus;

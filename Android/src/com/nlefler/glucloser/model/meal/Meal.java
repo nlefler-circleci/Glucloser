@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.types;
+package com.nlefler.glucloser.model.meal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,9 +12,10 @@ import java.util.UUID;
 import android.text.format.DateFormat;
 import android.util.Log;
 
-import com.nlefler.glucloser.util.MealUtil;
+import com.nlefler.glucloser.model.GlucloserBaseModel;
+import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -27,11 +28,15 @@ import se.emilsjolander.sprinkles.annotations.Table;
 
 
 @Table(Meal.MEAL_DB_NAME)
-public class Meal extends Model implements Serializable {
+public class Meal extends GlucloserBaseModel implements Serializable {
 	private static final String LOG_TAG = "Glucloser_Meal";
 
-    public static final String MEAL_DB_NAME = "meal";
+    protected  static final String MEAL_DB_NAME = "meal";
 	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
+
+    public static String getDatabaseTableName() {
+        return MEAL_DB_NAME;
+    }
 
     @Key
     @AutoIncrement
@@ -40,6 +45,10 @@ public class Meal extends Model implements Serializable {
     public int getId() {
         return id;
     }
+
+    @Key
+    @Column(DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME)
+    public String glucloserId;
 
     @Key
     @Column(DatabaseUtil.PARSE_ID_COLUMN_NAME)
@@ -63,6 +72,7 @@ public class Meal extends Model implements Serializable {
 
 	public Meal() {
 		this.parseId = UUID.randomUUID().toString();
+        this.glucloserId = UUID.randomUUID().toString();
 
 		this.mealToFoods = new ArrayList<MealToFood>();
 

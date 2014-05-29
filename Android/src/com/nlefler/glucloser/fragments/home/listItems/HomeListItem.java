@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.place.Place;
 
 /**
  * Created by lefler on 11/3/13.

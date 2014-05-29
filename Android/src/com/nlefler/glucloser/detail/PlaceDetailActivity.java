@@ -24,12 +24,12 @@ import android.widget.TextView;
 
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.fragments.add.AddPlaceFragment;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.MeterDataUtil;
-import com.nlefler.glucloser.util.PlaceUtil;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.util.MeterDataUtil.BloodSugarDataResults;
 import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
