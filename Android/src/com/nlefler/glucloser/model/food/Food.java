@@ -32,22 +32,6 @@ public class Food extends GlucloserBaseModel implements Serializable {
 	public static final String CORRECTION_DB_COLUMN_KEY = "correction";
 	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
 
-    public static String getDatabaseTableName() {
-        return FOOD_DB_NAME;
-    }
-
-    @Key
-    @AutoIncrement
-    @Column(DatabaseUtil.ID_COLUMN_NAME)
-    private int id;
-    public int getId() {
-        return id;
-    }
-
-    @Key
-    @Column("parseId")
-	public String parseId;
-
     @Key
     @Column(NAME_DB_COLUMN_KEY)
 	public String name;
@@ -61,14 +45,6 @@ public class Food extends GlucloserBaseModel implements Serializable {
     @Column(CORRECTION_DB_COLUMN_KEY)
 	public boolean isCorrection;
 
-    @Column(DatabaseUtil.CREATED_AT_COLUMN_NAME)
-	public Date createdAt;
-    @Column(DatabaseUtil.UPDATED_AT_COLUMN_NAME)
-	public Date updatedAt;
-    @Column(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME)
-	public boolean needsUpload;
-    @Column(DatabaseUtil.DATA_VERSION_COLUMN_NAME)
-	public int dataVersion;
 	
 	public Food() {
 		this.parseId = UUID.randomUUID().toString();

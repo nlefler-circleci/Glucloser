@@ -3,13 +3,16 @@ package com.nlefler.glucloser.model.meterdata;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 import se.emilsjolander.sprinkles.Model;
+import se.emilsjolander.sprinkles.annotations.Column;
+import se.emilsjolander.sprinkles.annotations.Key;
 import se.emilsjolander.sprinkles.annotations.Table;
 
 @Table(MeterData.METER_DATA_DB_NAME)
-public class MeterData extends Model {
+public class MeterData extends GlucloserBaseModel {
 
     public static final String METER_DATA_DB_NAME = "meter_data";
 
@@ -53,21 +56,47 @@ public class MeterData extends Model {
 	public static final String RAW_SEQ_NUM_DB_COLUMN_NAME							= "Raw_Seq_Num";
 	public static final String RAW_DEVICE_TYPE_DB_COLUMN_NAME						= "Raw_Device_Type";
 
-	public static final Map<String, Class> COLUMN_TYPES = new HashMap<String, Class>() {{
-		put(MeterData.TIMESTAMP_DB_COLUMN_NAME, String.class);
-		put(MeterData.BG_READING__MG_DL_COLUMN_NAME, Integer.class);
-		put(MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME, Integer.class);
-		put(MeterData.BOLUS_TYPE_DB_COLUMN_NAME, String.class);
-		put(MeterData.BWZ_ESTIMATE__U__DB_COLUMN_NAME, Double.class);
-		put(MeterData.BWZ_CORRECTION_ESTIMATE__U__DB_COLUMN_NAME, Double.class);
-		put(MeterData.BWZ_FOOD_ESTIMATE__U__DB_COLUMN_NAME, Double.class);
-		put(MeterData.BWZ_ACTIVE_INSULIN__U__DB_COLUMN_NAME, Double.class);
-		put(MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME, Double.class);
-		put(MeterData.PROGRAMMED_BOLUS_DURATION__HH_MM_SS__DB_COLUMN_NAME, String.class);
-		put(DatabaseUtil.PARSE_ID_COLUMN_NAME, String.class);
-		put(DatabaseUtil.CREATED_AT_COLUMN_NAME, String.class);
-		put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, String.class);
-		put(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME, Boolean.class);
-		put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, Integer.class);
-	}};
+
+    @Column(MeterData.INDEX_DB_COLUMN_NAME)
+    public int index;
+
+    INDEX_DB_COLUMN_NAME
+    DATE_DB_COLUMN_NAME_DB_COLUMN_NAME
+    TIME_DB_COLUMN_NAME_DB_COLUMN_NAME
+    TIMESTAMP_DB_COLUMN_NAME
+    NEW_DEVICE_TIME_DB_COLUMN_NAME_DB_COLUMN_NAME
+    BG_READING__MG_DL_COLUMN_NAME
+    LINKED_BG_METER_ID_DB_COLUMN_NAME
+    TEMP_BASAL_AMOUNT__U_H__DB_COLUMN_NAME
+    TEMP_BASAL_TYPE_DB_COLUMN_NAME
+    TEMP_BASAL_DURATION__HH_MM_SS__DB_COLUMN_NAME
+    BOLUS_TYPE_DB_COLUMN_NAME
+    BOLUS_VOLUME_SELECTED__U__DB_COLUMN_NAME
+    BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME
+    PROGRAMMED_BOLUS_DURATION__HH_MM_SS__DB_COLUMN_NAME
+    PRIME_TYPE_DB_COLUMN_NAME
+    PRIME_VOLUME_DELIVERED__U__DB_COLUMN_NAME
+    SUSPEND_DB_COLUMN_NAME
+    @Column(MeterData.REWIND_DB_COLUMN_NAME
+    @Column(MeterData.BWZ_ESTIMATE__U__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_TARGET_HIGH_BG__MG_DL__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_TARGET_LOW_BG__MG_DL__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_CARB_RATIO__GRAMS__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_INSULIN_SENSITIVITY__MG_DL__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_CARB_INPUT__GRAMS__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_BG_INPUT__MG_DL__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_CORRECTION_ESTIMATE__U__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_FOOD_ESTIMATE__U__DB_COLUMN_NAME
+    @Column(MeterData.BWZ_ACTIVE_INSULIN__U__DB_COLUMN_NAME
+    @Column(MeterData.ALARM_DB_COLUMN_NAME
+    @Column(MeterData.SENSOR_CALIBRATION_BG__MG_DL__DB_COLUMN_NAME
+    @Column(MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME
+    @Column(MeterData.ISIG_VALUE_DB_COLUMN_NAME
+    @Column(MeterData.DAILY_INSULIN_TOTAL__U__DB_COLUMN_NAME
+    @Column(MeterData.RAW_TYPE_DB_COLUMN_NAME
+    @Column(MeterData.RAW_VALUES_DB_COLUMN_NAME
+    @Column(MeterData.RAW_ID_DB_COLUMN_NAME
+    @Column(MeterData.RAW_UPLOAD_ID_DB_COLUMN_NAME
+    @Column(MeterData.RAW_SEQ_NUM_DB_COLUMN_NAME
+    @Column(MeterData.RAW_DEVICE_TYPE_DB_COLUMN_NAME
 }

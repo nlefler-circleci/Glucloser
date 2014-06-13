@@ -21,6 +21,8 @@ import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 
+import se.emilsjolander.sprinkles.Query;
+
 
 public class MeterDataUtil {
 	private static final String LOG_TAG = "Glucloser_Blood_Sugar_Util";
@@ -43,28 +45,19 @@ public class MeterDataUtil {
 		}
 	}
 
-	private static String[] columnsForGetBloodSugarDataFromDateToDate = new String[] {
-		MeterData.TIMESTAMP_DB_COLUMN_NAME,
-		MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME,
-		MeterData.BG_READING__MG_DL_COLUMN_NAME
-	};
 	private static String whereClauseForGetBloodSugarDataFromDateToDate = 
 			"(" + MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME + " != 0" +
 					" OR " +
 					MeterData.BG_READING__MG_DL_COLUMN_NAME + " != 0)" +
-					" AND " +
-					DatabaseUtil.getStrfStringForString(MeterData.TIMESTAMP_DB_COLUMN_NAME) +
-					" >= " + DatabaseUtil.getStrfStringForString("?") +
-					" AND " +
-					DatabaseUtil.getStrfStringForString(MeterData.TIMESTAMP_DB_COLUMN_NAME) +
-					" <= " + DatabaseUtil.getStrfStringForString("?");
+					" AND " + MeterData.TIMESTAMP_DB_COLUMN_NAME +
+					" >= ? AND " + MeterData.TIMESTAMP_DB_COLUMN_NAME +
+					" <= ?";
 	/**
 	 * 
 	 * @param fromDate
 	 * @param toDate
 	 * @param limit number of records to return, or -1 for all records
 	 * @param requestId
-	 * @param callback
 	 */
 	public static BloodSugarDataResults getBloodSugarDataFromDateToDate(
 			Date fromDate, Date toDate, int limit, final long requestId) {
@@ -95,46 +88,35 @@ public class MeterDataUtil {
 
 		Log.i(LOG_TAG, "Date to Date " + fromDate + " to " + toDate);
 
-		final String toDateString = DatabaseUtil.parseDateFormat.format(toDate);
-		final String fromDateString = DatabaseUtil.parseDateFormat.format(fromDate);
-		final int skipCopy = skip;
+		String toDateString = DatabaseUtil.parseDateFormat.format(toDate);
+		String fromDateString = DatabaseUtil.parseDateFormat.format(fromDate);
 
-		Log.v(LOG_TAG, "Running query " +
-				"select " + columnsForGetBloodSugarDataFromDateToDate +
-				" from " + Tables.METER_DATA_DB_NAME + " where " +
-				whereClauseForGetBloodSugarDataFromDateToDate +
-				" limit " + skipCopy + "," + realLimit +
-				" with args " + fromDateString + " to " + toDateString);
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase()
-				.query(Tables.METER_DATA_DB_NAME,
-						columnsForGetBloodSugarDataFromDateToDate,
-						whereClauseForGetBloodSugarDataFromDateToDate,
-						new String[] {fromDateString, toDateString},
-						null, null, null,
-						skipCopy + "," + realLimit);
+        String query = "SELECT " + MeterData.TIMESTAMP_DB_COLUMN_NAME + ", " +
+                MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME + ", " +
+                MeterData.BG_READING__MG_DL_COLUMN_NAME + " FROM " +
+                DatabaseUtil.tableNameForModel(MeterData.class) + " WHERE " +
+                whereClauseForGetBloodSugarDataFromDateToDate + " LIMIT " +
+                skip + ", " + realLimit;
+        List<MeterData> results = Query.many(MeterData.class, query, fromDate, toDate).get().asList();
 
 		Map<Date, Integer> sensorDataMap = new TreeMap<Date, Integer>();
 		Map<Date, Integer> meterDataMap = new TreeMap<Date, Integer>();
 
-		if (!cursor.moveToFirst()) {
-			Log.i(LOG_TAG, "Got no results for blood sugar query, removing pagination date");
+        if (results.isEmpty()) {
+            Log.i(LOG_TAG, "Got no results for blood sugar query, removing pagination date");
 
-			borderDatesForBloodSugarPagination.remove(requestId);
-			return new BloodSugarDataResults(sensorDataMap, meterDataMap, requestId, false);
-		}
+            borderDatesForBloodSugarPagination.remove(requestId);
+            return new BloodSugarDataResults(sensorDataMap, meterDataMap, requestId, false);
+        }
 
 		Map<String, Object> record = null;
-		while (!cursor.isAfterLast()) {
-			record = DatabaseUtil.getRecordFromCursor(cursor, MeterData.COLUMN_TYPES);
-			cursor.moveToNext();
-
+		for (MeterData meterData : results) {
 			Date date;
 			try {
-				date = DatabaseUtil.parseDateFormat.parse(
-						(String)record.get(MeterData.TIMESTAMP_DB_COLUMN_NAME));
+				date = DatabaseUtil.parseDateFormat.parse(meterData.TIMESTAMP_DB_COLUMN_NAME);
 			} catch (java.text.ParseException e) {
 				Log.e(LOG_TAG, "Unable to parse record timestamp: " +
-						(String)record.get(MeterData.TIMESTAMP_DB_COLUMN_NAME));
+                        meterData.TIMESTAMP_DB_COLUMN_NAME);
 				e.printStackTrace();
 				continue;
 			}
