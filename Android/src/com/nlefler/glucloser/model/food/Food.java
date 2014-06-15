@@ -26,6 +26,7 @@ public class Food extends GlucloserBaseModel implements Serializable {
 	private static final String LOG_TAG = "Glucloser_Food";
 
     protected static final String FOOD_DB_NAME = "food";
+    
 	public static final String NAME_DB_COLUMN_KEY = "name";
 	public static final String CARBS_DB_COLUMN_KEY = "carbs";
 	public static final String IMAGE_DB_COLUMN_KEY = "photo";

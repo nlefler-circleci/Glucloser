@@ -12,7 +12,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.model.PlaceToMeal;
+import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 

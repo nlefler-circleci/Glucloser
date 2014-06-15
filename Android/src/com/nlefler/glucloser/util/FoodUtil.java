@@ -21,7 +21,7 @@ import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 
 public class FoodUtil {
-	private static final String LOG_TAG = "Pump_Food_Util";
+	private static final String LOG_TAG = "Glucloserr_Food_Util";
 
 	private static String[] columnsForGetAllFoodNames = new String[] {Food.NAME_DB_COLUMN_KEY};
 

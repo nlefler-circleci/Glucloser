@@ -30,12 +30,12 @@ public class Tables {
 //	public static final String SYNC_INFO_UP_DB_NAME = "SyncInfoUp";
 
 	protected static String[] syncingTableNames = new String[] {
-		FOOD_DB_NAME, 
+		Food.FOOD_DB_NAME, 
 		Meal.MEAL_DB_NAME,
 		Place.PLACE_DB_NAME,
 		MeterData.METER_DATA_DB_NAME,
 		MEAL_TO_FOOD_DB_NAME, 
-		PLACE_TO_MEAL_DB_NAME,
+		PlaceToMeal.PLACE_TO_MEAL_DB_NAME,
 		PLACE_TO_FOODS_HASH_DB_NAME,
 		MEAL_TO_FOODS_HASH_DB_NAME,
 	};

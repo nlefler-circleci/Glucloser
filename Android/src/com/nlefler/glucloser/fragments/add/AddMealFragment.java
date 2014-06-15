@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.model.PlaceToMeal;
+import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.model.meal.Meal;

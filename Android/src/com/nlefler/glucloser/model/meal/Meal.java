@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.model.MealToFood;
-import com.nlefler.glucloser.model.PlaceToMeal;
+import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -140,16 +140,6 @@ public class Meal extends GlucloserBaseModel implements Serializable {
 		return this;
 	}
 
-	public static boolean verifyMeal(Meal meal) {
-		return meal != null &&
-				meal.placeToMeal != null &&
-				meal.placeToMeal.meal != null &&
-				meal.placeToMeal.place != null &&
-				meal.placeToMeal.place != null &&
-				meal.mealToFoods != null &&
-				meal.parseId != null;
-	}
-	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Meal) {

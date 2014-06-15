@@ -27,7 +27,7 @@ import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.model.PlaceToMeal;
+import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.R;
