@@ -3,6 +3,8 @@ package com.nlefler.glucloser.model.bolus;
 import com.nlefler.glucloser.model.GlucloserBaseModel;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Table;
@@ -12,43 +14,43 @@ import se.emilsjolander.sprinkles.annotations.Table;
 public class Bolus extends GlucloserBaseModel {
 	private static final String LOG_TAG = "Glucloser_Bolus";
 
+	public enum BolusType {
+	    BolusTypeUnknown,
+	    BolusTypeNormal,
+	    BolusTypeDualNormal,
+	    BolusTypeDualSquare,
+	    BolusTypeSquare
+	};
+
     protected static final String BOLUS_DB_NAME = "bolus";
 
-	public static final String TYPE_NORMAL = "Normal";
-	public static final String TYPE_DUAL_NORMAL = "Dual/Normal";
-	public static final String TYPE_DUAL_SQUARE = "Dual/Square";
-	public static final String TYPE_SQUARE = "Square";
+	private static final String TYPE_NORMAL = "Normal";
+	private static final String TYPE_DUAL_NORMAL = "Dual/Normal";
+	private static final String TYPE_DUAL_SQUARE = "Dual/Square";
+	private static final String TYPE_SQUARE = "Square";
+	private static final Map<String, BolusType> typeConversionMap = new HashMap<String, BolusType>() {{
+		put(TYPE_NORMAL, BolusType.BolusTypeNormal);
+		put(TYPE_DUAL_NORMAL, BolusType.BolusTypeDualNormal);
+		put(TYPE_DUAL_SQUARE, BolusType.BolusTypeDualSquare);
+		put(TYPE_SQUARE, BolusType.BolusTypeSquare);
+	}};
+	private static final Map<BolusType, String> typeToReadableMap = new HashMap<BolusType, String>() {{
+		put(BolusType.BolusTypeNormal, "Normal");
+		put(BolusType.BolusTypeDualNormal, "Dual (Normal)");
+		put(BolusType.BolusTypeDualSquare, "Dual (Square)");
+		put(BolusType.BolusTypeSquare, "Square");
+	}};
 
-	public String type;
+	public BolusType type;
 	public double units;
-	public long length;
+	public double duration;
 	public Date timeStarted;
 
-	public Bolus(String t, double u, long l, Date started) {
-		type = t;
-		units = u;
-		length = l;
+	public Bolus(String type, double units, double duration, Date started) {
+		type = typeConversionMap.containsKey(type) ? typeConversionMap.get(type) : BolusType.BolusTypeUnknown;
+		units = units;
+		duration = duration;
 		timeStarted = started;
-	}
-
-	public Bolus(String t, double u, String l, Date started) {
-		type = t;
-		units = u;
-		timeStarted = started;
-
-		String[] timeUnits = l.split(":");
-		if (timeUnits.length < 3) {
-			length = 0;
-		} else {
-			int hours = Integer.valueOf(timeUnits[0]);
-			int minutes = Integer.valueOf(timeUnits[1]);
-			int seconds = Integer.valueOf(timeUnits[2]);
-
-			length = hours * 60 * 60;
-			length += minutes * 60;
-			length += seconds;
-		}
-		
 	}
 	
 	@Override
@@ -61,14 +63,8 @@ public class Bolus extends GlucloserBaseModel {
 	}
 
 	public String getTypeForDisplay() {
-		if (type.equals(TYPE_NORMAL)) {
-			return "Normal";
-		} else if (type.equals(TYPE_DUAL_NORMAL)) {
-			return "Dual (Normal)";
-		} else if (type.equals(TYPE_DUAL_SQUARE)) {
-			return "Dual (Square)";
-		} else if (type.equals(TYPE_SQUARE)) {
-			return "Square";
+		if (typeToReadableMap.containsKey(type)) {
+			return typeToReadableMap.get(type);
 		} else {
 			return "Unknown Type";
 		}

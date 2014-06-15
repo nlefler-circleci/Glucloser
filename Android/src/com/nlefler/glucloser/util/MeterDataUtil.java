@@ -91,9 +91,7 @@ public class MeterDataUtil {
 		String toDateString = DatabaseUtil.parseDateFormat.format(toDate);
 		String fromDateString = DatabaseUtil.parseDateFormat.format(fromDate);
 
-        String query = "SELECT " + MeterData.TIMESTAMP_DB_COLUMN_NAME + ", " +
-                MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME + ", " +
-                MeterData.BG_READING__MG_DL_COLUMN_NAME + " FROM " +
+        String query = "SELECT * FROM " +
                 DatabaseUtil.tableNameForModel(MeterData.class) + " WHERE " +
                 whereClauseForGetBloodSugarDataFromDateToDate + " LIMIT " +
                 skip + ", " + realLimit;
@@ -132,7 +130,7 @@ public class MeterDataUtil {
 			}
 		}
 
-		borderDatesForBloodSugarPagination.put(requestId, skipCopy + realLimit);
+		borderDatesForBloodSugarPagination.put(requestId, skip + realLimit);
 
 		Log.i(LOG_TAG, "Got " + sensorDataMap.keySet().size() + " sensor values and " +
 				meterDataMap.keySet().size() + " meter values for date to date query (" +
@@ -192,19 +190,9 @@ public class MeterDataUtil {
 		return new BloodSugarDataResults(sensorData, meterData, requestId, false);
 	}
 
-	private static String[] columnsForGetBolusDataForMeal = new String[] {
-		MeterData.TIMESTAMP_DB_COLUMN_NAME,
-		MeterData.BOLUS_TYPE_DB_COLUMN_NAME,
-		MeterData.BWZ_ACTIVE_INSULIN__U__DB_COLUMN_NAME,
-		MeterData.BWZ_CORRECTION_ESTIMATE__U__DB_COLUMN_NAME,
-		MeterData.BWZ_FOOD_ESTIMATE__U__DB_COLUMN_NAME,
-		MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME
-	};
 	private static String whereClauseForGetBolusDataForMeal = 
-			DatabaseUtil.getStrfStringForString(MeterData.TIMESTAMP_DB_COLUMN_NAME) + 
-			" >= " + DatabaseUtil.getStrfStringForString("?") + " AND " +
-			DatabaseUtil.getStrfStringForString(MeterData.TIMESTAMP_DB_COLUMN_NAME) + 
-			" <= " + DatabaseUtil.getStrfStringForString("?") + " AND " +
+			MeterData.TIMESTAMP_DB_COLUMN_NAME + " >= ? AND " +
+			MeterData.TIMESTAMP_DB_COLUMN_NAME + " <= ? AND " +
 			MeterData.BOLUS_TYPE_DB_COLUMN_NAME + " NOT NULL AND " +
 			MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME + " NOT NULl";
 
@@ -240,57 +228,24 @@ public class MeterDataUtil {
 
 		Log.i(LOG_TAG, "Querying for boluses between " + minTime.getTime() + " to " + maxTime.getTime());
 
-		final String fromDateString = DatabaseUtil.parseDateFormat.format(minTime.getTime());
-		final String toDateString = DatabaseUtil.parseDateFormat.format(maxTime.getTime());
-		final Date mealDate = meal.getDateEaten();
+		String fromDateString = DatabaseUtil.parseDateFormat.format(minTime.getTime());
+		String toDateString = DatabaseUtil.parseDateFormat.format(maxTime.getTime());
+		Date mealDate = meal.getDateEaten();
 
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.METER_DATA_DB_NAME, columnsForGetBolusDataForMeal,
-				whereClauseForGetBolusDataForMeal,
-				new String[] {fromDateString, toDateString},
-				null, null, null);
+		String selectQuery = "SELECT * FROM " + DatabaseUtil.tableNameForModel(MeterData.class) +
+		" WHERE " + whereClauseForGetBolusDataForMeal;
 
-		if (!cursor.moveToFirst()) {
+		List<MeterData> results = Query.many(MeterData.class, selectQuery, fromDateString,
+			toDateString).get().asList();
+
+		if (results.isEmpty()) {
 			return bolusMap.values();
 		}
 
-		Log.v(LOG_TAG, "Got " + cursor.getCount() + " possible boluses");	
+		Log.v(LOG_TAG, "Got " + results.size() + " possible boluses");	
 		Map<String, Object> record;
-		while (!cursor.isAfterLast()) {
-			record = DatabaseUtil.getRecordFromCursor(cursor, MeterData.COLUMN_TYPES);
-			cursor.moveToNext();
-
-			Date date;
-			try {
-				date = DatabaseUtil.parseDateFormat.parse((String)record.get(MeterData.TIMESTAMP_DB_COLUMN_NAME));
-			} catch (java.text.ParseException e) {
-				Log.e(LOG_TAG, "Unable to parse meter data timestamp: " +
-						(String)record.get(MeterData.TIMESTAMP_DB_COLUMN_NAME));
-				e.printStackTrace();
-				continue;
-			}
-
-			Object value = null;
-			String type = "Unknown bolus type";
-			double units = 0;
-			long length = 0;
-
-			value = record.get(MeterData.BOLUS_TYPE_DB_COLUMN_NAME);
-			if (value != null) {
-				type = (String)value;
-			}
-
-			value = record.get(MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME);
-			if (value != null) {
-				units = (Double)value;
-			}
-
-			value = record.get(MeterData.PROGRAMMED_BOLUS_DURATION__HH_MM_SS__DB_COLUMN_NAME);
-			if (value != null) {
-				length = ((Double)value).longValue();
-			}
-
-			bolusMap.put(date, new Bolus(type, units, length, date));
+		for (MeterData meterData : results) {
+			bolusMap.put(meterData.timestamp, meterData.getBolus());
 		}
 
 		// Possible that multiple boluses are found within this window

@@ -2,9 +2,11 @@ package com.nlefler.glucloser.model.meterdata;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
 
 import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
+import com.nlefler.glucloser.model.bolus.Bolus;
 
 import se.emilsjolander.sprinkles.Model;
 import se.emilsjolander.sprinkles.annotations.Column;
@@ -13,6 +15,22 @@ import se.emilsjolander.sprinkles.annotations.Table;
 
 @Table(MeterData.METER_DATA_DB_NAME)
 public class MeterData extends GlucloserBaseModel {
+    public enum TemporaryBasalType {
+        TemporaryBasalTypeUnknown
+    };
+    public enum PrimeType {
+        PrimeTypeUnknown
+    };
+    public enum AlarmType {
+        AlarmTypeUnknown,
+        AlarmTypeNone
+    };
+    public enum RawType {
+        RawTypeUnknown
+    };
+    public enum DeviceType {
+        DeviceTypeUnknown
+    };
 
     public static final String METER_DATA_DB_NAME = "meter_data";
 
@@ -60,43 +78,121 @@ public class MeterData extends GlucloserBaseModel {
     @Column(MeterData.INDEX_DB_COLUMN_NAME)
     public int index;
 
-    INDEX_DB_COLUMN_NAME
-    DATE_DB_COLUMN_NAME_DB_COLUMN_NAME
-    TIME_DB_COLUMN_NAME_DB_COLUMN_NAME
-    TIMESTAMP_DB_COLUMN_NAME
-    NEW_DEVICE_TIME_DB_COLUMN_NAME_DB_COLUMN_NAME
-    BG_READING__MG_DL_COLUMN_NAME
-    LINKED_BG_METER_ID_DB_COLUMN_NAME
-    TEMP_BASAL_AMOUNT__U_H__DB_COLUMN_NAME
-    TEMP_BASAL_TYPE_DB_COLUMN_NAME
-    TEMP_BASAL_DURATION__HH_MM_SS__DB_COLUMN_NAME
-    BOLUS_TYPE_DB_COLUMN_NAME
-    BOLUS_VOLUME_SELECTED__U__DB_COLUMN_NAME
-    BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME
-    PROGRAMMED_BOLUS_DURATION__HH_MM_SS__DB_COLUMN_NAME
-    PRIME_TYPE_DB_COLUMN_NAME
-    PRIME_VOLUME_DELIVERED__U__DB_COLUMN_NAME
-    SUSPEND_DB_COLUMN_NAME
-    @Column(MeterData.REWIND_DB_COLUMN_NAME
-    @Column(MeterData.BWZ_ESTIMATE__U__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_TARGET_HIGH_BG__MG_DL__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_TARGET_LOW_BG__MG_DL__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_CARB_RATIO__GRAMS__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_INSULIN_SENSITIVITY__MG_DL__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_CARB_INPUT__GRAMS__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_BG_INPUT__MG_DL__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_CORRECTION_ESTIMATE__U__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_FOOD_ESTIMATE__U__DB_COLUMN_NAME
-    @Column(MeterData.BWZ_ACTIVE_INSULIN__U__DB_COLUMN_NAME
-    @Column(MeterData.ALARM_DB_COLUMN_NAME
-    @Column(MeterData.SENSOR_CALIBRATION_BG__MG_DL__DB_COLUMN_NAME
-    @Column(MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME
-    @Column(MeterData.ISIG_VALUE_DB_COLUMN_NAME
-    @Column(MeterData.DAILY_INSULIN_TOTAL__U__DB_COLUMN_NAME
-    @Column(MeterData.RAW_TYPE_DB_COLUMN_NAME
-    @Column(MeterData.RAW_VALUES_DB_COLUMN_NAME
-    @Column(MeterData.RAW_ID_DB_COLUMN_NAME
-    @Column(MeterData.RAW_UPLOAD_ID_DB_COLUMN_NAME
-    @Column(MeterData.RAW_SEQ_NUM_DB_COLUMN_NAME
-    @Column(MeterData.RAW_DEVICE_TYPE_DB_COLUMN_NAME
+    @Column(MeterData.DATE_DB_COLUMN_NAME_DB_COLUMN_NAME)
+    public Date date;
+
+    @Column(MeterData.TIME_DB_COLUMN_NAME_DB_COLUMN_NAME)
+    public double time;
+
+    @Column(MeterData.TIMESTAMP_DB_COLUMN_NAME)
+    public Date timestamp;
+
+    @Column(MeterData.NEW_DEVICE_TIME_DB_COLUMN_NAME_DB_COLUMN_NAME)
+    public double newDeviceTime;
+
+    @Column(MeterData.BG_READING__MG_DL_COLUMN_NAME)
+    public int bgReading;
+
+    @Column(MeterData.LINKED_BG_METER_ID_DB_COLUMN_NAME)
+    public int linkedMeterId;
+
+    @Column(MeterData.TEMP_BASAL_AMOUNT__U_H__DB_COLUMN_NAME)
+    public float temporaryBasalAmount;
+
+    @Column(MeterData.TEMP_BASAL_TYPE_DB_COLUMN_NAME)
+    public String rawTemporaryBasalType;
+
+    @Column(MeterData.TEMP_BASAL_DURATION__HH_MM_SS__DB_COLUMN_NAME)
+    public double temporaryBasalDuration;
+
+    @Column(MeterData.BOLUS_TYPE_DB_COLUMN_NAME)
+    public String rawBolusType;
+
+    @Column(MeterData.BOLUS_VOLUME_SELECTED__U__DB_COLUMN_NAME)
+    public float bolusVolumeSelected;
+
+    @Column(MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME)
+    public float bolusVolumeDelivered;
+
+    @Column(MeterData.PROGRAMMED_BOLUS_DURATION__HH_MM_SS__DB_COLUMN_NAME)
+    public float programmedBolusDuration;
+
+    @Column(MeterData.PRIME_TYPE_DB_COLUMN_NAME)
+    public String rawPrimeType;
+
+    @Column(MeterData.PRIME_VOLUME_DELIVERED__U__DB_COLUMN_NAME)
+    public float primeVolumeDelivered;
+
+    @Column(MeterData.SUSPEND_DB_COLUMN_NAME)
+    public boolean suspended;
+
+    @Column(MeterData.REWIND_DB_COLUMN_NAME)
+    public boolean rewinding;
+
+    @Column(MeterData.BWZ_ESTIMATE__U__DB_COLUMN_NAME)
+    public float bolusWizardEstimate;
+
+    @Column(MeterData.BWZ_TARGET_HIGH_BG__MG_DL__DB_COLUMN_NAME)
+    public int bolusWizardHighTarget;
+
+    @Column(MeterData.BWZ_TARGET_LOW_BG__MG_DL__DB_COLUMN_NAME)
+    public int bolusWizardLowTarget;
+
+    @Column(MeterData.BWZ_CARB_RATIO__GRAMS__DB_COLUMN_NAME)
+    public int bolusWizardCarbRatio;
+
+    @Column(MeterData.BWZ_INSULIN_SENSITIVITY__MG_DL__DB_COLUMN_NAME)
+    public int bolusWizardInsulinSensitivity;
+
+    @Column(MeterData.BWZ_CARB_INPUT__GRAMS__DB_COLUMN_NAME)
+    public int bolusWizardCarbInput;
+
+    @Column(MeterData.BWZ_BG_INPUT__MG_DL__DB_COLUMN_NAME)
+    public int bolusWizardBGInput;
+
+    @Column(MeterData.BWZ_CORRECTION_ESTIMATE__U__DB_COLUMN_NAME)
+    public float bolusWizardCorrectionEstimate;
+
+    @Column(MeterData.BWZ_FOOD_ESTIMATE__U__DB_COLUMN_NAME)
+    public float bolusWizardFoodEstimate;
+
+    @Column(MeterData.BWZ_ACTIVE_INSULIN__U__DB_COLUMN_NAME)
+    public float bolusWizardActiveInsulin;
+
+    @Column(MeterData.ALARM_DB_COLUMN_NAME)
+    public String rawAlarmType;
+
+    @Column(MeterData.SENSOR_CALIBRATION_BG__MG_DL__DB_COLUMN_NAME)
+    public int sensorCalibrationBG;
+
+    @Column(MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME)
+    public int sensorBG;
+
+    @Column(MeterData.ISIG_VALUE_DB_COLUMN_NAME)
+    public float sensorISIG;
+
+    @Column(MeterData.DAILY_INSULIN_TOTAL__U__DB_COLUMN_NAME)
+    public float dailyInsulinTotal;
+
+    @Column(MeterData.RAW_TYPE_DB_COLUMN_NAME)
+    public String rawType;
+
+    @Column(MeterData.RAW_VALUES_DB_COLUMN_NAME)
+    public String rawValues;
+
+    @Column(MeterData.RAW_ID_DB_COLUMN_NAME)
+    public int rawId;
+
+    @Column(MeterData.RAW_UPLOAD_ID_DB_COLUMN_NAME)
+    public int rawUploadId;
+
+    @Column(MeterData.RAW_SEQ_NUM_DB_COLUMN_NAME)
+    public int rawSequenceNumber;
+
+    @Column(MeterData.RAW_DEVICE_TYPE_DB_COLUMN_NAME)
+    public String rawDeviceType;
+
+    public Bolus getBolus() {
+        return new Bolus(rawBolusType, bolusVolumeDelivered, programmedBolusDuration, timestamp);
+    }
 }
