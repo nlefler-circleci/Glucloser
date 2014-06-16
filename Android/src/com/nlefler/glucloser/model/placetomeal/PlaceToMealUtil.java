@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.util;
+package com.nlefler.glucloser.model.placetomeal;
 
 import java.util.Calendar;
 import java.util.Map;

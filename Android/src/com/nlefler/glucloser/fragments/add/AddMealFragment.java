@@ -41,6 +41,7 @@ import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.database.save.FoodUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.MealUpdatedEvent;
@@ -149,7 +150,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				Bundle args = new Bundle();
 
 				Food food = new Food();
-				foodMap.put(food.id, food);
+				foodMap.put(food.glucloserId, food);
 				args.putSerializable(AddFoodFragment.FOOD_KEY, food);
 
 				AddFoodFragment fragment = new AddFoodFragment();
@@ -259,7 +260,8 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 
 			meal = (Meal)bundle.getSerializable(MEAL_KEY);
 
-			Place place = meal.placeToMeal.place;
+            // TODO: Thread
+			Place place = PlaceUtil.getPlaceById(meal.placeToMeal.placeGlucloserId);
 			if (place == null) {
 				place = (Place)bundle.getSerializable(PLACE_KEY);
 			}
@@ -271,11 +273,13 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 					bundle.getSerializable(FOODS_KEY);
 			if (foods != null) {
 				for (Food food : foods) {
-					addFood(food, /*new ArrayList<TagToFood>(),*/ true, false);
+					addFood(food, true, false);
 				}
 			} else {
 				for (MealToFood m2f : meal.mealToFoods) {
-					addFood(m2f.food, /*new ArrayList<TagToFood>(),*/ true, false);
+                    // TODO: Thread
+                    Food food = FoodUtil.getFoodById(m2f.foodGlucloserId);
+					addFood(food, true, false);
 				}
 			}
 		} else {
@@ -294,22 +298,22 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 	}
 
 	@Subscribe public void foodUpdated(FoodUpdatedEvent event) {
-		if (foodMap.containsKey(event.getFood().id)) {
-			boolean replaceFoodView = foodViewList.contains(event.getFood().id);
+		if (foodMap.containsKey(event.getFood().glucloserId)) {
+			boolean replaceFoodView = foodViewList.contains(event.getFood().glucloserId);
 			addFood(event.getFood(), /*new ArrayList<TagToFood>(),*/ true, replaceFoodView);
 		} else {
-			Log.v(LOG_TAG, "Ignoring updated food with id " + event.getFood().id + ". Not in our map");
+			Log.v(LOG_TAG, "Ignoring updated food with id " + event.getFood().glucloserId + ". Not in our map");
 		}
 	}
 
 	@Subscribe public void placeUpdated(PlaceUpdatedEvent event) {
 		if (addingPlace
                 || selectedPlace.equals(event.getPlace())
-                || selectedPlace.id.equals(event.getPlace().id)) {
+                || selectedPlace.glucloserId.equals(event.getPlace().glucloserId)) {
 			addingPlace = false;
 			setSelectedPlace(event.getPlace());
 		} else {
-			Log.v(LOG_TAG, "Ignoring updated place with id " + event.getPlace().id + ". Not selected");
+			Log.v(LOG_TAG, "Ignoring updated place with id " + event.getPlace().glucloserId + ". Not selected");
 		}
 	}
 
@@ -322,17 +326,9 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		placeAddress.setText(R.string.location_noun);
 	}
 
-	private void addFood( Food food, /*List<TagToFood> tags,*/ 
-			boolean addView, boolean replace) {
-//		if (foodTags.containsKey(food.id)) {
-//			foodTags.get(food.id).clear();
-//		} else {
-//			foodTags.put(food.id, new ArrayList<TagToFood>());
-//		}
+	private void addFood( Food food, boolean addView, boolean replace) {
 		// TODO This breaks the date when editing
 		food.setNowAsDateEaten();
-
-		//foodTags.get(food.id).addAll(tags);
 
 		if (addView) {
 			addViewForFood(food, replace);
@@ -347,7 +343,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
         }
 		RelativeLayout foodItem = null;
 		if (replace) {
-			foodItem = (RelativeLayout) foodTableLayout.findViewWithTag(food.id);
+			foodItem = (RelativeLayout) foodTableLayout.findViewWithTag(food.glucloserId);
 		} 
 		if (foodItem == null) {
 			foodItem = (RelativeLayout)getActivity().getLayoutInflater().inflate(
@@ -365,7 +361,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		}
 		carbs.setText(carbValue);
 
-		foodItem.setTag(food.id);
+		foodItem.setTag(food.glucloserId);
 
 		foodItem.setOnClickListener(new OnClickListener() {
 
@@ -385,7 +381,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 			}
 		});
 		
-		foodViewList.add(food.id);
+		foodViewList.add(food.glucloserId);
 	}
 
 	private void updateNearbyPlacesAndShowSelectDialog(final Location loc, final boolean showDialog) {
@@ -595,14 +591,14 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		}
 
 		meal.placeToMeal = new PlaceToMeal();
-		meal.placeToMeal.place = selectedPlace;
-		meal.placeToMeal.meal = meal;
+		meal.placeToMeal.placeGlucloserId = selectedPlace.glucloserId;
+		meal.placeToMeal.mealGlucloserId = meal.glucloserId;
 
 		Log.i(LOG_TAG, "Setting up " + foodMap.values().size() + " meal to foods");
 		for (Food f : foodMap.values()) {
 			MealToFood mealToFood = new MealToFood();
-			mealToFood.meal = meal;
-			mealToFood.food = f;
+			mealToFood.mealGlucloserId = meal.glucloserId;
+			mealToFood.foodGlucloserId = f.glucloserId;
 			meal.addFood(mealToFood);
 		}
 
@@ -611,7 +607,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 	
 	@Subscribe public void mealUpdated(MealUpdatedEvent event) {
 		if (meal.equals(event.getMeal())
-                || meal.id.equals(event.getMeal().id)) {
+                || meal.glucloserId.equals(event.getMeal().glucloserId)) {
 			clearViews();
 		}
 	}

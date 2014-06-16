@@ -27,11 +27,11 @@ public class Food extends GlucloserBaseModel implements Serializable {
 
     protected static final String FOOD_DB_NAME = "food";
     
-	public static final String NAME_DB_COLUMN_KEY = "name";
-	public static final String CARBS_DB_COLUMN_KEY = "carbs";
-	public static final String IMAGE_DB_COLUMN_KEY = "photo";
-	public static final String CORRECTION_DB_COLUMN_KEY = "correction";
-	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
+	protected static final String NAME_DB_COLUMN_KEY = "name";
+	protected static final String CARBS_DB_COLUMN_KEY = "carbs";
+	protected static final String IMAGE_DB_COLUMN_KEY = "photo";
+	protected static final String CORRECTION_DB_COLUMN_KEY = "correction";
+	protected static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
 
     @Key
     @Column(NAME_DB_COLUMN_KEY)

@@ -46,8 +46,8 @@ public class Bolus extends GlucloserBaseModel {
 	public double duration;
 	public Date timeStarted;
 
-	public Bolus(String type, double units, double duration, Date started) {
-		type = typeConversionMap.containsKey(type) ? typeConversionMap.get(type) : BolusType.BolusTypeUnknown;
+	public Bolus(String stringType, double units, double duration, Date started) {
+		type = typeConversionMap.containsKey(stringType) ? typeConversionMap.get(type) : BolusType.BolusTypeUnknown;
 		units = units;
 		duration = duration;
 		timeStarted = started;
@@ -57,7 +57,7 @@ public class Bolus extends GlucloserBaseModel {
 	public boolean equals(Object o) {
 		if (o instanceof Bolus) {
 			Bolus b = (Bolus)o;
-			return (this.type.equals(b.type)) && (this.units == b.units) && (this.length == b.length);
+			return (this.type.equals(b.type)) && (this.units == b.units) && (this.duration == b.duration);
 		}
 		return false;
 	}
@@ -75,11 +75,11 @@ public class Bolus extends GlucloserBaseModel {
 	}
 
 	public String getLengthForDisplay() {
-		int hours = (int)(length / (60 * 60));
-		length -= hours * 60 * 60;
-		int minutes = (int)(length / 60);
-		length -= minutes * 60;
-		int seconds = (int)(length);
+		int hours = (int)(duration / (60 * 60));
+		duration -= hours * 60 * 60;
+		int minutes = (int)(duration / 60);
+		duration -= minutes * 60;
+		int seconds = (int)(duration);
 
 		String ret = "";
 		if (hours > 0) {

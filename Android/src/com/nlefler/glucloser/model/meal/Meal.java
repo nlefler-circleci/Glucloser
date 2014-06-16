@@ -34,41 +34,12 @@ public class Meal extends GlucloserBaseModel implements Serializable {
     protected  static final String MEAL_DB_NAME = "meal";
 	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
 
-    public static String getDatabaseTableName() {
-        return MEAL_DB_NAME;
-    }
-
-    @Key
-    @AutoIncrement
-    @Column(DatabaseUtil.ID_COLUMN_NAME)
-    private int id;
-    public int getId() {
-        return id;
-    }
-
-    @Key
-    @Column(DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME)
-    public String glucloserId;
-
-    @Key
-    @Column(DatabaseUtil.PARSE_ID_COLUMN_NAME)
-	public String parseId;
-
     // TODO: Relationship
 	public PlaceToMeal placeToMeal;
 	public List<MealToFood> mealToFoods;
 
     @Column(DATE_EATEN_DB_COLUMN_NAME)
 	public Date dateEaten;
-
-    @Column(DatabaseUtil.CREATED_AT_COLUMN_NAME)
-	public Date createdAt;
-    @Column(DatabaseUtil.UPDATED_AT_COLUMN_NAME)
-	public Date updatedAt;
-    @Column(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME)
-	public boolean needsUpload;
-    @Column(DatabaseUtil.DATA_VERSION_COLUMN_NAME)
-	public int dataVersion;
 
 	public Meal() {
 		this.parseId = UUID.randomUUID().toString();
@@ -129,37 +100,15 @@ public class Meal extends GlucloserBaseModel implements Serializable {
 		
 		return meal;
 	}
-	
-	public Meal linkFoods() {
-		this.mealToFoods.addAll(MealUtil.getFoodsForMeal(this));
-		return this;
-	}
-	
-	public Meal linkPlace() {
-		this.placeToMeal = MealUtil.getPlaceForMeal(this);
-		return this;
+
+	public void addFood(MealToFood mealToFood) {
+        mealToFood.foodGlucloserId = glucloserId;
+		this.mealToFoods.add(mealToFood);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Meal) {
-			Meal m = (Meal)o;
-
-			return this.placeToMeal.equals(m.placeToMeal) &&
-					// TODO: iterative equals?
-					this.mealToFoods.equals(m.mealToFoods);
-		}
-		return false;
-	}
-
-	public void addFood(MealToFood f) {
-		f.meal = this;
-		this.mealToFoods.add(f);
-	}
-
-	public void removeFood(MealToFood f) {
-		f.meal = null;
-		this.mealToFoods.remove(f);
+	public void removeFood(MealToFood mealToFood) {
+        mealToFood.mealGlucloserId = null;
+		this.mealToFoods.remove(mealToFood);
 	}
 
 	public Date getDateEaten() {
@@ -174,4 +123,30 @@ public class Meal extends GlucloserBaseModel implements Serializable {
 
 		return DateFormat.format("MMM dd, kk:mm", toTZ).toString();
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Meal)) return false;
+
+        Meal meal = (Meal) o;
+
+        if (dataVersion != meal.dataVersion) return false;
+        if (dateEaten != null ? !dateEaten.equals(meal.dateEaten) : meal.dateEaten != null)
+            return false;
+        if (glucloserId != null ? !glucloserId.equals(meal.glucloserId) : meal.glucloserId != null)
+            return false;
+        if (parseId != null ? !parseId.equals(meal.parseId) : meal.parseId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = glucloserId != null ? glucloserId.hashCode() : 0;
+        result = 31 * result + (parseId != null ? parseId.hashCode() : 0);
+        result = 31 * result + (dateEaten != null ? dateEaten.hashCode() : 0);
+        result = 31 * result + dataVersion;
+        return result;
+    }
 }

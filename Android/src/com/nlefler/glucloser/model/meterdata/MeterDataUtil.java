@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.util;
+package com.nlefler.glucloser.model.meterdata;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +18,7 @@ import com.nlefler.glucloser.model.bolus.Bolus;
 import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.model.meterdata.MeterData;
 import com.nlefler.glucloser.model.meal.MealUtil;
+import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 

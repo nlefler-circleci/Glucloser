@@ -35,7 +35,7 @@ import com.nlefler.glucloser.thirdparty.zxing.IntentResult;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.thirdparty.zxing.IntentIntegrator;
-import com.nlefler.glucloser.util.FoodUtil;
+import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.util.database.save.SaveManager;
 
 public class AddFoodFragment extends Fragment {

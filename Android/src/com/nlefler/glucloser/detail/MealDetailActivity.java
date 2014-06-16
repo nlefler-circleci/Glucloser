@@ -35,14 +35,17 @@ import android.widget.TextView;
 import com.nlefler.glucloser.fragments.add.AddMealFragment;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.place.PlaceUtil;
+import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.model.bolus.Bolus;
 import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.LocationUtil;
-import com.nlefler.glucloser.util.MeterDataUtil;
-import com.nlefler.glucloser.util.MeterDataUtil.BloodSugarDataResults;
+import com.nlefler.glucloser.model.meterdata.MeterDataUtil;
+import com.nlefler.glucloser.model.meterdata.MeterDataUtil.BloodSugarDataResults;
 import com.nlefler.glucloser.util.database.save.FoodUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.SaveManager;
@@ -154,21 +157,6 @@ public class MealDetailActivity extends Activity {
 		} else {
 			meal = new Meal();
 		}
-		
-		new AsyncTask<Meal, Void, Void>() {
-			@Override
-			protected Void doInBackground(Meal... params) {
-				meal.linkPlace();
-				meal.linkFoods();
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void nil) {				
-				setupViews();
-			}
-
-		}.execute(meal);
 	}
 	
 	public void showFragment(Fragment fragment, String tag) {
@@ -185,7 +173,9 @@ public class MealDetailActivity extends Activity {
 
 	@SuppressLint("SetJavaScriptEnabled")
 	private void setupViews() {
-		placeNameView.setText(meal.placeToMeal.place.name);
+        // TODO: Thread
+        Place place = PlaceUtil.getPlaceById(meal.placeToMeal.placeGlucloserId);
+		placeNameView.setText(place.name);
 
 		Date dateEaten = meal.getDateEaten();
 		timeEatenView.setText(DateFormat.format("MMM dd, kk:mm", dateEaten));
@@ -210,7 +200,8 @@ public class MealDetailActivity extends Activity {
 
 				int carbTotal = 0;
 				for (MealToFood mealToFood : meal.mealToFoods) {
-					final Food food = mealToFood.food;
+                    // TODO: Thread
+					final Food food = FoodUtil.getFoodById(mealToFood.foodGlucloserId);
 					carbTotal += food.carbs;
 					handler.post(new Runnable() {
 
@@ -272,7 +263,7 @@ public class MealDetailActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent detailIntent = new Intent(MealDetailActivity.this, FoodDetailActivity.class);
-				detailIntent.putExtra(FoodDetailActivity.FOOD_EXTRA_KEY, food.id);
+				detailIntent.putExtra(FoodDetailActivity.FOOD_EXTRA_KEY, food.glucloserId);
 				MealDetailActivity.this.startActivity(detailIntent);
 			}
 		});
@@ -299,8 +290,8 @@ public class MealDetailActivity extends Activity {
 		TextView units = (TextView)bolusItem.findViewById(R.id.bolus_item_list_unit_count);
 
 		String typeText = bolus.getTypeForDisplay();
-		if (bolus.type.equals(Bolus.TYPE_DUAL_SQUARE) ||
-				bolus.type.equals(Bolus.TYPE_SQUARE)) {
+		if (bolus.type.equals(Bolus.BolusType.BolusTypeDualSquare) ||
+				bolus.type.equals(Bolus.BolusType.BolusTypeSquare)) {
 			typeText += " (" + bolus.getLengthForDisplay() + ")";
 		}
 		type.setText(typeText);

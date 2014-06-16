@@ -43,7 +43,7 @@ public class PlaceListItem implements HomeListItem {
 
         LinearLayout theView = null;
 
-		double requestId = place.id.hashCode() + count;
+		double requestId = place.glucloserId.hashCode() + count;
 
 		if (convertView == null || convertView.getId() != R.layout.home_line_item) {
 			theView = (LinearLayout)inflater.inflate(R.layout.home_line_item, null);

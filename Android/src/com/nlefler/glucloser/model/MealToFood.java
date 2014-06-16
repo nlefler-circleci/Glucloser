@@ -1,22 +1,13 @@
 package com.nlefler.glucloser.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
-import com.nlefler.glucloser.model.food.Food;
-import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.util.database.upgrade.Tables;
-import com.nlefler.glucloser.util.FoodUtil;
-import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import se.emilsjolander.sprinkles.Model;
-import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
 import se.emilsjolander.sprinkles.annotations.Table;

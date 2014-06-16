@@ -16,7 +16,7 @@ import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 public class MealToFoodUtil {
-	private static final String LOG_TAG = "Pump_Meal_To_Food_Util";
+	private static final String LOG_TAG = "Glucloser_Meal_To_Food_Util";
 
 	public static long saveMealToFood(MealToFood mealToFood) {
 		ContentValues values = new ContentValues();

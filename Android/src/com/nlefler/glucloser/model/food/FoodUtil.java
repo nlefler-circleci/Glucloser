@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.util;
+package com.nlefler.glucloser.model.food;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,21 +9,23 @@ import java.util.TimeZone;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 
+import se.emilsjolander.sprinkles.Query;
+
 
 public class FoodUtil {
-	private static final String LOG_TAG = "Glucloserr_Food_Util";
+	private static final String LOG_TAG = "Glucloser_Food_Util";
 
-	private static String[] columnsForGetAllFoodNames = new String[] {Food.NAME_DB_COLUMN_KEY};
 
 	/**
 	 * Returns names for all foods in the database.
@@ -34,32 +36,18 @@ public class FoodUtil {
 	 * @return A List<String> of food names
 	 */
 	public static List<String> getAllFoodNames() {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				true, Tables.FOOD_DB_NAME, columnsForGetAllFoodNames,
-				null, null, Food.NAME_DB_COLUMN_KEY, 
-				null, Food.NAME_DB_COLUMN_KEY + " ASC", null);
+        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
+                " ORDER BY " + Food.NAME_DB_COLUMN_KEY + " ASC";
+		List<Food> sortedFoods = Query.many(Food.class, select).get().asList();
 
-		List<String> sortedNames = new ArrayList<String>();
-
-		if (!cursor.moveToFirst()) {
-			return sortedNames;
-		}
-
-		Map<String, Object> map = null;
-		while (!cursor.isAfterLast()) {
-			map = DatabaseUtil.getRecordFromCursor(cursor, Food.COLUMN_TYPES);
-			sortedNames.add((String)map.get(Food.NAME_DB_COLUMN_KEY));
-
-			cursor.moveToNext();
-		}
+        List<String> sortedNames = new ArrayList<String>(sortedFoods.size());
+        for (Food food : sortedFoods) {
+            sortedNames.add(food.name);
+        }
 
 		return sortedNames;
 	}
 
-	private static final String[] columnsForGetAllFoodNamesStartingWith = 
-			new String[] {Food.NAME_DB_COLUMN_KEY};
-	private static final String whereClauseForGetAllFoodNamesStartingWith =
-			"lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(?)";
 	/**
 	 * Returns names for all foods in the database that begin
 	 * with the provided string.
@@ -71,28 +59,17 @@ public class FoodUtil {
 	 * @return A List<String> of food names.
 	 */
 	public static List<String> getAllFoodNamesStartingWith(String start) {
-		Log.i(LOG_TAG, "Getting food names starting with " + start);
+        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
+                " WHERE lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(?%) ORDERED BY " +
+                Food.NAME_DB_COLUMN_KEY + " ASC";
 
+        List<Food> sortedFoods = Query.many(Food.class, select, start).get().asList();
+		List<String> sortedNames = new ArrayList<String>(sortedFoods.size());
 
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.FOOD_DB_NAME,
-				columnsForGetAllFoodNamesStartingWith, 
-				whereClauseForGetAllFoodNamesStartingWith,
-				new String[] {start + "%"}, Food.NAME_DB_COLUMN_KEY, null, 
-				Food.NAME_DB_COLUMN_KEY + " ASC");
-		List<String> sortedNames = new ArrayList<String>();
+        for (Food food : sortedFoods) {
+            sortedNames.add(food.name);
+        }
 
-		if (!cursor.moveToFirst()) {
-			return sortedNames;
-		}
-
-		Map<String, Object> map;
-		while (!cursor.isAfterLast()) {
-			map = DatabaseUtil.getRecordFromCursor(cursor, Food.COLUMN_TYPES);
-			cursor.moveToNext();
-
-			sortedNames.add((String)map.get(Food.NAME_DB_COLUMN_KEY));
-		}
 		return sortedNames;
 
 	}
@@ -111,22 +88,12 @@ public class FoodUtil {
 	 * @return A List<Food> of matching records
 	 */
 	public static List<Food> getAllFoodsForName(String foodName) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.FOOD_DB_NAME,
-				null, whereClauseForGetFoodForName,
-				new String[] {"%" + foodName + "%"}, Food.NAME_DB_COLUMN_KEY,
-				null, Food.NAME_DB_COLUMN_KEY + " ASC");
-		List<Food> foods = new ArrayList<Food>();
+        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
+                " WHERE lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(?) ORDERED BY " +
+                Food.NAME_DB_COLUMN_KEY + " ASC";
 
-		if (!cursor.moveToFirst()) {
-			return foods;
-		}
+		List<Food> foods = Query.many(Food.class, select, foodName).get().asList();
 
-		while (!cursor.isAfterLast()) {
-			foods.add(Food.fromMap(DatabaseUtil.getRecordFromCursor(cursor, 
-					Food.COLUMN_TYPES)));
-			cursor.moveToNext();
-		}
 		return foods;
 	}
 
@@ -140,21 +107,10 @@ public class FoodUtil {
 	 * @return A @ref Food for the id or null if no matching Food is found
 	 */
 	public static Food getFoodById(String id) {
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.FOOD_DB_NAME, null,
-				DatabaseUtil.PARSE_ID_COLUMN_NAME + "=?",
-				new String[] {id}, null, null, null, "1");
-		Food food = null;
+        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
+                "WHERE " + DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " = ?";
 
-		if (!cursor.moveToFirst()) {
-			Log.i(LOG_TAG, "No foods with id " + id + " in local db");
-			return food;
-		}
-
-		while (!cursor.isAfterLast()) {
-			food = Food.fromMap(DatabaseUtil.getRecordFromCursor(cursor, Food.COLUMN_TYPES));
-			cursor.moveToNext();
-		}
+		Food food = Query.one(Food.class, select, id).get();
 
 		return food;
 	}
@@ -169,7 +125,7 @@ public class FoodUtil {
 	 * @return The @ref Place or null if no @ref Food or @ref Place is found
 	 */
 	public static Place getPlaceForFood(Food food) {
-		return MealUtil.getPlaceForMeal(FoodUtil.getMealForFood(food)).place;
+		return PlaceUtil.getPlaceById(MealUtil.getPlaceForMeal(FoodUtil.getMealForFood(food)).placeGlucloserId);
 	}
 
 	private static final String whereClauseForGetAllFoodsWithNameContaining = 
@@ -185,25 +141,12 @@ public class FoodUtil {
 	 * @return A List<Food> with matching foods
 	 */
 	public static List<Food> getAllFoodsWithNameContaining(String name) {
-		Log.i(LOG_TAG, "Getting food with names containing " + name);
+        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
+                " WHERE lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(%?%) ORDER BY " +
+                Food.NAME_DB_COLUMN_KEY + " ASC";
 
-		Cursor cursor = DatabaseUtil.instance().getReadableDatabase().query(
-				Tables.FOOD_DB_NAME,
-				null, 
-				whereClauseForGetAllFoodsWithNameContaining,
-				new String[] {"%" + name + "%"}, Food.NAME_DB_COLUMN_KEY, null,
-				Food.NAME_DB_COLUMN_KEY + " ASC");
-		List<Food> foods = new ArrayList<Food>();
+		List<Food> foods = Query.many(Food.class, select, name).get().asList();
 
-		if (!cursor.moveToFirst()) {
-			return foods;
-		}
-
-		while (!cursor.isAfterLast()) {
-			foods.add(Food.fromMap(DatabaseUtil.getRecordFromCursor(cursor,
-					Food.COLUMN_TYPES)));
-			cursor.moveToNext();
-		}
 		return foods;
 	}
 
@@ -344,7 +287,6 @@ public class FoodUtil {
 			average += food.carbs;
 		}
 
-		Log.i(LOG_TAG, "Running callback for average carbs for food " + foodName);
 		return (float)average / (float)foods.size();
 
 	}
@@ -356,7 +298,7 @@ public class FoodUtil {
 	 * @param food The food to save
 	 * @return The new id if the save was successful or -1
 	 */
-	public static long saveFood(Food food) {
+	public static boolean saveFood(Food food) {
 		ContentValues values = new ContentValues();
 
 		if (food.createdAt == null) {
@@ -366,42 +308,6 @@ public class FoodUtil {
 			food.updatedAt = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu")).getTime());
 		}
 
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				DatabaseUtil.PARSE_ID_COLUMN_NAME), food.id);
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				DatabaseUtil.CREATED_AT_COLUMN_NAME), 
-				DatabaseUtil.parseDateFormat.format(food.createdAt));
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				DatabaseUtil.UPDATED_AT_COLUMN_NAME), 
-				DatabaseUtil.parseDateFormat.format(food.updatedAt));
-
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				Food.NAME_DB_COLUMN_KEY), food.name);
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				Food.CARBS_DB_COLUMN_KEY), food.carbs);
-
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				Food.CORRECTION_DB_COLUMN_KEY), food.isCorrection);
-
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				Food.DATE_EATEN_DB_COLUMN_NAME), 
-				DatabaseUtil.parseDateFormat.format(food.dateEaten));
-
-		values.put(DatabaseUtil.localKeyForNetworkKey(Tables.FOOD_DB_NAME,
-				DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
-				food.needsUpload);
-
-		DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
-		long code = DatabaseUtil.instance().getWritableDatabase().insertWithOnConflict(
-				Tables.FOOD_DB_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-		if (code == -1) {
-			Log.i(LOG_TAG, "Error code recieved from insert: " + code);
-			Log.i(LOG_TAG, "Values are: " + values);
-		} else {
-			DatabaseUtil.instance().getWritableDatabase().setTransactionSuccessful();
-		}
-        DatabaseUtil.instance().getWritableDatabase().endTransaction();
-
-		return code;
+        return food.save();
 	}
 }

@@ -68,4 +68,26 @@ public class PlaceToMeal extends GlucloserBaseModel implements Serializable {
 		
 		return ret;
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+
+        PlaceToMeal that = (PlaceToMeal) o;
+
+        if (mealGlucloserId != null ? !mealGlucloserId.equals(that.mealGlucloserId) : that.mealGlucloserId != null)
+            return false;
+        if (placeGlucloserId != null ? !placeGlucloserId.equals(that.placeGlucloserId) : that.placeGlucloserId != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = placeGlucloserId != null ? placeGlucloserId.hashCode() : 0;
+        result = 31 * result + (mealGlucloserId != null ? mealGlucloserId.hashCode() : 0);
+        return result;
+    }
 }

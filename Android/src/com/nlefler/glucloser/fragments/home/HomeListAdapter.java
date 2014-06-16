@@ -23,7 +23,7 @@ import com.nlefler.glucloser.fragments.home.listItems.PopularMealListItem;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.util.FoodUtil;
+import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.model.place.PlaceUtil;
 
 public class HomeListAdapter extends BaseAdapter implements ListAdapter {
@@ -228,12 +228,13 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
 					}
 				}
 				for (Place place : foundPlaces) {
-					// Get popular meals
-					List<List<Food>> mealsForPlace =
-							PlaceUtil.getMostPopularMealsForPlace(place, MOST_POPULAR_MEAL_LIMIT);
-                    for (List<Food> foods : mealsForPlace) {
-                        meals.add(new PopularMealListItem(place, foods));
-                    }
+                    // TODO: What
+//					// Get popular meals
+//					List<List<Food>> mealsForPlace =
+//							PlaceUtil.getMostPopularMealsForPlace(place, MOST_POPULAR_MEAL_LIMIT);
+//                    for (List<Food> foods : mealsForPlace) {
+//                        meals.add(new PopularMealListItem(place, foods));
+//                    }
                 }
 
 				return meals;
@@ -297,7 +298,8 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
 					foundPlaces = PlaceUtil.getPlacesNear(lastSearchLocation);
 				}
                 for (Place place : foundPlaces) {
-                    places.add(new PlaceListItem(place, PlaceUtil.getNumberOfMealsForPlace(place)));
+                    // TODO: What
+//                    places.add(new PlaceListItem(place, PlaceUtil.getNumberOfMealsForPlace(place)));
                 }
 
 				return places;

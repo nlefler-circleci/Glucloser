@@ -9,6 +9,7 @@ import java.util.TimeZone;
 
 import android.location.Address;
 import android.location.Location;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.nlefler.glucloser.model.meal.Meal;
@@ -287,7 +288,7 @@ public class PlaceUtil {
 	 * @return List<Meal> The list of meals
 	 */
 	private static List<Meal> _getAllMealsForPlace(Place place, int limit) {
-        String selectClause = "SELECT * FROM " + Meal.getDatabaseTableName() + " WHERE " +
+        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Meal.class) + " WHERE " +
                 DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " IN " +
                 " (SELECT " + PlaceToMeal.MEAL_DB_COLUMN_KEY + " WHERE " +
                 PlaceToMeal.PLACE_DB_COLUMN_KEY + " = ?) ORDERED BY " +

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.food.FoodUtil;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,10 +37,6 @@ public class PlaceDetailMealListAdapter extends BaseAdapter implements
 				Place place = params[0];
 
 				List<Meal>meals = PlaceUtil.getAllMealsForPlace(place);
-				for (Meal meal : meals) {
-					meal.linkFoods();
-				}
-				
 				return meals;
 			}
 
@@ -94,7 +92,9 @@ public class PlaceDetailMealListAdapter extends BaseAdapter implements
 		foodsList.removeAllViews();
 		for (MealToFood m2f : meal.mealToFoods) {
 			TextView foodView = new TextView(mealLayout.getContext());
-			foodView.setText(m2f.food.name);
+            // TODO: Thread
+            Food food = FoodUtil.getFoodById(m2f.foodGlucloserId);
+			foodView.setText(food.name);
 			foodView.setTextSize(18);
 			foodsList.addView(foodView);
 		}
