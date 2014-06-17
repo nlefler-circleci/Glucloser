@@ -29,13 +29,6 @@ public class Tables {
 //	public static final String SYNC_INFO_DOWN_DB_NAME = "SyncInfoDown";
 //	public static final String SYNC_INFO_UP_DB_NAME = "SyncInfoUp";
 
-	protected static String[] syncingTableNames = new String[] {
-		Food.FOOD_DB_NAME, 
-		Meal.MEAL_DB_NAME,
-		Place.PLACE_DB_NAME,
-		MeterData.METER_DATA_DB_NAME,
-	};
-
     protected static final String MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
             MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + MEAL_DB_NAME + " WHERE " +
