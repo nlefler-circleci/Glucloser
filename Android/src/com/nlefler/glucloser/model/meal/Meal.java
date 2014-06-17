@@ -14,6 +14,8 @@ import android.util.Log;
 
 import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.model.MealToFood;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
@@ -31,23 +33,25 @@ import se.emilsjolander.sprinkles.annotations.Table;
 public class Meal extends GlucloserBaseModel implements Serializable {
 	private static final String LOG_TAG = "Glucloser_Meal";
 
-    protected  static final String MEAL_DB_NAME = "meal";
-	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
+    protected static final String MEAL_DB_NAME = "meal";
 
-    // TODO: Relationship
-	public PlaceToMeal placeToMeal;
-	public List<MealToFood> mealToFoods;
+    protected static final String PLACE_GLUCLOSER_ID_COLUMN_NAME = "placeGlucloserId";
+	public static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
 
     @Column(DATE_EATEN_DB_COLUMN_NAME)
 	public Date dateEaten;
 
-	public Meal() {
-		this.parseId = UUID.randomUUID().toString();
-        this.glucloserId = UUID.randomUUID().toString();
+    @Column(PLACE_GLUCLOSER_ID_COLUMN_NAME)
+    protected String placeGlucloserId;
 
-		this.mealToFoods = new ArrayList<MealToFood>();
+    private Place place;
+    public List<Food> foods;
+
+	public Meal() {
+        super();
 
 		this.dateEaten = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu"))).getTime();
+        this.foods = new ArrayList<Food>();
 	}
 
 	private ParseObject populateParseObject(ParseObject pobj) {
@@ -68,47 +72,22 @@ public class Meal extends GlucloserBaseModel implements Serializable {
 		
 		return ret;
 	}
-	
-	public static Meal fromMap(Map<String, Object> map) {
-		Meal meal = new Meal();
 
-		meal.parseId = (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME);
+    public Place getPlace () {
+        return place;
+    }
 
-		meal.needsUpload = (Boolean)map.get(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME);
-		meal.dataVersion = (Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME);
-		try {
-			meal.dateEaten = DatabaseUtil.parseDateFormat.parse(
-					(String)map.get(Meal.DATE_EATEN_DB_COLUMN_NAME));
-		} catch (java.text.ParseException e) {
-			Log.e(LOG_TAG, "Unable to parse " + (String)map.get(Meal.DATE_EATEN_DB_COLUMN_NAME));
-			e.printStackTrace();
-		}
+    public void setPlace(Place newPlace) {
+        this.place = newPlace;
+        this.placeGlucloserId = this.place.glucloserId;
+    }
 
-
-		try {
-			meal.createdAt = DatabaseUtil.parseDateFormat.parse((String)map.get(DatabaseUtil.CREATED_AT_COLUMN_NAME));
-		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			meal.updatedAt = DatabaseUtil.parseDateFormat.parse((String)map.get(DatabaseUtil.CREATED_AT_COLUMN_NAME));
-		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return meal;
+	public void addFood(Food food) {
+		this.foods.add(food);
 	}
 
-	public void addFood(MealToFood mealToFood) {
-        mealToFood.foodGlucloserId = glucloserId;
-		this.mealToFoods.add(mealToFood);
-	}
-
-	public void removeFood(MealToFood mealToFood) {
-        mealToFood.mealGlucloserId = null;
-		this.mealToFoods.remove(mealToFood);
+	public void removeFood(Food food) {
+		this.foods.remove(food);
 	}
 
 	public Date getDateEaten() {

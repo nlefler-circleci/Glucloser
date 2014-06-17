@@ -47,9 +47,11 @@ public class Bolus extends GlucloserBaseModel {
 	public Date timeStarted;
 
 	public Bolus(String stringType, double units, double duration, Date started) {
-		type = typeConversionMap.containsKey(stringType) ? typeConversionMap.get(type) : BolusType.BolusTypeUnknown;
-		units = units;
-		duration = duration;
+        super();
+
+		this.type = typeConversionMap.containsKey(stringType) ? typeConversionMap.get(type) : BolusType.BolusTypeUnknown;
+		this.units = units;
+		this.duration = duration;
 		timeStarted = started;
 	}
 	

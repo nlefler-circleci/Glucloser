@@ -1,13 +1,17 @@
 package com.nlefler.glucloser.model;
 
+import android.database.Cursor;
+
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 import java.util.Date;
+import java.util.UUID;
 
 import se.emilsjolander.sprinkles.Model;
 import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
+import se.emilsjolander.sprinkles.typeserializers.TypeSerializer;
 
 /**
  * Created by Nathan Lefler on 5/28/14.
@@ -42,4 +46,17 @@ public class GlucloserBaseModel extends Model {
     @Column(DatabaseUtil.DATA_VERSION_COLUMN_NAME)
     public int dataVersion;
 
+    public GlucloserBaseModel() {
+        this.glucloserId = UUID.randomUUID().toString();
+        this.parseId = UUID.randomUUID().toString();
+        this.createdAt = new Date();
+        this.dataVersion = 1;
+    }
+
+    public boolean updateFieldsAndSave() {
+        this.updatedAt = new Date();
+        this.needsUpload = true;
+
+        return super.save();
+    }
 }

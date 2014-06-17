@@ -29,9 +29,9 @@ public class Food extends GlucloserBaseModel implements Serializable {
     
 	protected static final String NAME_DB_COLUMN_KEY = "name";
 	protected static final String CARBS_DB_COLUMN_KEY = "carbs";
-	protected static final String IMAGE_DB_COLUMN_KEY = "photo";
 	protected static final String CORRECTION_DB_COLUMN_KEY = "correction";
 	protected static final String DATE_EATEN_DB_COLUMN_NAME = "dateEaten";
+    protected static final String MEAL_GLUCLOSER_ID_COLUMN_NAME = "mealGlucloserId";
 
     @Key
     @Column(NAME_DB_COLUMN_KEY)
@@ -46,9 +46,11 @@ public class Food extends GlucloserBaseModel implements Serializable {
     @Column(CORRECTION_DB_COLUMN_KEY)
 	public boolean isCorrection;
 
-	
+    @Column(MEAL_GLUCLOSER_ID_COLUMN_NAME)
+    public String mealGlucloserId;
+
 	public Food() {
-		this.parseId = UUID.randomUUID().toString();
+        super();
 
 		this.carbs = -1;
 		this.isCorrection = false;
@@ -80,54 +82,6 @@ public class Food extends GlucloserBaseModel implements Serializable {
 		}
 		
 		return ret;
-	}
-
-	public static Food fromMap(Map<String, Object> map) {
-		Food food = new Food();
-
-		food.parseId = (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME);
-		food.needsUpload = (Boolean)map.get(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME);
-		food.dataVersion = (Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME);
-		food.name = (String)map.get(NAME_DB_COLUMN_KEY);
-		food.carbs = (Integer)map.get(CARBS_DB_COLUMN_KEY);
-		food.isCorrection = (Boolean)map.get(CORRECTION_DB_COLUMN_KEY);
-
-		try {
-			food.dateEaten = DatabaseUtil.parseDateFormat.parse((String)map.get(Food.DATE_EATEN_DB_COLUMN_NAME));
-		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			food.createdAt = DatabaseUtil.parseDateFormat.parse((String)map.get(DatabaseUtil.CREATED_AT_COLUMN_NAME));
-		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			food.updatedAt = DatabaseUtil.parseDateFormat.parse((String)map.get(DatabaseUtil.CREATED_AT_COLUMN_NAME));
-		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return food;
-	};
-
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Food) {
-			Food f = (Food)o;
-			return
-					this.name.equals(f.name) &&
-					this.carbs == f.carbs &&
-					this.isCorrection == f.isCorrection;
-		}
-		return false;
-	}
-
-	public Calendar getDateEaten() {
-		return (Calendar)this.dateEaten.clone();
 	}
 
 	public Calendar getDateEatenForDisplay() {
