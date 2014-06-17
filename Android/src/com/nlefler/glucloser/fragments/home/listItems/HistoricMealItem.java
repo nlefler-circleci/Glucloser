@@ -9,11 +9,8 @@ import android.widget.TextView;
 
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.model.food.Food;
-import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.model.meal.MealUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,7 +27,7 @@ public class HistoricMealItem implements HomeListItem {
 
     public HistoricMealItem(Meal meal) {
         this.meal = meal;
-        this.place = this.meal.linkPlace().placeToMeal.place;
+        this.place = this.meal.getPlace();
     }
 
     public Meal getMeal() { return meal; }
@@ -76,7 +73,7 @@ public class HistoricMealItem implements HomeListItem {
 
 		List<Food> foods = new ArrayList<Food>();
 		// TODO: Is this running in a thread?
-		for (Food food : MealUtil.getFoodsForMeal(meal)) {
+		for (Food food : meal.getFoods()) {
 			foods.add(food);
 
 			RelativeLayout foodLayout = (RelativeLayout) inflater.inflate(

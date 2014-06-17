@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.fragments.add.AddPlaceFragment;
 import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.LocationUtil;
@@ -134,7 +135,7 @@ public class PlaceDetailActivity extends Activity {
 				protected Void doInBackground(Place... params) {
 					Place place = params[0];
 
-					List<Meal> meals = PlaceUtil.getAllMealsForPlace(place);
+					List<Meal> meals = MealUtil.getAllMealsForPlace(place);
 
 					for (Meal meal : meals) {
 						long requestId = RequestIdUtil.getNewId();

@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nlefler.glucloser.model.food.Food;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.parse.ParseException;

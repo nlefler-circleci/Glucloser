@@ -24,16 +24,11 @@ public abstract class SyncImporter {
 	
 	protected ContentValues getCommonValuesForTableIntoValuesFromMap(
 			String tableName, ContentValues values, Map<String, Object> map) {
-		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.PARSE_ID_COLUMN_NAME),
-				(String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME));
-		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.CREATED_AT_COLUMN_NAME), 
-				DatabaseUtil.parseDateFormat.format(((Date)map.get(DatabaseUtil.CREATED_AT_COLUMN_NAME))));
-		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME), 
-				DatabaseUtil.parseDateFormat.format(((Date)map.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME))));
-		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.DATA_VERSION_COLUMN_NAME), 
-				((Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME)));
-		values.put(DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME), 
-				false);
+		values.put(tableName, (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME));
+		values.put(tableName, DatabaseUtil.parseDateFormat.format(((Date)map.get(DatabaseUtil.CREATED_AT_COLUMN_NAME))));
+		values.put(tableName, DatabaseUtil.parseDateFormat.format(((Date)map.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME))));
+		values.put(tableName, ((Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME)));
+		values.put(tableName, false);
 		
 		return values;
 	}
@@ -50,10 +45,8 @@ public abstract class SyncImporter {
 	}
 	
 	protected String[] getArgsForUpsertWhereClauseFromMapForTable(Map<String, Object> map, String tableName) {
-		String id = (String)map.get(DatabaseUtil.localKeyForNetworkKey(
-				tableName, DatabaseUtil.PARSE_ID_COLUMN_NAME));
-		String version = String.valueOf((Integer)map.get(
-				DatabaseUtil.localKeyForNetworkKey(tableName, DatabaseUtil.DATA_VERSION_COLUMN_NAME)));
+		String id = (String)map.get(DatabaseUtil.PARSE_ID_COLUMN_NAME);
+		String version = String.valueOf((Integer)map.get(DatabaseUtil.DATA_VERSION_COLUMN_NAME));
 		
 		return new String[] {id, version, id};
 	}

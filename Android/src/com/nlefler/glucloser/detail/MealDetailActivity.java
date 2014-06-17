@@ -34,7 +34,6 @@ import android.widget.TextView;
 
 import com.nlefler.glucloser.fragments.add.AddMealFragment;
 import com.nlefler.glucloser.model.food.Food;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.model.food.FoodUtil;
@@ -174,7 +173,7 @@ public class MealDetailActivity extends Activity {
 	@SuppressLint("SetJavaScriptEnabled")
 	private void setupViews() {
         // TODO: Thread
-        Place place = PlaceUtil.getPlaceById(meal.placeToMeal.placeGlucloserId);
+        Place place = meal.getPlace();
 		placeNameView.setText(place.name);
 
 		Date dateEaten = meal.getDateEaten();
@@ -195,13 +194,9 @@ public class MealDetailActivity extends Activity {
 			protected Void doInBackground(Meal... params) {
 				Meal meal = params[0];
 
-				Log.v(LOG_TAG, "Meal food and tag data ready");
-				Log.v(LOG_TAG, "Making " + meal.mealToFoods.size() + " view for foods");
-
 				int carbTotal = 0;
-				for (MealToFood mealToFood : meal.mealToFoods) {
+				for (final Food food : meal.getFoods()) {
                     // TODO: Thread
-					final Food food = FoodUtil.getFoodById(mealToFood.foodGlucloserId);
 					carbTotal += food.carbs;
 					handler.post(new Runnable() {
 

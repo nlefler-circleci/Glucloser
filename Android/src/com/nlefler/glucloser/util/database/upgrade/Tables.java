@@ -34,27 +34,14 @@ public class Tables {
 		Meal.MEAL_DB_NAME,
 		Place.PLACE_DB_NAME,
 		MeterData.METER_DATA_DB_NAME,
-		MEAL_TO_FOOD_DB_NAME, 
-		PlaceToMeal.PLACE_TO_MEAL_DB_NAME,
-		PLACE_TO_FOODS_HASH_DB_NAME,
-		MEAL_TO_FOODS_HASH_DB_NAME,
 	};
 
-    protected static final String PLACE_TO_MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
-            PLACE_TO_MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
-            PLACE_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + PLACE_TO_MEAL_DB_NAME + " WHERE " +
-            "'" + DatabaseUtil.PARSE_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.PARSE_ID_COLUMN_NAME +
-            "'; END;";
     protected static final String MEAL_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             MEAL_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
             MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + MEAL_DB_NAME + " WHERE " +
             "'" + DatabaseUtil.PARSE_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.PARSE_ID_COLUMN_NAME +
             "'; END;";
-    protected static final String MEAL_TO_FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
-            MEAL_TO_FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
-            MEAL_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + MEAL_TO_FOOD_DB_NAME + " WHERE " +
-            "'" + DatabaseUtil.PARSE_ID_COLUMN_NAME + "'='OLD." + DatabaseUtil.PARSE_ID_COLUMN_NAME +
-            "'; END;";
+
     protected static final String FOOD_DELETE_TRIGGER = "CREATE TRIGGER IF NOT EXISTS " +
             FOOD_DELETE_TRIGGER_NAME + " AFTER DELETE ON " +
             MEAL_TO_FOOD_DB_NAME + " FOR EACH ROW BEGIN DELETE FROM " + FOOD_DB_NAME + " WHERE " +

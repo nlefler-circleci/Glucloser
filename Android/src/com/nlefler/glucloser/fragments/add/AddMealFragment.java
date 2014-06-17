@@ -35,9 +35,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.nlefler.glucloser.model.food.Food;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.model.meal.Meal;
@@ -261,7 +259,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 			meal = (Meal)bundle.getSerializable(MEAL_KEY);
 
             // TODO: Thread
-			Place place = PlaceUtil.getPlaceById(meal.placeToMeal.placeGlucloserId);
+			Place place = meal.getPlace();
 			if (place == null) {
 				place = (Place)bundle.getSerializable(PLACE_KEY);
 			}
@@ -276,9 +274,8 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 					addFood(food, true, false);
 				}
 			} else {
-				for (MealToFood m2f : meal.mealToFoods) {
-                    // TODO: Thread
-                    Food food = FoodUtil.getFoodById(m2f.foodGlucloserId);
+                // TODO: Thread
+				for (Food food : meal.getFoods()) {
 					addFood(food, true, false);
 				}
 			}
@@ -590,16 +587,11 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 			return;
 		}
 
-		meal.placeToMeal = new PlaceToMeal();
-		meal.placeToMeal.placeGlucloserId = selectedPlace.glucloserId;
-		meal.placeToMeal.mealGlucloserId = meal.glucloserId;
+		meal.setPlace(selectedPlace);
 
 		Log.i(LOG_TAG, "Setting up " + foodMap.values().size() + " meal to foods");
-		for (Food f : foodMap.values()) {
-			MealToFood mealToFood = new MealToFood();
-			mealToFood.mealGlucloserId = meal.glucloserId;
-			mealToFood.foodGlucloserId = f.glucloserId;
-			meal.addFood(mealToFood);
+		for (Food food : foodMap.values()) {
+			meal.addFood(food);
 		}
 
         SaveManager.saveMeal(meal);

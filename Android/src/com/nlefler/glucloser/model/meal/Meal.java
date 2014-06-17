@@ -13,19 +13,16 @@ import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.nlefler.glucloser.model.GlucloserBaseModel;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import se.emilsjolander.sprinkles.Model;
-import se.emilsjolander.sprinkles.annotations.AutoIncrement;
 import se.emilsjolander.sprinkles.annotations.Column;
-import se.emilsjolander.sprinkles.annotations.Key;
 import se.emilsjolander.sprinkles.annotations.Table;
 
 
@@ -45,13 +42,12 @@ public class Meal extends GlucloserBaseModel implements Serializable {
     protected String placeGlucloserId;
 
     private Place place;
-    public List<Food> foods;
+    private List<Food> foods;
 
 	public Meal() {
         super();
 
 		this.dateEaten = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu"))).getTime();
-        this.foods = new ArrayList<Food>();
 	}
 
 	private ParseObject populateParseObject(ParseObject pobj) {
@@ -74,6 +70,10 @@ public class Meal extends GlucloserBaseModel implements Serializable {
 	}
 
     public Place getPlace () {
+        if (place == null) {
+            // TODO
+            place = PlaceUtil.getPlaceById(placeGlucloserId);
+        }
         return place;
     }
 
@@ -89,6 +89,14 @@ public class Meal extends GlucloserBaseModel implements Serializable {
 	public void removeFood(Food food) {
 		this.foods.remove(food);
 	}
+
+    public List<Food> getFoods() {
+        // TODO
+        if (this.foods.isEmpty()) {
+            this.foods.addAll(FoodUtil.getAllFoodsForMeal(this));
+        }
+        return new ArrayList<Food>(this.foods);
+    }
 
 	public Date getDateEaten() {
 		return (Date) this.dateEaten.clone();

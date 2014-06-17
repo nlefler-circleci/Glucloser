@@ -24,11 +24,8 @@ import com.nlefler.glucloser.fragments.home.listItems.HomeListItem;
 import com.nlefler.glucloser.fragments.home.listItems.PlaceListItem;
 import com.nlefler.glucloser.fragments.home.listItems.PopularMealListItem;
 import com.nlefler.glucloser.model.food.Food;
-import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.R;
@@ -126,7 +123,7 @@ public class HomeFragment extends ListFragment {
 														
 							ArrayList<Food> foods = new ArrayList<Food>();
 							// TODO: Is this running in a thread?
-							for (Food food : MealUtil.getFoodsForMeal(historicItem.getMeal())) {
+							for (Food food : historicItem.getMeal().getFoods()) {
 								foods.add(food);
 							}
 							Meal meal = setupMealWithPlaceAndFoods(historicItem.getPlace(), foods);
@@ -201,16 +198,10 @@ public class HomeFragment extends ListFragment {
 	private Meal setupMealWithPlaceAndFoods(Place place, List<Food> foods) {
 		Meal meal = new Meal();
 		
-		meal.placeToMeal = new PlaceToMeal();
-		meal.placeToMeal.mealGlucloserId = meal.glucloserId;
-		meal.placeToMeal.placeGlucloserId = place.glucloserId;
+        meal.setPlace(place);
 		
 		for (Food food : foods) {
-			MealToFood m2f = new MealToFood();
-			m2f.mealGlucloserId = meal.glucloserId;
-			m2f.foodGlucloserId = food.glucloserId;
-			
-			meal.addFood(m2f);
+			meal.addFood(food);
 		}
 		return meal;
 	}

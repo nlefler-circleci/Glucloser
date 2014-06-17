@@ -1,49 +1,16 @@
 package com.nlefler.glucloser.model.meal;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
-import android.util.Log;
-
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.place.Place;
-import com.nlefler.glucloser.util.database.upgrade.Tables;
-import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
 import se.emilsjolander.sprinkles.Query;
 
 public class MealUtil {
 	private static final String LOG_TAG = "Glucloser_Meal_Util";
-
-	/**
-	 * Get all foods for the given meal.
-	 * 
-	 * @note This method is synchronous. It should not be called
-	 * on the main thread.
-	 * 
-	 * @param meal
-	 * @return A List<Food> for the meal
-	 */
-	public static List<Food> getFoodsForMeal(Meal meal) {
-        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
-                " WHERE " + DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " IN (" +
-                " SELECT " + MealToFood.FOOD_DB_COLUMN_KEY + " WHERE " + MealToFood.MEAL_DB_COLUMN_KEY +
-                " = ?)";
-		List<Food> foods = Query.many(Food.class, select, meal.glucloserId).get().asList();
-
-		return foods;
-	}
 
 	/**
 	 * Returns recently eaten meals
@@ -109,23 +76,29 @@ public class MealUtil {
 	 */
 	public static Place getPlaceForMeal(Meal meal) {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) +
-                " WHERE " + DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " = (SELECT " +
-                PlaceToMeal.PLACE_DB_COLUMN_KEY + " FROM " + DatabaseUtil.tableNameForModel(PlaceToMeal.class) +
-                " WHERE " + PlaceToMeal.MEAL_DB_COLUMN_KEY + " = ?)";
-        Place place = Query.one(Place.class, select, meal.glucloserId).get();
+                " WHERE " + DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " = ?";
+        Place place = Query.one(Place.class, select, meal.placeGlucloserId).get();
 
 		return place;
 	}
 
-	public static boolean saveMeal(Meal meal) {
-		// Save meal
-		if (meal.createdAt == null) {
-			meal.createdAt = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu")).getTime());
-		}
-		if (meal.updatedAt == null) {
-			meal.updatedAt = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu")).getTime());
-		}
+    public static List<Meal> getAllMealsForPlace(Place place) {
+        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Meal.class) +
+                " WHERE " + Meal.PLACE_GLUCLOSER_ID_COLUMN_NAME + " = ?";
+        List<Meal> meals = Query.many(Meal.class, select, place.glucloserId).get().asList();
 
-        return meal.save();
+        return meals;
+    }
+
+	public static boolean saveMeal(Meal meal) {
+        // TODO: Transaction
+        boolean result = meal.updateFieldsAndSave();
+        result = result && meal.getPlace().updateFieldsAndSave();
+
+        for (Food food : meal.getFoods()) {
+            result = result && food.updateFieldsAndSave();
+        }
+
+        return result;
 	}
 }

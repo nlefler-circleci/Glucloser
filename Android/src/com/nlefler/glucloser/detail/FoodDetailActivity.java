@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.model.meterdata.MeterDataUtil;
@@ -150,8 +149,7 @@ public class FoodDetailActivity extends Activity {
 
 					mealItem.setTag(meal);
 					time.setText(DateFormat.format("MMM, dd kk:mm", meal.getDateEaten()));
-					for (MealToFood mealToFood : meal.mealToFoods) {
-                        Food food = FoodUtil.getFoodById(mealToFood.foodGlucloserId);
+					for (Food food : meal.getFoods()) {
 						if (food.name.equals(food.name)) {
 							carbView.setText(String.valueOf(food.carbs));
 							break;

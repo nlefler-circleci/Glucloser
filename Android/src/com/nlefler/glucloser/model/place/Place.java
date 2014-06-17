@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import android.location.Location;
 
+import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
@@ -19,41 +20,25 @@ import se.emilsjolander.sprinkles.annotations.Key;
 import se.emilsjolander.sprinkles.annotations.Table;
 
 @Table(Place.PLACE_DB_NAME)
-public class Place extends Model implements Serializable {
+public class Place extends GlucloserBaseModel implements Serializable {
 	private static final long serialVersionUID = -7803318132865386549L;
 
 	private static final String LOG_TAG = "Glucloser_Place";
 
     protected static final String PLACE_DB_NAME = "place";
-    public static final String FOURSQUARE_ID_COLUMN_KEY = "foursquare_id";
-	public static final String NAME_DB_COLUMN_KEY = "name";
-	public static final String LOCATION_DB_COLUMN_KEY = "location";
-	public static final String LATITUDE_DB_COLUMN_KEY = "location_latitude";
-	public static final String LONGITUDE_DB_COLUMN_KEY = "location_longitude";
-	public static final String READABLE_ADDRESS_COLUMN_KEY = "readable_address";
-    public static final String LAST_VISITED_COLUMN_KEY = "last_visited";
 
-    public static String getDatabaseTableName() {
-        return PLACE_DB_NAME;
-    }
+    protected static final String FOURSQUARE_ID_COLUMN_KEY = "foursquare_id";
+	protected static final String NAME_DB_COLUMN_KEY = "name";
+	protected static final String LOCATION_DB_COLUMN_KEY = "location";
+	protected static final String LATITUDE_DB_COLUMN_KEY = "location_latitude";
+	protected static final String LONGITUDE_DB_COLUMN_KEY = "location_longitude";
+	protected static final String READABLE_ADDRESS_COLUMN_KEY = "readable_address";
+    protected static final String LAST_VISITED_COLUMN_KEY = "last_visited";
 
     @Column(LATITUDE_DB_COLUMN_KEY)
 	private double latitudeForSerializing;
     @Column(LONGITUDE_DB_COLUMN_KEY)
 	private double longitudeForSerializing;
-
-    @Key
-    @AutoIncrement
-    @Column(DatabaseUtil.ID_COLUMN_NAME)
-    private int id;
-
-    @Key
-    @Column(DatabaseUtil.PARSE_ID_COLUMN_NAME)
-	public String parseId;
-
-    @Key
-    @Column(DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME)
-    public String glucloserId;
 
     @Key
     @Column(FOURSQUARE_ID_COLUMN_KEY)
@@ -71,18 +56,8 @@ public class Place extends Model implements Serializable {
     @Column(READABLE_ADDRESS_COLUMN_KEY)
 	public String readableAddress;
 
-    @Column(DatabaseUtil.CREATED_AT_COLUMN_NAME)
-	public Date createdAt;
-    @Column(DatabaseUtil.UPDATED_AT_COLUMN_NAME)
-	public Date updatedAt;
-    @Column(DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME)
-	public boolean needsUpload;
-    @Column(DatabaseUtil.DATA_VERSION_COLUMN_NAME)
-	public int dataVersion;
-
 	public Place() {
-		this.parseId = UUID.randomUUID().toString();
-        this.glucloserId = UUID.randomUUID().toString();
+        super();
 	}
 
     public Location getLocation() {

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,25 +20,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nlefler.glucloser.NetworkSyncService;
-import com.nlefler.glucloser.model.MealToFood;
 import com.nlefler.glucloser.model.meterdata.MeterData;
-import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.sync.SyncDownEvent;
+import com.nlefler.glucloser.model.sync.SyncUpEvent;
 import com.nlefler.glucloser.util.database.fetchers.ParseFoodFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMeterDataFetcher;
 import com.nlefler.glucloser.util.database.fetchers.ParsePlaceFetcher;
 import com.nlefler.glucloser.util.database.fetchers.SyncFetcher;
 import com.nlefler.glucloser.util.database.importers.ParseMealImporter;
-import com.nlefler.glucloser.util.database.importers.ParseMealToFoodImporter;
-import com.nlefler.glucloser.util.database.importers.ParsePlaceToMealImporter;
 import com.nlefler.glucloser.util.database.importers.SyncImporter;
-import com.nlefler.glucloser.util.database.pushers.ParseMealToFoodPusher;
 import com.nlefler.glucloser.util.database.pushers.SyncPusher;
 import com.nlefler.glucloser.util.database.fetchers.ParseMealFetcher;
-import com.nlefler.glucloser.util.database.fetchers.ParseMealToFoodFetcher;
-import com.nlefler.glucloser.util.database.fetchers.ParsePlaceToMealFetcher;
 import com.nlefler.glucloser.util.database.importers.ParseFoodImporter;
 import com.nlefler.glucloser.util.database.importers.ParseMeterDataImporter;
 import com.nlefler.glucloser.util.database.importers.ParsePlaceImporter;
@@ -45,11 +41,11 @@ import com.nlefler.glucloser.util.database.pushers.NoOpPusher;
 import com.nlefler.glucloser.util.database.pushers.ParseFoodPusher;
 import com.nlefler.glucloser.util.database.pushers.ParseMealPusher;
 import com.nlefler.glucloser.util.database.pushers.ParsePlacePusher;
-import com.nlefler.glucloser.util.database.pushers.ParsePlaceToMealPusher;
 import com.nlefler.glucloser.util.database.upgrade.DatabaseUpgrader;
 import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.nlefler.glucloser.util.database.upgrade.ZeroToOne;
 
+import se.emilsjolander.sprinkles.Query;
 import se.emilsjolander.sprinkles.Sprinkles;
 import se.emilsjolander.sprinkles.annotations.Table;
 
@@ -143,16 +139,8 @@ public class DatabaseUtil {
 	private Map<String, Date>[] syncWithParse() {
 		Log.i(LOG_TAG, "Starting sync with Parse");
 
-		Map<String, Date> lastSyncTimes[];
-		try {
-			lastSyncTimes = getLastSyncTimes();
-		} catch (java.text.ParseException e) {
-			Log.e(LOG_TAG, "Unable to get last sync times");
-			e.printStackTrace();
-			return new Map[] {new HashMap<String, Date>(), new HashMap<String, Date>()};
-		}
-		Map<String, Date> lastDownSyncTimes = lastSyncTimes[0];
-		Map<String, Date> lastUpSyncTimes = lastSyncTimes[1];
+        SyncDownEvent lastDownSyncTimes = getLastSyncDownTime();
+        SyncUpEvent lastUpSyncTimes = getLastUpSyncTime();
 
 		syncHelper(tableNameForModel(Food.class),
 				new ParseFoodFetcher(), new ParseFoodImporter(), new ParseFoodPusher(),
@@ -165,14 +153,6 @@ public class DatabaseUtil {
 		syncHelper(tableNameForModel(Place.class),
                 new ParsePlaceFetcher(), new ParsePlaceImporter(), new ParsePlacePusher(),
                 lastDownSyncTimes, lastUpSyncTimes);
-
-		syncHelper(tableNameForModel(MealToFood.class),
-				new ParseMealToFoodFetcher(), new ParseMealToFoodImporter(), new ParseMealToFoodPusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
-
-		syncHelper(tableNameForModel(PlaceToMeal.class),
-				new ParsePlaceToMealFetcher(), new ParsePlaceToMealImporter(), new ParsePlaceToMealPusher(),
-				lastDownSyncTimes, lastUpSyncTimes);
 
 		// Doing this last because it's slow (42.5k records and counting)
 		syncHelper(tableNameForModel(MeterData.class),
@@ -189,13 +169,13 @@ public class DatabaseUtil {
 
 	private void syncHelper(String tableName, SyncFetcher fetcher,
 			SyncImporter importer, SyncPusher pusher,
-			Map<String, Date> downSyncTimes, Map<String, Date> upSyncTimes) {
+			SyncDownEvent downSyncTimes, SyncUpEvent upSyncTimes) {
 		Date[] tableSyncTimes = doSync(
 				fetcher,
-				downSyncTimes.get(tableName),
+                downSyncTimes
 				importer,
-				pusher, 
-				upSyncTimes.get(tableName),
+				pusher,
+                upSyncTimes
 				generatePartialSyncCallbackForTable(
 						tableName, downSyncTimes, upSyncTimes)
 				);
@@ -208,62 +188,21 @@ public class DatabaseUtil {
 		Log.v(LOG_TAG, "Completed sync for table " + tableName);
 	}
 
-	private Map<String, Date>[] getLastSyncTimes() throws java.text.ParseException {
-		Log.v(LOG_TAG, "Getting last sync times");
+	private SyncUpEvent getLastUpSyncTime() {
+        String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncUpEvent.class) +
+                " ORDERED BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+        SyncUpEvent upEvent = Query.one(SyncUpEvent.class, select).get();
 
-		Map<String, Date> lastDown = new HashMap<String, Date>();
-		Map<String, Date> lastUp = new HashMap<String, Date>();
-
-		for (Class modelClass : Tables.syncingTableNames) {
-			lastDown.put(tableName, null);
-			lastUp.put(tableName, null);
-		}
-
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor resultCursor = db.query(Tables.SYNC_INFO_DOWN_DB_NAME, 
-				Tables.syncingTableNames, null, null, null, null, CREATED_AT_COLUMN_NAME + " DESC", "1");
-
-		if (resultCursor.moveToFirst()) {
-			Date syncTime = null;
-
-			for (int i = 0; i < resultCursor.getColumnCount(); ++i) {
-				String value = resultCursor.getString(i);
-				if (value == null) {
-					continue;
-				}
-				syncTime = parseDateFormat.parse(value);
-
-				Log.v(LOG_TAG, "Got last sync time for " + resultCursor.getColumnName(i) + " " + syncTime.toGMTString());
-
-				lastDown.put(resultCursor.getColumnName(i), syncTime);
-			}
-		}
-
-		resultCursor.close();
-		resultCursor = db.query(Tables.SYNC_INFO_UP_DB_NAME, 
-				Tables.syncingTableNames, null, null, null, null, CREATED_AT_COLUMN_NAME + " DESC", "1");
-
-		if (resultCursor.moveToFirst()) {
-			Date syncTime = null;
-
-			for (int i = 0; i < resultCursor.getColumnCount(); ++i) {
-				String value = resultCursor.getString(i);
-				if (value == null) {
-					continue;
-				}
-				syncTime = parseDateFormat.parse(value);
-
-				Log.v(LOG_TAG, "Got last sync time for " + resultCursor.getColumnName(i) + " " + syncTime.toGMTString());
-
-				// TODO Why shouldn't all records marked as needUpload be uploaded?
-				//lastUp.put(resultCursor.getColumnName(i), syncTime);
-			}
-		}
-
-		Log.v(LOG_TAG, "Finished getting last sync times");
-
-		return new Map[] {lastDown, lastUp};
+        return upEvent;
 	}
+
+    private SyncDownEvent getLastSyncDownTime() {
+         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncDownEvent.class) +
+                " ORDERED BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+        SyncDownEvent downEvent = Query.one(SyncDownEvent.class, select).get();
+
+        return downEvent;
+    }
 
 	private void updateLastSyncTimes(Map<String, Date> lastDownSyncTimes, 
 			Map<String, Date> lastUpSyncTimes) {

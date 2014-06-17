@@ -98,7 +98,7 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
 		theView.setTag(requestId);
 
         // TODO: Thread
-        Place place = PlaceUtil.getPlaceById(meal.placeToMeal.placeGlucloserId);
+        Place place = meal.getPlace();
 		name.setText(place.name);
 		time.setText(meal.getDateEatenForDisplay());
 

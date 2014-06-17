@@ -13,7 +13,6 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.model.placetomeal.PlaceToMeal;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 
@@ -39,7 +38,7 @@ public class PlaceUtil {
 	 * or null if no place was found with the given id
 	 */
 	public static Place getPlaceById(String parseId) {
-        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() +
+        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) +
                 " WHERE " + DatabaseUtil.PARSE_ID_COLUMN_NAME + " = ?";
         Place place = Query.one(Place.class, selectClause, parseId).get();
 
@@ -69,29 +68,11 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */
 	public static List<Place> getAllPlacesSortedBy(String columnName, boolean asc) {
-        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() + " SORTED BY " +
+        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) + " SORTED BY " +
                 columnName + (asc ? " ASC " : " DESC ");
 		CursorList<Place> places = Query.many(Place.class, selectClause, columnName, null).get();
 
 		return places.asList();
-	}
-
-
-	/**
-	 * Gets recent meals for the provided place.
-	 * 
-	 * @note This method is synchronous. It should not be called
-	 * on the main thread.
-	 * 
-	 * @param mealLimit An upper bound on the number of meals to return,
-	 * or 0 for all meals
-	 * @param place
-	 * @return A List<Meal> of recent meals
-	 */
-	public static List<Meal> getRecentMealsForPlace(int mealLimit, Place place) {
-		Log.i(LOG_TAG, "Get recent meals");
-
-		return _getAllMealsForPlace(place, mealLimit);
 	}
 
 	private static double LATITUDE_DELTA = 0.018; // Approx. 2.001km
@@ -111,7 +92,7 @@ public class PlaceUtil {
             return new ArrayList<Place>();
         }
 
-        String selectCause = "SELECT * FROM " + Place.getDatabaseTableName() + " WHERE " +
+        String selectCause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) + " WHERE " +
                 Place.LATITUDE_DB_COLUMN_KEY + ">=? AND " +
                 Place.LATITUDE_DB_COLUMN_KEY + "<=? AND " +
                 Place.LONGITUDE_DB_COLUMN_KEY + ">=? AND " +
@@ -165,7 +146,7 @@ public class PlaceUtil {
 		recentDate.add(Calendar.HOUR, -72);
 
 		String boundDate = recentDate.getTime().toGMTString();
-        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() + " WHERE " +
+        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) + " WHERE " +
                 Place.LAST_VISITED_COLUMN_KEY + " >= strftime('%Y-%m-%dT%H:%M:%fZ', ?) " +
                 "ORDERED BY " + Place.LAST_VISITED_COLUMN_KEY + " DESC LIMIT ?";
 
@@ -241,7 +222,7 @@ public class PlaceUtil {
 	 * provided name
 	 */
 	public static Place getPlaceWithName(String name) {
-        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName()
+        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class)
                 + " WHERE lower(" + DatabaseUtil.tableNameForModel(Place.class) +
                 ") = lower(?)";
         Place place = Query.one(Place.class, selectClause, name).get();
@@ -261,48 +242,12 @@ public class PlaceUtil {
 	 * @return A List<Place> of matching places
 	 */	
 	public static List<Place> getAllPlacesWithNameContaining(String name) {
-        String selectClause = "SELECT * FROM " + Place.getDatabaseTableName() + " WHERE lower(" +
+        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) + " WHERE lower(" +
                 DatabaseUtil.tableNameForModel(Place.class) + ") = lower(%?%) DESC";
 		List<Place> matchingPlaces = Query.many(Place.class, selectClause, name).get().asList();
 
 		return matchingPlaces;
 	}
-
-	/**
-	 * Retrieves all meals for a given place.
-	 * The list will be ordered by date eaten descending.
-	 * 
-	 * @param place
-	 * @return List<Meal> The list of meals
-	 */
-	public static List<Meal> getAllMealsForPlace(Place place) {
-		return _getAllMealsForPlace(place, 0);
-	}
-
-	/**
-	 * Retrieves a number of meals for a given place.
-	 * The list will be ordered by date eaten descending.
-	 * 
-	 * @param 
-	 * @param limit The number of meals to get. If all meals, use 0.
-	 * @return List<Meal> The list of meals
-	 */
-	private static List<Meal> _getAllMealsForPlace(Place place, int limit) {
-        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Meal.class) + " WHERE " +
-                DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME + " IN " +
-                " (SELECT " + PlaceToMeal.MEAL_DB_COLUMN_KEY + " WHERE " +
-                PlaceToMeal.PLACE_DB_COLUMN_KEY + " = ?) ORDERED BY " +
-                DatabaseUtil.UPDATED_AT_COLUMN_NAME + " DESC";
-        List<Meal> meals = Query.many(Meal.class, selectClause, place.glucloserId).get().asList();
-
-        if (limit > 0) {
-            limit = Math.min(limit, meals.size());
-            meals.subList(0, limit);
-        }
-
-		return meals;
-	}
-
 
 	/**
 	 * Saves the provided @ref Place using the default database using a transaction.
@@ -315,14 +260,7 @@ public class PlaceUtil {
             return false;
         }
 
-		if (place.createdAt == null) {
-			place.createdAt = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu")).getTime());
-		}
-		if (place.updatedAt == null) {
-			place.updatedAt = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu")).getTime());
-		}
-
-        return place.save();
+        return place.updateFieldsAndSave();
 	}
 
 	/**
