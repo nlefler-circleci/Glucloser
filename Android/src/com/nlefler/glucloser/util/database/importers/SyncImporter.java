@@ -59,19 +59,13 @@ public abstract class SyncImporter {
 						record, tableName));
 		if (code != -1) {
 			if (lastSyncDate == null) {
-				Log.v(LOG_TAG, "Updating last sync time with " + (Date)record.get(DatabaseUtil.localKeyForNetworkKey(
-						tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME)));
-				return (Date)record.get(DatabaseUtil.localKeyForNetworkKey(
-						tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME));
-			} else if (((Date)record.get(DatabaseUtil.localKeyForNetworkKey(
-					tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME))).compareTo(lastSyncDate) >= 0) {
-				Log.v(LOG_TAG, "Updating last sync time with " + (Date)record.get(DatabaseUtil.localKeyForNetworkKey(
-						tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME)));
-				return (Date)record.get(DatabaseUtil.localKeyForNetworkKey(
-						tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME));
+				Log.v(LOG_TAG, "Updating last sync time with " + (Date)record.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME));
+				return (Date)record.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME);
+			} else if (((Date)record.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME)).compareTo(lastSyncDate) >= 0) {
+				Log.v(LOG_TAG, "Updating last sync time with " + (Date)record.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME));
+				return (Date)record.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME);
 			} else {
-				Log.v(LOG_TAG, "Not updating last sync date, " + (Date)record.get(DatabaseUtil.localKeyForNetworkKey(
-					tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME)) + " is before " + lastSyncDate);
+				Log.v(LOG_TAG, "Not updating last sync date, " + (Date)record.get(DatabaseUtil.UPDATED_AT_COLUMN_NAME) + " is before " + lastSyncDate);
 			}
 		} else {
 			Log.w(logTag, "Error code recieved from insert: " + code);

@@ -20,15 +20,15 @@ public abstract class SyncPusher {
 	// WHERE strftime('%Y-%m-%dT%H:%M:%fZ', updatedAt) >= strftime('%Y-%m-%dT%H:%M:%fZ', ?)
 	// AND needsUpload = 1
 	private static final String datedWhereClauseForInternalGetRecordsSinceDate = 
-			DatabaseUtil.getStrfStringForString(DatabaseUtil.UPDATED_AT_COLUMN_NAME) + 
-			">=" + DatabaseUtil.getStrfStringForString("?") +  ") AND " +
+			DatabaseUtil.UPDATED_AT_COLUMN_NAME +
+			">=? AND " +
 			DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME + "=1";
 	// WHERE needsUpload = 1
 	private static final String whereClauseForInternalGetRecordsSinceDate = 
 			DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME + "=1";
 	// ORDER BY strftime('%Y-%m-%dT%H:%M:%fZ', updatedAt) ASC
 	private static final String orderClauseForInternalGetRecordsSinceDate = 
-			DatabaseUtil.getStrfStringForString(DatabaseUtil.UPDATED_AT_COLUMN_NAME) + " ASC";
+			DatabaseUtil.UPDATED_AT_COLUMN_NAME + " ASC";
 	protected List<Map<String, Object>> internalGetRecordsSinceDate(String tableName,
 			Map<String, Class> columnTypes, Date sinceDate) {
 		String whereClause = null;
@@ -74,13 +74,13 @@ public abstract class SyncPusher {
 		if (withNewId != null) {
 			// replace temp id with parse id
 			values.put(
-					DatabaseUtil.networkKeyForLocalKey(tableName, DatabaseUtil.PARSE_ID_COLUMN_NAME)
+					DatabaseUtil.PARSE_ID_COLUMN_NAME
 					, withNewId);
 		}
 		values.put(
-				DatabaseUtil.networkKeyForLocalKey(tableName, DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME),
+				 DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME,
 				needsUpload);
-		values.put(DatabaseUtil.networkKeyForLocalKey(tableName, DatabaseUtil.UPDATED_AT_COLUMN_NAME),
+		values.put( DatabaseUtil.UPDATED_AT_COLUMN_NAME,
 				DatabaseUtil.parseDateFormat.format(new Date(System.currentTimeMillis())));
 
 		return values;
