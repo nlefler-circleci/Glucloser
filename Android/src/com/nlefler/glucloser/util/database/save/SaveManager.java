@@ -9,7 +9,6 @@ import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.upgrade.Tables;
 import com.squareup.otto.Bus;
 
 public class SaveManager {
@@ -60,15 +59,13 @@ public class SaveManager {
 					return null;
 				}
 				Place place = params[0];
-				
-				long placeId = PlaceUtil.savePlace(place);
-				if (placeId == -1) {
+
+                place.needsUpload = true;
+				if (PlaceUtil.savePlace(place)) {
 					return null;
 				}
 				
 				DatabaseUtil.setNeedsSync();
-				
-				place.id = DatabaseUtil.instance().objectIdForRowId(Tables.PLACE_DB_NAME, placeId);
 				
 				return place;
 			}
@@ -97,71 +94,17 @@ public class SaveManager {
 				
 				// Set needsUpload flags
 				meal.needsUpload = true;
-				for (MealToFood mealToFood : meal.mealToFoods) {
-					mealToFood.needsUpload = true;
-					mealToFood.food.needsUpload = true;
+                MealUtil.saveMeal(meal);
+
+				for (Food food : meal.getFoods()) {
+					food.needsUpload = true;
+                    FoodUtil.saveFood(food);
 				}
-				meal.placeToMeal.needsUpload = true;
-				meal.placeToMeal.place.needsUpload = true;
+				meal.getPlace().needsUpload = true;
+				PlaceUtil.savePlace(meal.getPlace());
 
-				// Start writing
-				DatabaseUtil.instance().getWritableDatabase().beginTransactionNonExclusive();
-
-				// PlaceToMeal
-				long placeToMealId = PlaceToMealUtil.savePlaceToMeal(meal.placeToMeal);
-				
-				// Place
-				long placeId = PlaceUtil.savePlace(meal.placeToMeal.place);
-
-				// PlaceToFoodsHash
-				PlaceToFoodsHash ptfh = new PlaceToFoodsHash();
-				ptfh.place = meal.placeToMeal.place;
-				ptfh.foodsHash = MealUtil.generateHashForFoods(meal);;
-				ptfh.needsUpload = true;
-				long placeToFoodsHashId = PlaceToFoodsHashUtil.savePlaceToFoodsHash(ptfh);
-
-				// MealToFoods, Foods, and Barcodes
-				long mealToFoodIds[] = new long[meal.mealToFoods.size()];
-				long foodIds[] = new long[meal.mealToFoods.size()];
-				boolean foodSaveFail = false;
-				for (int i = 0; i < meal.mealToFoods.size(); ++i) {
-					MealToFood mealToFood = meal.mealToFoods.get(i);
-					
-					mealToFoodIds[i] = MealToFoodUtil.saveMealToFood(mealToFood);
-					foodIds[i] = FoodUtil.saveFood(mealToFood.food);
-
-					if (mealToFoodIds[i] == -1 || foodIds[i] == -1) {
-						foodSaveFail = true;
-					}
-				}
-				
-				// Meal
-				long mealId = MealUtil.saveMeal(meal);
-
-				// Transaction successful?
-				if (placeToMealId == -1 || placeId == -1 || placeToFoodsHashId == -1 ||
-						mealId == -1 ||	foodSaveFail) {
-					DatabaseUtil.instance().getWritableDatabase().endTransaction();
-					return null;
-				}
-				
-				// Finish writing
-				DatabaseUtil.instance().getWritableDatabase().setTransactionSuccessful();
-				DatabaseUtil.instance().getWritableDatabase().endTransaction();
 				DatabaseUtil.setNeedsSync();
-				
-				// Update objectIds for meal and all linked objects
-				meal.id = DatabaseUtil.instance().objectIdForRowId(Tables.MEAL_DB_NAME, mealId);
-				meal.placeToMeal.id = DatabaseUtil.instance().objectIdForRowId(Tables.PLACE_TO_MEAL_DB_NAME, placeToMealId);
-				meal.placeToMeal.place.id = DatabaseUtil.instance().objectIdForRowId(Tables.PLACE_DB_NAME, placeId);
-				for (int i = 0; i < mealToFoodIds.length; ++i) {
-					MealToFood m2f = meal.mealToFoods.get(i);
-					
-					m2f.id = DatabaseUtil.instance().objectIdForRowId(Tables.MEAL_TO_FOOD_DB_NAME, mealToFoodIds[i]);
-					m2f.food.id = DatabaseUtil.instance().objectIdForRowId(Tables.FOOD_DB_NAME, foodIds[i]);
-				}
-				
-				
+
 				return meal;
 			}
 			
@@ -187,14 +130,11 @@ public class SaveManager {
 				}
 				Food food = params[0];
 				
-				long foodId = FoodUtil.saveFood(food);
-				if (foodId == -1) {
+				if (FoodUtil.saveFood(food)) {
 					return null;
 				}
 				
 				DatabaseUtil.setNeedsSync();
-				
-				food.id = DatabaseUtil.instance().objectIdForRowId(Tables.FOOD_DB_NAME, foodId);
 				
 				return food;
 			}

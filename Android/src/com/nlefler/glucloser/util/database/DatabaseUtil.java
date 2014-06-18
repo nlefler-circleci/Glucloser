@@ -19,12 +19,7 @@ import com.nlefler.glucloser.model.sync.SyncDownEvent;
 import com.nlefler.glucloser.model.sync.SyncUpEvent;
 import com.nlefler.glucloser.util.database.fetchers.SyncFetcher;
 import com.nlefler.glucloser.util.database.pushers.SyncPusher;
-import com.nlefler.glucloser.util.database.pushers.NoOpPusher;
-import com.nlefler.glucloser.util.database.pushers.ParseFoodPusher;
-import com.nlefler.glucloser.util.database.pushers.ParseMealPusher;
-import com.nlefler.glucloser.util.database.pushers.ParsePlacePusher;
 import com.nlefler.glucloser.util.database.upgrade.DatabaseUpgrader;
-import com.nlefler.glucloser.util.database.upgrade.ZeroToOne;
 
 import se.emilsjolander.sprinkles.Query;
 import se.emilsjolander.sprinkles.Sprinkles;
@@ -50,10 +45,6 @@ public class DatabaseUtil {
 	private static DatabaseUtil instance;
 	private static AtomicBoolean okToContinueSyncing = new AtomicBoolean(true);
 	private static AtomicBoolean needsSync = new AtomicBoolean(false);
-
-	private static DatabaseUpgrader[] dbUpgraders = new DatabaseUpgrader[] {
-		new ZeroToOne()
-	};
 
 	private DatabaseUtil(Context context) {
         // TODO: Enable foreign key constraints and WAL
@@ -123,20 +114,20 @@ public class DatabaseUtil {
         SyncUpEvent lastUpSyncTimes = getLastUpSyncTime();
 
 		syncHelper(Food.class,
-				new SyncFetcher(Food.class), new ParseFoodPusher(),
+				new SyncFetcher(Food.class), new SyncPusher(Food.class),
 				lastDownSyncTimes, lastUpSyncTimes);
 
 		syncHelper(Meal.class,
-				new SyncFetcher(Meal.class), new ParseMealPusher(),
+				new SyncFetcher(Meal.class), new SyncPusher(Meal.class),
 				lastDownSyncTimes, lastUpSyncTimes);
 
 		syncHelper(Place.class,
-                new SyncFetcher(Place.class), new ParsePlacePusher(),
+                new SyncFetcher(Place.class), new SyncPusher(Place.class),
                 lastDownSyncTimes, lastUpSyncTimes);
 
 		// Doing this last because it's slow (42.5k records and counting)
 		syncHelper(MeterData.class,
-				new SyncFetcher(MeterData.class), new NoOpPusher(),
+				new SyncFetcher(MeterData.class), new SyncPusher(MeterData.class),
 				lastDownSyncTimes, lastUpSyncTimes);
 
 		Log.i(LOG_TAG, "Sync with Parse complete");

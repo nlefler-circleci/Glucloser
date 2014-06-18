@@ -15,7 +15,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQuery.CachePolicy;
 
 public class SyncFetcher {
-	private static final String LOG_TAG = "Pump_Sync_Fetcher";
+	private static final String LOG_TAG = "Glucloser_Sync_Fetcher";
 	// 1K is the highest limit supported by Parse but this uses a ton of memory
 	// within the Parse SDK
 	private static final int PARSE_FETCH_LIMIT = 1000;
@@ -26,7 +26,7 @@ public class SyncFetcher {
     public SyncFetcher(Class modelClass) {
         this.modelClass = modelClass;
     }
-	
+
 	public boolean hasMoreRecords() {
 		return hasMoreRecords;
 	}

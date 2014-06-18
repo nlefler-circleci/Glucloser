@@ -11,16 +11,13 @@ import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import android.database.Cursor;
 import android.util.Log;
 
 import com.nlefler.glucloser.model.bolus.Bolus;
 import com.nlefler.glucloser.model.meal.Meal;
-import com.nlefler.glucloser.model.meterdata.MeterData;
 import com.nlefler.glucloser.model.meal.MealUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
-import com.nlefler.glucloser.util.database.upgrade.Tables;
 
 import se.emilsjolander.sprinkles.Query;
 
