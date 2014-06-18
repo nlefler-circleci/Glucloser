@@ -58,6 +58,8 @@ public class Place extends GlucloserBaseModel implements Serializable {
 
 	public Place() {
         super();
+
+        lastVisited = new Date();
 	}
 
     public Location getLocation() {
