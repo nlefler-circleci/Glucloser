@@ -34,7 +34,6 @@ public class MeterData extends GlucloserBaseModel {
 
     public static final String METER_DATA_DB_NAME = "meter_data";
 
-	public static final String INDEX_DB_COLUMN_NAME									= "Index"; 
 	public static final String DATE_DB_COLUMN_NAME_DB_COLUMN_NAME					= "Date";
 	public static final String TIME_DB_COLUMN_NAME_DB_COLUMN_NAME					= "Time";
 	public static final String TIMESTAMP_DB_COLUMN_NAME								= "Timestamp";
@@ -74,9 +73,6 @@ public class MeterData extends GlucloserBaseModel {
 	public static final String RAW_SEQ_NUM_DB_COLUMN_NAME							= "Raw_Seq_Num";
 	public static final String RAW_DEVICE_TYPE_DB_COLUMN_NAME						= "Raw_Device_Type";
 
-
-    @Column(MeterData.INDEX_DB_COLUMN_NAME)
-    public int index;
 
     @Column(MeterData.DATE_DB_COLUMN_NAME_DB_COLUMN_NAME)
     public Date date;

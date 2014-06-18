@@ -14,7 +14,6 @@ import se.emilsjolander.sprinkles.annotations.Table;
 public class ZeroToOne extends DatabaseUpgrader {
     @Override
     protected String[] getUpgradeCommands() {
-        List<String> commands = new ArrayList<String>();
         String[] tableCreationSQLs = new String[] {
                 BolusCreationSQL.creationSQL,
                 FoodCreationSQL.creationSQL,
@@ -22,10 +21,7 @@ public class ZeroToOne extends DatabaseUpgrader {
                 MeterDataCreationSQL.creationSQL,
                 PlaceCreationSQL.creationSQL
         };
-		for (String sql : tableCreationSQLs) {
-            commands.add(sql);
-		}
 
-        return commands.toArray(new String[0]);
+        return tableCreationSQLs;
     }
 }

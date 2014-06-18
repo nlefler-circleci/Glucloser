@@ -41,7 +41,6 @@ public class DatabaseUtil {
 	public static final String CREATED_AT_COLUMN_NAME = "createdAt";
 	public static final String NEEDS_UPLOAD_COLUMN_NAME = "needsUpload";
 	public static final String DATA_VERSION_COLUMN_NAME = "dataVersion";
-	public static SimpleDateFormat parseDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'H:mm:ss.SSS'Z'");
 
 	private static DatabaseUtil instance;
 	private static AtomicBoolean okToContinueSyncing = new AtomicBoolean(true);
@@ -53,7 +52,7 @@ public class DatabaseUtil {
 
 	private DatabaseUtil(Context context) {
         // TODO: Enable foreign key constraints and WAL
-        sprinklesInstance = Sprinkles.init(context, DATABASE_NAME, DATABASE_VERSION);
+        sprinklesInstance = Sprinkles.init(context);
         for (int i = 0; i < DATABASE_VERSION && i < dbUpgraders.length; i++) {
             sprinklesInstance.addMigration(dbUpgraders[i]);
         }
@@ -68,9 +67,9 @@ public class DatabaseUtil {
 	}
 
     public static String tableNameForModel(Class modelClass) {
-        Annotation tableAnnotation = modelClass.getAnnotation(Table.class);
+        Table tableAnnotation = (Table)modelClass.getAnnotation(Table.class);
         if (tableAnnotation != null) {
-            return tableAnnotation.toString();
+            return tableAnnotation.value();
         }
         return null;
     }

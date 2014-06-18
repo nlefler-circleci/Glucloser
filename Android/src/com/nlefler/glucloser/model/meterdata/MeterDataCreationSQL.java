@@ -17,7 +17,6 @@ public class MeterDataCreationSQL extends TableCreationSQL {
             DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME + " INTEGER, " +
             DatabaseUtil.DATA_VERSION_COLUMN_NAME + " INTEGER, " +
 
-            MeterData.INDEX_DB_COLUMN_NAME + " INTEGER," +
             MeterData.DATE_DB_COLUMN_NAME_DB_COLUMN_NAME + " INTEGER," +
             MeterData.TIME_DB_COLUMN_NAME_DB_COLUMN_NAME + " INTEGER," +
             MeterData.TIMESTAMP_DB_COLUMN_NAME + " INTEGER," +

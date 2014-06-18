@@ -43,13 +43,6 @@ public class MeterDataUtil {
 		}
 	}
 
-	private static String whereClauseForGetBloodSugarDataFromDateToDate = 
-			"(" + MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME + " != 0" +
-					" OR " +
-					MeterData.BG_READING__MG_DL_COLUMN_NAME + " != 0)" +
-					" AND " + MeterData.TIMESTAMP_DB_COLUMN_NAME +
-					" >= ? AND " + MeterData.TIMESTAMP_DB_COLUMN_NAME +
-					" <= ?";
 	/**
 	 * 
 	 * @param fromDate
@@ -75,7 +68,7 @@ public class MeterDataUtil {
 		// we'll use the last date and get the next set of rows. We'll end up calling
 		// the query one extra time (returning zero results).
 
-		final int realLimit = limit > 0 ? limit : 1000;
+		int realLimit = limit > 0 ? limit : 1000;
 		int skip = 0;
 		// Check the pagination map
 		if (borderDatesForBloodSugarPagination.containsKey(requestId)) {
@@ -86,14 +79,16 @@ public class MeterDataUtil {
 
 		Log.i(LOG_TAG, "Date to Date " + fromDate + " to " + toDate);
 
-		String toDateString = DatabaseUtil.parseDateFormat.format(toDate);
-		String fromDateString = DatabaseUtil.parseDateFormat.format(fromDate);
-
         String query = "SELECT * FROM " +
                 DatabaseUtil.tableNameForModel(MeterData.class) + " WHERE " +
-                whereClauseForGetBloodSugarDataFromDateToDate + " LIMIT " +
-                skip + ", " + realLimit;
-        List<MeterData> results = Query.many(MeterData.class, query, fromDate, toDate).get().asList();
+                "(" + MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME + " != 0" +
+					" OR " +
+					MeterData.BG_READING__MG_DL_COLUMN_NAME + " != 0)" +
+					" AND " + MeterData.TIMESTAMP_DB_COLUMN_NAME +
+					" >= ? AND " + MeterData.TIMESTAMP_DB_COLUMN_NAME +
+					" <= ? LIMIT ?,?";
+        List<MeterData> results = Query.many(MeterData.class, query, fromDate, toDate,
+                skip, realLimit).get().asList();
 
 		Map<Date, Integer> sensorDataMap = new TreeMap<Date, Integer>();
 		Map<Date, Integer> meterDataMap = new TreeMap<Date, Integer>();
@@ -107,32 +102,19 @@ public class MeterDataUtil {
 
 		Map<String, Object> record = null;
 		for (MeterData meterData : results) {
-			Date date;
-			try {
-				date = DatabaseUtil.parseDateFormat.parse(meterData.TIMESTAMP_DB_COLUMN_NAME);
-			} catch (java.text.ParseException e) {
-				Log.e(LOG_TAG, "Unable to parse record timestamp: " +
-                        meterData.TIMESTAMP_DB_COLUMN_NAME);
-				e.printStackTrace();
-				continue;
-			}
-
-			Integer value = (Integer)record.get(MeterData.SENSOR_GLUCOSE__MG_DL__DB_COLUMN_NAME);
-			if (value != null && value != 0) {
+			Date date = meterData.timestamp;
+            int value = meterData.bgReading;
+			if (value != 0) {
 				sensorDataMap.put(date, value);
 
 			}
-			value = (Integer)record.get(MeterData.BG_READING__MG_DL_COLUMN_NAME);
-			if (value != null && value != 0) {
+			if (value != 0) {
 				meterDataMap.put(date, value);
 			}
 		}
 
 		borderDatesForBloodSugarPagination.put(requestId, skip + realLimit);
 
-		Log.i(LOG_TAG, "Got " + sensorDataMap.keySet().size() + " sensor values and " +
-				meterDataMap.keySet().size() + " meter values for date to date query (" +
-				fromDateString + " to " + toDateString);
 		return new BloodSugarDataResults(sensorDataMap, meterDataMap, requestId, true);
 	}
 
@@ -188,12 +170,6 @@ public class MeterDataUtil {
 		return new BloodSugarDataResults(sensorData, meterData, requestId, false);
 	}
 
-	private static String whereClauseForGetBolusDataForMeal = 
-			MeterData.TIMESTAMP_DB_COLUMN_NAME + " >= ? AND " +
-			MeterData.TIMESTAMP_DB_COLUMN_NAME + " <= ? AND " +
-			MeterData.BOLUS_TYPE_DB_COLUMN_NAME + " NOT NULL AND " +
-			MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME + " NOT NULl";
-
 	/**
 	 * Get bolus data for the given meal.
 	 * 
@@ -226,15 +202,17 @@ public class MeterDataUtil {
 
 		Log.i(LOG_TAG, "Querying for boluses between " + minTime.getTime() + " to " + maxTime.getTime());
 
-		String fromDateString = DatabaseUtil.parseDateFormat.format(minTime.getTime());
-		String toDateString = DatabaseUtil.parseDateFormat.format(maxTime.getTime());
 		Date mealDate = meal.getDateEaten();
 
 		String selectQuery = "SELECT * FROM " + DatabaseUtil.tableNameForModel(MeterData.class) +
-		" WHERE " + whereClauseForGetBolusDataForMeal;
+    		" WHERE " +
+            MeterData.TIMESTAMP_DB_COLUMN_NAME + " >= ? AND " +
+            MeterData.TIMESTAMP_DB_COLUMN_NAME + " <= ? AND " +
+            MeterData.BOLUS_TYPE_DB_COLUMN_NAME + " NOT NULL AND " +
+            MeterData.BOLUS_VOLUME_DELIVERED__U__DB_COLUMN_NAME + " NOT NULl";
 
-		List<MeterData> results = Query.many(MeterData.class, selectQuery, fromDateString,
-			toDateString).get().asList();
+		List<MeterData> results = Query.many(MeterData.class, selectQuery, minTime,
+			maxTime).get().asList();
 
 		if (results.isEmpty()) {
 			return bolusMap.values();

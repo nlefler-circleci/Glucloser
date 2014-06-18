@@ -19,7 +19,7 @@ public class MealUtil {
 	 */
 	public static List<Meal> getRecentMeals(int mealLimit) {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Meal.class) +
-                "ORDER BY " + Meal.DATE_EATEN_DB_COLUMN_NAME + " DESC LIMIT ?";
+                " ORDER BY " + Meal.DATE_EATEN_DB_COLUMN_NAME + " DESC LIMIT ?";
 		List<Meal> meals = Query.many(Meal.class, select, mealLimit).get().asList();
 
 		return meals;
