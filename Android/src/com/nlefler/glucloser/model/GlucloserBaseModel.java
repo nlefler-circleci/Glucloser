@@ -66,6 +66,34 @@ public class GlucloserBaseModel extends Model {
         return super.save();
     }
 
+    public static <T extends GlucloserBaseModel> T fromParseObject(Class<T> modelClass,
+                                        ParseObject parseObject) {
+        try {
+            T object = modelClass.newInstance();
+            Field[] allFields = modelClass.getDeclaredFields();
+            for (Field field : allFields) {
+                Column column = (Column)field.getAnnotation(Column.class);
+                if (column != null) {
+                    String fieldName = column.value();
+                    try {
+                        field.set(object, parseObject.get(fieldName));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+            }
+
+            return object;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ParseObject toParseObject() {
         ParseObject object;
         boolean success = false;
