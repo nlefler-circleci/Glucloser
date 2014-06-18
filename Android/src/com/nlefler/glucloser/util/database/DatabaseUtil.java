@@ -20,6 +20,7 @@ import com.nlefler.glucloser.model.sync.SyncUpEvent;
 import com.nlefler.glucloser.util.database.fetchers.SyncFetcher;
 import com.nlefler.glucloser.util.database.pushers.SyncPusher;
 import com.nlefler.glucloser.util.database.upgrade.DatabaseUpgrader;
+import com.nlefler.glucloser.util.database.upgrade.ZeroToOne;
 
 import se.emilsjolander.sprinkles.Query;
 import se.emilsjolander.sprinkles.Sprinkles;
@@ -45,6 +46,10 @@ public class DatabaseUtil {
 	private static DatabaseUtil instance;
 	private static AtomicBoolean okToContinueSyncing = new AtomicBoolean(true);
 	private static AtomicBoolean needsSync = new AtomicBoolean(false);
+
+	private static DatabaseUpgrader[] dbUpgraders = new DatabaseUpgrader[] {
+		new ZeroToOne()
+	};
 
 	private DatabaseUtil(Context context) {
         // TODO: Enable foreign key constraints and WAL

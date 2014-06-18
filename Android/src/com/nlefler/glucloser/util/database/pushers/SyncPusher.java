@@ -30,7 +30,7 @@ public class SyncPusher {
 	public Date doSyncSinceDate(Date sinceDate) {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(modelClass) +
                 " WHERE " + DatabaseUtil.UPDATED_AT_COLUMN_NAME + " >= ? AND " +
-                DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME + " = true ORDER BY " +
+                DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME + " = 1 ORDER BY " +
                 DatabaseUtil.UPDATED_AT_COLUMN_NAME + " ASC";
 
         List<? extends GlucloserBaseModel> records = Query.many(modelClass, select, sinceDate).get().asList();
