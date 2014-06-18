@@ -54,46 +54,11 @@ public class Food extends GlucloserBaseModel implements Serializable {
 
 		this.carbs = -1;
 		this.isCorrection = false;
-		this.dateEaten = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu"))).getTime();
+		this.dateEaten = new Date();
 	}
 
-	/**
-	 * You need to link the returned object with meal and place
-	 * @return A partial parse object
-	 */
-	private ParseObject populateParseObject(ParseObject pobj) {
-		pobj.put(NAME_DB_COLUMN_KEY, this.name);
-		pobj.put(CARBS_DB_COLUMN_KEY, this.carbs);
-		pobj.put(DATE_EATEN_DB_COLUMN_NAME, this.dateEaten);
-		
-		pobj.put(CORRECTION_DB_COLUMN_KEY, this.isCorrection);
-		pobj.put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, dataVersion);
-
-		return pobj;
-	}
-	
-	public ParseObject toParseObject() {
-		ParseObject ret;
-		try {
-			ParseQuery query = new ParseQuery(FOOD_DB_NAME);
-			ret = populateParseObject(query.get(parseId));
-		} catch (ParseException e) {
-			ret = populateParseObject(new ParseObject(FOOD_DB_NAME));
-		}
-		
-		return ret;
-	}
-
-	public Calendar getDateEatenForDisplay() {
-		TimeZone tz = TimeZone.getDefault();
-		Calendar toTZ = (Calendar) this.dateEaten.clone();
-		toTZ.setTimeZone(tz);
-
-		return toTZ;
-	}
-	
 	public void setNowAsDateEaten() {
-		this.dateEaten = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu"))).getTime();
+		this.dateEaten = new Date();
 	}
 
 }

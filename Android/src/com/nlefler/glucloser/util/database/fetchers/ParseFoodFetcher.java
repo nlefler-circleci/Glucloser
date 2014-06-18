@@ -36,17 +36,6 @@ public class ParseFoodFetcher extends SyncFetcher {
 				record.put(Food.CORRECTION_DB_COLUMN_KEY, object.getBoolean(Food.CORRECTION_DB_COLUMN_KEY));
 				record.put(Food.DATE_EATEN_DB_COLUMN_NAME, object.getDate(Food.DATE_EATEN_DB_COLUMN_NAME));
 
-				if (object.containsKey(Food.IMAGE_DB_COLUMN_KEY)) {
-					ParseFile photoFile = (ParseFile) object.get(Food.IMAGE_DB_COLUMN_KEY);
-					try {
-						record.put(Food.IMAGE_DB_COLUMN_KEY, photoFile.getData());
-					} catch (ParseException e) {
-						Log.e(LOG_TAG, "Unable to get photo from food");
-						Log.e(LOG_TAG, e.getMessage());
-						e.printStackTrace();
-					}
-				}
-				
 				Log.v(LOG_TAG, "Got record " + record.toString());
 				results.add(record);
 			}

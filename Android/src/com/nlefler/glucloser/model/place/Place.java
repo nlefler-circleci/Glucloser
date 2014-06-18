@@ -67,38 +67,6 @@ public class Place extends GlucloserBaseModel implements Serializable {
         return l;
     }
 
-	private ParseObject populateParseObject(ParseObject pobj) {
-		pobj.put(NAME_DB_COLUMN_KEY, this.name);
-		pobj.put(LOCATION_DB_COLUMN_KEY,
-				LocationUtil.getParseGeoPointForLocation(this.getLocation()));
-		pobj.put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, dataVersion);
-
-		if (readableAddress != null) {
-			pobj.put(READABLE_ADDRESS_COLUMN_KEY, readableAddress);
-		}
-
-        if (glucloserId != null) {
-            pobj.put(DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME, glucloserId);
-        }
-        if (foursquareId != null) {
-            pobj.put(FOURSQUARE_ID_COLUMN_KEY, foursquareId);
-        }
-
-		return pobj;
-	}
-
-	public ParseObject toParseObject() {
-		ParseObject ret;
-		try {
-			ParseQuery query = new ParseQuery(PLACE_DB_NAME);
-			ret = populateParseObject(query.get(parseId));
-		} catch (ParseException e) {
-			ret = populateParseObject(new ParseObject(PLACE_DB_NAME));
-		}
-
-		return ret;
-	}
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

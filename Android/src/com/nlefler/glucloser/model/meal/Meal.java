@@ -50,25 +50,6 @@ public class Meal extends GlucloserBaseModel implements Serializable {
 		this.dateEaten = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu"))).getTime();
 	}
 
-	private ParseObject populateParseObject(ParseObject pobj) {
-		pobj.put(DATE_EATEN_DB_COLUMN_NAME, this.dateEaten);
-		pobj.put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, dataVersion);
-
-		return pobj;
-	}
-
-	public ParseObject toParseObject() {
-		ParseObject ret;
-		try {
-			ParseQuery query = new ParseQuery(MEAL_DB_NAME);
-			ret = populateParseObject(query.get(parseId));
-		} catch (ParseException e) {
-			ret = populateParseObject(new ParseObject(MEAL_DB_NAME));
-		}
-		
-		return ret;
-	}
-
     public Place getPlace () {
         if (place == null) {
             // TODO
