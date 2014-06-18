@@ -14,9 +14,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <meta-data
-        android:name="com.google.android.maps.v2.API_KEY"
-        android:value="@string/gmaps_api_key" />
     <permission
         android:name="com.nlefler.glucloser.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -36,6 +33,10 @@
             android:name=".NetworkSyncService"
             android:label="@string/syncing_verb" >
         </service>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/gmaps_api_key" />
 
         <activity
             android:name=".GlucloserActivity"
