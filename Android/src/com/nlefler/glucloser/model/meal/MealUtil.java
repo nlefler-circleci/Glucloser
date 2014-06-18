@@ -38,7 +38,7 @@ public class MealUtil {
 	public static List<Meal> getMealsFromDateToDate(Date fromDate, Date toDate) {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Meal.class) +
                 " WHERE " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " >= ?" +
-                " AND " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " <= ? ORDERED BY " +
+                " AND " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " <= ? ORDER BY " +
                 DatabaseUtil.UPDATED_AT_COLUMN_NAME + " DESC";
 		List<Meal> meals = Query.many(Meal.class, select, fromDate, toDate).get().asList();
 

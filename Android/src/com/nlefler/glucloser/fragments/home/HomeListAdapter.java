@@ -91,8 +91,8 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
                     if (rhs == null || rhs.getPlace() == null) {
                         return -1;
                     }
-                    return (int) (lhs.getPlace().location.distanceTo(currentLocationPointer) -
-                            lhs.getPlace().location.distanceTo(currentLocationPointer));
+                    return (int) (lhs.getPlace().getLocation().distanceTo(currentLocationPointer) -
+                            lhs.getPlace().getLocation().distanceTo(currentLocationPointer));
                 }
             };
 		} else {

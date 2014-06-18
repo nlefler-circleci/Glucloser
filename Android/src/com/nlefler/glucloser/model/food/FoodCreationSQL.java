@@ -15,7 +15,7 @@ public class FoodCreationSQL extends TableCreationSQL {
             DatabaseUtil.UPDATED_AT_COLUMN_NAME + " INTEGER, " +
             DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME + " INTEGER, " +
             DatabaseUtil.DATA_VERSION_COLUMN_NAME + " INTEGER, " +
-            Food.FOOD_DB_NAME + " TEXT, " +
+            Food.NAME_DB_COLUMN_KEY + " TEXT, " +
             Food.CARBS_DB_COLUMN_KEY + " INTEGER, " +
             Food.DATE_EATEN_DB_COLUMN_NAME + " INTEGER, " +
             Food.CORRECTION_DB_COLUMN_KEY + " INTEGER, " +

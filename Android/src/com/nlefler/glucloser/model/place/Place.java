@@ -48,7 +48,7 @@ public class Place extends GlucloserBaseModel implements Serializable {
     @Column(NAME_DB_COLUMN_KEY)
 	public String name;
 
-	public transient Location location;
+	private transient Location location;
 
     @Column(LAST_VISITED_COLUMN_KEY)
 	public Date lastVisited;
@@ -61,10 +61,12 @@ public class Place extends GlucloserBaseModel implements Serializable {
 	}
 
     public Location getLocation() {
-        Location l = new Location(LocationUtil.NO_PROVIDER);
-        l.setLatitude(latitudeForSerializing);
-        l.setLongitude(longitudeForSerializing);
-        return l;
+        if (location == null) {
+            location = new Location(LocationUtil.NO_PROVIDER);
+            location.setLatitude(latitudeForSerializing);
+            location.setLongitude(longitudeForSerializing);
+        }
+        return location;
     }
 
     @Override

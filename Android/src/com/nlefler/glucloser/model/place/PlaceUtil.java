@@ -54,7 +54,7 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */
 	public static List<Place> getAllPlacesSortedByName() {
-		return getAllPlacesSortedBy(DatabaseUtil.tableNameForModel(Place.class), true);
+		return getAllPlacesSortedBy(Place.NAME_DB_COLUMN_KEY, true);
 	}
 
 	/**
@@ -68,9 +68,9 @@ public class PlaceUtil {
 	 * @return A List<Place> of places
 	 */
 	public static List<Place> getAllPlacesSortedBy(String columnName, boolean asc) {
-        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) + " SORTED BY " +
+        String selectClause = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Place.class) + " ORDER BY " +
                 columnName + (asc ? " ASC " : " DESC ");
-		CursorList<Place> places = Query.many(Place.class, selectClause, columnName, null).get();
+		CursorList<Place> places = Query.many(Place.class, selectClause, columnName).get();
 
 		return places.asList();
 	}
@@ -116,8 +116,8 @@ public class PlaceUtil {
 		Collections.sort(sortedList, new Comparator<Place>() {
 			@Override
 			public int compare(Place lhs, Place rhs) {
-				return (int)(lhs.location.distanceTo(location)
-						- rhs.location.distanceTo(location));
+				return (int)(lhs.getLocation().distanceTo(location)
+						- rhs.getLocation().distanceTo(location));
 			}
 		});
 
@@ -202,8 +202,8 @@ public class PlaceUtil {
 		lastLocationForClosestPlace = currentLocation;
 		if (lastLocationForClosestPlace != null &&
 				secondClosest != null) {
-			double distanceToClosest = lastLocationForClosestPlace.distanceTo(closestPlace.location);
-			double distanceToSecondClosest = lastLocationForClosestPlace.distanceTo(secondClosest.location);
+			double distanceToClosest = lastLocationForClosestPlace.distanceTo(closestPlace.getLocation());
+			double distanceToSecondClosest = lastLocationForClosestPlace.distanceTo(secondClosest.getLocation());
 
 			distanceToRecomputeClosestPlace = distanceToClosest + ((distanceToSecondClosest - distanceToClosest) / 2);
 		}
@@ -274,7 +274,7 @@ public class PlaceUtil {
 	 * @param place The place to update
 	 */
 	public static void updateReadableLocation(Place place) {
-		List<Address> addresses = LocationUtil.getAddressFromLocation(place.location, 1);
+		List<Address> addresses = LocationUtil.getAddressFromLocation(place.getLocation(), 1);
 		if (!addresses.isEmpty()) {
 			// TODO drill up until we find a non-null address line value
 			place.readableAddress = addresses.get(0).getAddressLine(0);
