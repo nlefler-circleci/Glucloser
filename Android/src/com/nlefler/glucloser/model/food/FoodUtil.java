@@ -234,6 +234,6 @@ public class FoodUtil {
 	 * @return The new id if the save was successful or -1
 	 */
 	public static boolean saveFood(Food food) {
-        return food.updateFieldsAndSave();
+        return food.save();
 	}
 }

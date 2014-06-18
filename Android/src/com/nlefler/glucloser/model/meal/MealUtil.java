@@ -92,11 +92,11 @@ public class MealUtil {
 
 	public static boolean saveMeal(Meal meal) {
         // TODO: Transaction
-        boolean result = meal.updateFieldsAndSave();
-        result = result && meal.getPlace().updateFieldsAndSave();
+        boolean result = meal.save();
+        result = result && meal.getPlace().save();
 
         for (Food food : meal.getFoods()) {
-            result = result && food.updateFieldsAndSave();
+            result = result && food.save();
         }
 
         return result;

@@ -59,11 +59,10 @@ public class GlucloserBaseModel extends Model {
         this.dataVersion = 1;
     }
 
-    public boolean updateFieldsAndSave() {
+    @Override
+    public void beforeSave() {
         this.updatedAt = new Date();
         this.needsUpload = true;
-
-        return super.save();
     }
 
     public static <T extends GlucloserBaseModel> T fromParseObject(Class<T> modelClass,

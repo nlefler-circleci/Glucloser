@@ -180,8 +180,8 @@ public class DatabaseUtil {
 			return;
 		}
 
-        lastDownSyncTimes.updateFieldsAndSave();
-        lastUpSyncTimes.updateFieldsAndSave();
+        lastDownSyncTimes.save();
+        lastUpSyncTimes.save();
 
 		Log.v(LOG_TAG, "Finished updating last sync times");
 	}

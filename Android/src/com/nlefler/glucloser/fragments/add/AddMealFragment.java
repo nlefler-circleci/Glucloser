@@ -50,7 +50,7 @@ import com.squareup.otto.Subscribe;
 @SuppressLint("ValidFragment")
 public class AddMealFragment extends Fragment 
 implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-	private static final String LOG_TAG = "Pump_Add_Meal_Activity";
+	private static final String LOG_TAG = "Glucloser_Add_Meal_Activity";
 
 	// Bundle keys for loading a meal to edit
 	public static final String MEAL_KEY = "meal";
@@ -70,7 +70,6 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 
 	private Map<String, Food> foodMap;
 	private List<String> foodViewList;
-	//private Map<String, List<TagToFood>> foodTags;
 
 	private Button saveButton;
 
@@ -84,7 +83,6 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 
 		foodMap = new HashMap<String, Food>();
 		foodViewList = new ArrayList<String>();
-		//foodTags = new HashMap<String, List<TagToFood>>();
 
 		placesList = new ArrayList<Place>();
 
@@ -274,10 +272,20 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 					addFood(food, true, false);
 				}
 			} else {
-                // TODO: Thread
-				for (Food food : meal.getFoods()) {
-					addFood(food, true, false);
-				}
+                new AsyncTask<Meal, Void, List<Food>>() {
+
+                    @Override
+                    protected List<Food> doInBackground(Meal... params) {
+                        return params[0].getFoods();
+                    }
+
+                    @Override
+                    protected void onPostExecute(List<Food> foods) {
+                        for (Food food : foods) {
+                            addFood(food, true, false);
+                        }
+                    }
+                }.execute(meal);
 			}
 		} else {
 			meal = new Meal();
@@ -290,14 +298,14 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		}
 
 		for (Food food : foodMap.values()) {
-			addFood(food, /*foodTags.get(food.id),*/ true, true);
+			addFood(food, true, true);
 		}
 	}
 
 	@Subscribe public void foodUpdated(FoodUpdatedEvent event) {
 		if (foodMap.containsKey(event.getFood().glucloserId)) {
 			boolean replaceFoodView = foodViewList.contains(event.getFood().glucloserId);
-			addFood(event.getFood(), /*new ArrayList<TagToFood>(),*/ true, replaceFoodView);
+			addFood(event.getFood(), true, replaceFoodView);
 		} else {
 			Log.v(LOG_TAG, "Ignoring updated food with id " + event.getFood().glucloserId + ". Not in our map");
 		}

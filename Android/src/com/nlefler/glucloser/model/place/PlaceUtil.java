@@ -260,7 +260,7 @@ public class PlaceUtil {
             return false;
         }
 
-        return place.updateFieldsAndSave();
+        return place.save();
 	}
 
 	/**

@@ -266,6 +266,10 @@ public class AddPlaceFragment extends Fragment {
 							if (!lockLongitude) {
 								longitudeInput.setText(String.valueOf(info[1]));
 							}
+                            if (!lockLatitude && !lockLongitude) {
+                                place.getLocation().setLatitude((Double)info[0]);
+                                place.getLocation().setLongitude((Double)info[1]);
+                            }
 							if (!lockAddress && info[2] != null) {
 								addressInput.setText((String)info[2]);
 							}
