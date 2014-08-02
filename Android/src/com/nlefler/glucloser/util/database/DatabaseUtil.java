@@ -158,7 +158,7 @@ public class DatabaseUtil {
 
 	private SyncUpEvent getLastUpSyncTime() {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncUpEvent.class) +
-                " ORDERED BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+                " ORDER BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
         SyncUpEvent upEvent = Query.one(SyncUpEvent.class, select).get();
 
         return upEvent;
@@ -166,7 +166,7 @@ public class DatabaseUtil {
 
     private SyncDownEvent getLastSyncDownTime() {
          String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncDownEvent.class) +
-                " ORDERED BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+                " ORDER BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
         SyncDownEvent downEvent = Query.one(SyncDownEvent.class, select).get();
 
         return downEvent;
