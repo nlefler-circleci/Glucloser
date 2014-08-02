@@ -24,6 +24,7 @@ public class LocationUtil {
 
     private static boolean isInitialized = false;
 
+    // TODO: Thread safety
 	private static Location lastKnownLocation = null;
 	private static LocationManager locationManager = null;
 	private static LocationListener networkLocationListener = null, gpsLocationListener = null;
