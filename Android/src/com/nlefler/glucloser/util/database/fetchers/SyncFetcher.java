@@ -7,30 +7,53 @@ import java.util.Map;
 
 import android.util.Log;
 
+import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQuery.CachePolicy;
 
-public abstract class SyncFetcher {
-	private static final String LOG_TAG = "Pump_Sync_Fetcher";
+public class SyncFetcher {
+	private static final String LOG_TAG = "Glucloser_Sync_Fetcher";
 	// 1K is the highest limit supported by Parse but this uses a ton of memory
 	// within the Parse SDK
 	private static final int PARSE_FETCH_LIMIT = 1000;
 	
 	private boolean hasMoreRecords = true;
-	
+    private Class modelClass;
+
+    public SyncFetcher(Class modelClass) {
+        this.modelClass = modelClass;
+    }
+
 	public boolean hasMoreRecords() {
 		return hasMoreRecords;
 	}
 	
-	public abstract List<Map<String, Object>> fetchRecords(Date sinceDate);
+	public Date importRecordsSince(Date sinceDate) {
+        Log.i(LOG_TAG, "Starting fetch from Parse");
+
+        List<ParseObject> parseObjects =
+                fetchParseObjectsForModelSinceDate(modelClass, sinceDate, LOG_TAG);
+
+        Date lastDate = null;
+        for (ParseObject object : parseObjects) {
+            GlucloserBaseModel model = GlucloserBaseModel.fromParseObject(modelClass, object);
+            if (model.save()) {
+                if (lastDate == null || model.updatedAt.compareTo(lastDate) == 1) {
+                    lastDate = model.updatedAt;
+                }
+            }
+        }
+
+        return lastDate;
+    }
 	
-	protected List<ParseObject> fetchParseObjectsForTableSinceDate(String tableName,
+	protected List<ParseObject> fetchParseObjectsForModelSinceDate(Class modelClass,
 			Date sinceDate, String logTag) {
 		
-		ParseQuery syncQuery = new ParseQuery(tableName);
+		ParseQuery syncQuery = new ParseQuery(DatabaseUtil.tableNameForModel(modelClass));
 		syncQuery.setCachePolicy(CachePolicy.NETWORK_ONLY);
 		
 		if (sinceDate != null) {
@@ -52,16 +75,5 @@ public abstract class SyncFetcher {
 		}
 		
 		return results;
-	}
-	
-	protected Map<String, Object> getCommonValuesFromParseObjectIntoMap(ParseObject parseObject,
-			Map<String, Object> map) {
-		map.put(DatabaseUtil.OBJECT_ID_COLUMN_NAME, parseObject.getObjectId());
-		map.put(DatabaseUtil.UPDATED_AT_COLUMN_NAME, parseObject.getUpdatedAt());
-		map.put(DatabaseUtil.CREATED_AT_COLUMN_NAME, parseObject.getCreatedAt());
-		map.put(DatabaseUtil.DATA_VERSION_COLUMN_NAME, 
-				parseObject.getInt(DatabaseUtil.DATA_VERSION_COLUMN_NAME));
-		
-		return map;
 	}
 }

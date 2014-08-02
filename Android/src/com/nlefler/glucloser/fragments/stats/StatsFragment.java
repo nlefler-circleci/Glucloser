@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.ListUtil;
-import com.nlefler.glucloser.util.MeterDataUtil;
+import com.nlefler.glucloser.model.meterdata.MeterDataUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.R;
 

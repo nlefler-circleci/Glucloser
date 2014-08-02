@@ -24,14 +24,15 @@ import android.widget.TextView;
 
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.fragments.add.AddPlaceFragment;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.meal.MealUtil;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
 import com.nlefler.glucloser.util.LocationUtil;
-import com.nlefler.glucloser.util.MeterDataUtil;
-import com.nlefler.glucloser.util.PlaceUtil;
+import com.nlefler.glucloser.model.meterdata.MeterDataUtil;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
-import com.nlefler.glucloser.util.MeterDataUtil.BloodSugarDataResults;
+import com.nlefler.glucloser.model.meterdata.MeterDataUtil.BloodSugarDataResults;
 import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.SaveManager;
 import com.squareup.otto.Subscribe;
@@ -134,7 +135,7 @@ public class PlaceDetailActivity extends Activity {
 				protected Void doInBackground(Place... params) {
 					Place place = params[0];
 
-					List<Meal> meals = PlaceUtil.getAllMealsForPlace(place);
+					List<Meal> meals = MealUtil.getAllMealsForPlace(place);
 
 					for (Meal meal : meals) {
 						long requestId = RequestIdUtil.getNewId();
@@ -161,7 +162,7 @@ public class PlaceDetailActivity extends Activity {
 
 	@Subscribe public void placeUpdated(PlaceUpdatedEvent event) {
 		Log.v(LOG_TAG, "Got notification to update place");
-		if (place.equals(event.getPlace())|| place.id.equals(event.getPlace().id)) {
+		if (place.equals(event.getPlace())|| place.equals(event.getPlace())) {
 			Log.v(LOG_TAG, "Place matches, updating");
 
 			place = event.getPlace();

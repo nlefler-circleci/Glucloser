@@ -14,7 +14,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.util.database.save.SaveManager;
@@ -145,10 +145,10 @@ public class AddPlaceFragment extends Fragment {
 			@Override
 			protected void onPostExecute(Object[] results) {
 				if (!lockLatitude) {
-					latitudeInput.setText(String.valueOf(place.location.getLatitude()));
+					latitudeInput.setText(String.valueOf(place.getLocation().getLatitude()));
 				}
 				if (!lockLongitude) {
-					longitudeInput.setText(String.valueOf(place.location.getLongitude()));
+					longitudeInput.setText(String.valueOf(place.getLocation().getLongitude()));
 				}
 				if (!lockAddress) {
 					addressInput.setText(place.readableAddress);
@@ -180,10 +180,10 @@ public class AddPlaceFragment extends Fragment {
 
 			placeNameInput.setText(place.name);
 
-			latitudeInput.setText(String.valueOf(place.location.getLatitude()));
+			latitudeInput.setText(String.valueOf(place.getLocation().getLatitude()));
 			//lockLatitude = true;
 
-			longitudeInput.setText(String.valueOf(place.location.getLongitude()));
+			longitudeInput.setText(String.valueOf(place.getLocation().getLongitude()));
 			//lockLongitude = true;
 
 			addressInput.setText(place.readableAddress);
@@ -215,8 +215,8 @@ public class AddPlaceFragment extends Fragment {
 				place.readableAddress = address;
 			}
 			if (latitude != 0 && longitude != 0) {
-				place.location.setLatitude(latitude);
-				place.location.setLongitude(longitude);
+				place.getLocation().setLatitude(latitude);
+				place.getLocation().setLongitude(longitude);
 			}
 		}
 
@@ -266,6 +266,10 @@ public class AddPlaceFragment extends Fragment {
 							if (!lockLongitude) {
 								longitudeInput.setText(String.valueOf(info[1]));
 							}
+                            if (!lockLatitude && !lockLongitude) {
+                                place.getLocation().setLatitude((Double)info[0]);
+                                place.getLocation().setLongitude((Double)info[1]);
+                            }
 							if (!lockAddress && info[2] != null) {
 								addressInput.setText((String)info[2]);
 							}
@@ -339,7 +343,7 @@ public class AddPlaceFragment extends Fragment {
 			return;
 		}
 
-		LatLng latLng = new LatLng(place.location.getLatitude(), place.location.getLongitude());
+		LatLng latLng = new LatLng(place.getLocation().getLatitude(), place.getLocation().getLongitude());
 		CameraPosition cameraPosition = new CameraPosition(latLng, 16, 0, 0);
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
@@ -361,8 +365,8 @@ public class AddPlaceFragment extends Fragment {
 				mapP.clear();
 				mapP.addMarker(new MarkerOptions().position(point));
 
-				place.location.setLatitude(point.latitude);
-				place.location.setLongitude(point.longitude);
+				place.getLocation().setLatitude(point.latitude);
+				place.getLocation().setLongitude(point.longitude);
 
 				latitudeInput.setText(String.valueOf(point.latitude));
 				longitudeInput.setText(String.valueOf(point.longitude));

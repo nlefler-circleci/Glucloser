@@ -11,10 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.place.Place;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.util.LocationUtil;
-import com.nlefler.glucloser.util.PlaceUtil;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -140,8 +140,8 @@ public class EditPlacesListAdapter implements ListAdapter {
 
 		// TODO: Probably not unique
 		double requestId = place.name.hashCode() +
-				place.location.getLatitude() +
-				place.location.getLongitude();
+				place.getLocation().getLatitude() +
+				place.getLocation().getLongitude();
 
 		if (convertView == null || convertView.getId() != R.layout.place_line_item) {
 			theView = (LinearLayout)layoutInflater.inflate(R.layout.place_line_item, null);
@@ -160,7 +160,7 @@ public class EditPlacesListAdapter implements ListAdapter {
 
 		String readableAddress = place.readableAddress;
 		if (readableAddress == null || readableAddress.equals("")) {
-			List<Address> addresses = LocationUtil.getAddressFromLocation(place.location, 1);
+			List<Address> addresses = LocationUtil.getAddressFromLocation(place.getLocation(), 1);
 			if (!addresses.isEmpty()) {
 				// TODO drill up until we find a non-null address line value
 				addressView.setText(addresses.get(0).getAddressLine(0));

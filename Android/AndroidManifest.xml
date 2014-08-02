@@ -6,13 +6,14 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="14" />
+        android:minSdkVersion="19"
+        android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="com.nlefler.glucloser.permission.MAPS_RECEIVE"
@@ -33,6 +34,10 @@
             android:name=".NetworkSyncService"
             android:label="@string/syncing_verb" >
         </service>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyD0b2NirDn5wzBK4rhzaqQnO2IQlv6p968" />
 
         <activity
             android:name=".GlucloserActivity"
@@ -156,9 +161,6 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/gmaps_api_key" />
     </application>
 
 </manifest>

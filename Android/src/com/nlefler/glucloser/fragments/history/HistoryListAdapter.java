@@ -16,8 +16,10 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.nlefler.glucloser.detail.MealDetailActivity;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.util.MealUtil;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.meal.MealUtil;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
 import com.nlefler.glucloser.R;
 
@@ -44,12 +46,6 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
 			@Override
 			protected List<Meal> doInBackground(Integer... maxMealsToReturn) {
 				List<Meal> meals = MealUtil.getRecentMeals(maxMealsToReturn[0]);
-                for (Meal meal : meals) {
-                    if (meal.placeToMeal == null ||
-                            meal.placeToMeal.place == null) {
-                        meal.linkPlace();
-                    }
-                }
                 return meals;
 			}		
 
@@ -101,7 +97,9 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
 		TextView time = (TextView)theView.findViewById(R.id.history_list_item_time);
 		theView.setTag(requestId);
 
-		name.setText(meal.placeToMeal.place.name);
+        // TODO: Thread
+        Place place = meal.getPlace();
+		name.setText(place.name);
 		time.setText(meal.getDateEatenForDisplay());
 
 		theView.setOnClickListener(new OnClickListener() {
@@ -130,8 +128,7 @@ public class HistoryListAdapter extends BaseAdapter implements ListAdapter {
 			throw new ArrayIndexOutOfBoundsException();
 		}
 
-		Meal meal = meals.get(position);
-
-		return Meal.verifyMeal(meal);
+        // TODO: What is this
+        return true;
 	}
 }

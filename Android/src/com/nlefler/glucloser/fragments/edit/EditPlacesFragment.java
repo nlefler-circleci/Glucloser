@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.nlefler.glucloser.detail.PlaceDetailActivity;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.place.Place;
 
 /**
  * Created by Nathan Lefler on 7/27/13.

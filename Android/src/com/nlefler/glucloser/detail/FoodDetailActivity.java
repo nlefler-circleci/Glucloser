@@ -14,15 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nlefler.glucloser.types.Food;
+import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.R;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.MealToFood;
+import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.util.BloodSugarPlotHandler;
-import com.nlefler.glucloser.util.FoodUtil;
-import com.nlefler.glucloser.util.MeterDataUtil;
+import com.nlefler.glucloser.model.food.FoodUtil;
+import com.nlefler.glucloser.model.meterdata.MeterDataUtil;
 import com.nlefler.glucloser.util.RequestIdUtil;
-import com.nlefler.glucloser.util.MeterDataUtil.BloodSugarDataResults;
+import com.nlefler.glucloser.model.meterdata.MeterDataUtil.BloodSugarDataResults;
 
 public class FoodDetailActivity extends Activity {
 	private static final String LOG_TAG = "Pump_Food_Detail_Activity";
@@ -140,9 +139,6 @@ public class FoodDetailActivity extends Activity {
 		setupBloodSugarPlot(meals);
 
 		for (final Meal meal : meals) {
-			meal.linkFoods();
-			meal.linkPlace();
-
 			handler.post(new Runnable() {
 
 				@Override
@@ -153,9 +149,9 @@ public class FoodDetailActivity extends Activity {
 
 					mealItem.setTag(meal);
 					time.setText(DateFormat.format("MMM, dd kk:mm", meal.getDateEaten()));
-					for (MealToFood f : meal.mealToFoods) {
-						if (f.food.name.equals(food.name)) {
-							carbView.setText(String.valueOf(f.food.carbs));
+					for (Food food : meal.getFoods()) {
+						if (food.name.equals(food.name)) {
+							carbView.setText(String.valueOf(food.carbs));
 							break;
 						}
 					}

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,12 +32,10 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.nlefler.glucloser.thirdparty.zxing.IntentResult;
-import com.nlefler.glucloser.types.Barcode;
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.util.BarcodeUtil;
+import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.thirdparty.zxing.IntentIntegrator;
-import com.nlefler.glucloser.util.FoodUtil;
+import com.nlefler.glucloser.model.food.FoodUtil;
 import com.nlefler.glucloser.util.database.save.SaveManager;
 
 public class AddFoodFragment extends Fragment {
@@ -126,14 +123,6 @@ public class AddFoodFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_REQUEST) {  
-			if (resultCode == Activity.RESULT_OK) {
-				foodImage = (Bitmap) data.getExtras().get("data"); 
-			}
-		} else if (scanResult != null) {
-			handleBarcode(scanResult.getContents());
-		}
-
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -142,30 +131,6 @@ public class AddFoodFragment extends Fragment {
 		String carbValue = carbValueInput.getText().toString();
 
 		return !(foodName.equals("") || carbValue.equals("") || Integer.valueOf(carbValue) < 0);
-	}
-
-	private void handleBarcode(String barcodeValue) {
-		if (barcodeValue == null || barcodeValue.equals("")) {
-			return;
-		}
-
-		Log.i(LOG_TAG, "Handling barcode with value " + barcodeValue);
-
-		// First see if this barcode has already been assigned to a food
-		Barcode barCode = BarcodeUtil.barCodeForBarcodeValue(barcodeValue);
-
-		// If so, populate the views with that food
-		if (barCode != null && barCode.foodName != null) {
-			Log.i(LOG_TAG, "Barcode already known, matched to food named " + barCode.foodName);
-			populateFieldsForFoodName(barCode.foodName);
-			return;
-		}
-
-		// Otherwise this is a new barcode
-		populateFood();
-		Log.i(LOG_TAG, "New barcode, linking to food named " + food.name);
-		food.setBarcodeValue(barcodeValue);
-		food.getBarcode().needsUpload = true;
 	}
 
 	private void populateFood() {
@@ -180,7 +145,6 @@ public class AddFoodFragment extends Fragment {
 		food.name = foodName;
 		food.carbs = carbValue;
 		food.isCorrection = correction;
-		food.getBarcode().foodName = foodName;
 	}
 
 	private void saveAndExit() {

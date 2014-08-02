@@ -8,8 +8,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nlefler.glucloser.R;
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.Place;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.place.Place;
 
 import java.util.List;
 

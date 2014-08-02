@@ -3,10 +3,12 @@ package com.nlefler.glucloser.detail;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.util.PlaceUtil;
-import com.nlefler.glucloser.types.Meal;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.MealUtil;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.place.PlaceUtil;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.food.FoodUtil;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,11 +36,7 @@ public class PlaceDetailMealListAdapter extends BaseAdapter implements
 			protected List<Meal> doInBackground(Place... params) {
 				Place place = params[0];
 
-				List<Meal>meals = PlaceUtil.getAllMealsForPlace(place);
-				for (Meal meal : meals) {
-					meal.linkFoods();
-				}
-				
+				List<Meal>meals = MealUtil.getAllMealsForPlace(place);
 				return meals;
 			}
 
@@ -92,9 +90,10 @@ public class PlaceDetailMealListAdapter extends BaseAdapter implements
 		
 		LinearLayout foodsList = (LinearLayout)mealLayout.findViewById(foodListId);
 		foodsList.removeAllViews();
-		for (MealToFood m2f : meal.mealToFoods) {
+		for (Food food : meal.getFoods()) {
 			TextView foodView = new TextView(mealLayout.getContext());
-			foodView.setText(m2f.food.name);
+            // TODO: Thread
+			foodView.setText(food.name);
 			foodView.setTextSize(18);
 			foodsList.addView(foodView);
 		}

@@ -8,11 +8,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nlefler.glucloser.R;
-import com.nlefler.glucloser.types.Food;
-import com.nlefler.glucloser.types.Meal;
-import com.nlefler.glucloser.types.MealToFood;
-import com.nlefler.glucloser.types.Place;
-import com.nlefler.glucloser.util.MealUtil;
+import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.Meal;
+import com.nlefler.glucloser.model.place.Place;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,7 +27,7 @@ public class HistoricMealItem implements HomeListItem {
 
     public HistoricMealItem(Meal meal) {
         this.meal = meal;
-        this.place = this.meal.linkPlace().placeToMeal.place;
+        this.place = this.meal.getPlace();
     }
 
     public Meal getMeal() { return meal; }
@@ -56,13 +54,13 @@ public class HistoricMealItem implements HomeListItem {
 			theView = (LinearLayout)inflater.inflate(R.layout.home_line_item, null);
 		} else {
 			theView = (LinearLayout) convertView;
-			if (((Double)theView.getTag()) == meal.id.hashCode()) {
+			if (((Double)theView.getTag()) == meal.glucloserId.hashCode()) {
 				return theView;
 			}
 		}
 		LinearLayout mealItem = (LinearLayout)inflater.inflate(
 				R.layout.popular_meal_line_item, null);
-		theView.setTag(meal.id.hashCode());
+		theView.setTag(meal.glucloserId.hashCode());
         theView.addView(mealItem);
 
 		TextView placeName = (TextView) mealItem.findViewById(R.id.popular_meal_place_name);
@@ -75,8 +73,7 @@ public class HistoricMealItem implements HomeListItem {
 
 		List<Food> foods = new ArrayList<Food>();
 		// TODO: Is this running in a thread?
-		for (MealToFood m2f : MealUtil.getFoodsForMeal(meal)) {
-			Food food = m2f.food;
+		for (Food food : meal.getFoods()) {
 			foods.add(food);
 
 			RelativeLayout foodLayout = (RelativeLayout) inflater.inflate(
