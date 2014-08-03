@@ -28,6 +28,9 @@ public class SyncPusher {
     }
 
 	public Date doSyncSinceDate(Date sinceDate) {
+        if (sinceDate == null) {
+            sinceDate = new Date(0);
+        }
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(modelClass) +
                 " WHERE " + DatabaseUtil.UPDATED_AT_COLUMN_NAME + " >= ? AND " +
                 DatabaseUtil.NEEDS_UPLOAD_COLUMN_NAME + " = 1 ORDER BY " +
@@ -49,6 +52,6 @@ public class SyncPusher {
             }
         }
 
-        return lastSyncDate;
+        return lastSyncDate == null ? new Date() : lastSyncDate;
     }
 }

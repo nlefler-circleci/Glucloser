@@ -61,7 +61,7 @@ public class SaveManager {
 				Place place = params[0];
 
                 place.needsUpload = true;
-				if (PlaceUtil.savePlace(place)) {
+				if (!PlaceUtil.savePlace(place)) {
 					return null;
 				}
 				
@@ -91,18 +91,20 @@ public class SaveManager {
 					return null;
 				}
 				Meal meal = params[0];
-				
+
+                Place place = meal.getPlace();
+                place.needsUpload = true;
+                PlaceUtil.savePlace(meal.getPlace());
+
 				// Set needsUpload flags
 				meal.needsUpload = true;
                 MealUtil.saveMeal(meal);
 
 				for (Food food : meal.getFoods()) {
 					food.needsUpload = true;
-                    FoodUtil.saveFood(food);
+                    food.mealGlucloserId = meal.glucloserId;
+                    SaveManager.saveFood(food);
 				}
-				meal.getPlace().needsUpload = true;
-				PlaceUtil.savePlace(meal.getPlace());
-
 				DatabaseUtil.setNeedsSync();
 
 				return meal;
@@ -130,7 +132,7 @@ public class SaveManager {
 				}
 				Food food = params[0];
 				
-				if (FoodUtil.saveFood(food)) {
+				if (!FoodUtil.saveFood(food)) {
 					return null;
 				}
 				

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.nlefler.glucloser.NetworkSyncService;
+import com.nlefler.glucloser.model.bolus.Bolus;
 import com.nlefler.glucloser.model.meterdata.MeterData;
 import com.nlefler.glucloser.model.food.Food;
 import com.nlefler.glucloser.model.meal.Meal;
@@ -56,6 +57,21 @@ public class DatabaseUtil {
         for (int i = 0; i < DATABASE_VERSION && i < dbUpgraders.length; i++) {
             sprinklesInstance.addMigration(dbUpgraders[i]);
         }
+        SyncDownEvent down = new SyncDownEvent();
+        down.setTimeForModel(new Date(0), Bolus.class);
+        down.setTimeForModel(new Date(0), Food.class);
+        down.setTimeForModel(new Date(0), MeterData.class);
+        down.setTimeForModel(new Date(0), Place.class);
+        down.setTimeForModel(new Date(0), Meal.class);
+        down.save();
+
+        SyncUpEvent up = new SyncUpEvent();
+        up.setTimeForModel(new Date(0), Bolus.class);
+        up.setTimeForModel(new Date(0), Food.class);
+        up.setTimeForModel(new Date(0), MeterData.class);
+        up.setTimeForModel(new Date(0), Place.class);
+        up.setTimeForModel(new Date(0), Meal.class);
+        up.save();
 	}
 
 	public static void initialize(Context context) {
@@ -141,11 +157,19 @@ public class DatabaseUtil {
 
 	private void syncHelper(Class modelClass, SyncFetcher fetcher, SyncPusher pusher,
 			SyncDownEvent downSyncTimes, SyncUpEvent upSyncTimes) {
+        Date downTime = downSyncTimes.getTimeForModel(modelClass);
+        Date upTime = upSyncTimes.getTimeForModel(modelClass);
+        if (downTime == null) {
+            downTime = new Date(0);
+        }
+        if (upTime == null) {
+            upTime =  new Date(0);
+        }
 		Date[] tableSyncTimes = doSync(
 				fetcher,
-                downSyncTimes.getTimeForModel(modelClass),
+                downTime,
 				pusher,
-                upSyncTimes.getTimeForModel(modelClass)
+                upTime
 				);
 
         downSyncTimes.setTimeForModel(tableSyncTimes[0], modelClass);
@@ -158,18 +182,18 @@ public class DatabaseUtil {
 
 	private SyncUpEvent getLastUpSyncTime() {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncUpEvent.class) +
-                " ORDERED BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+                " ORDER BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
         SyncUpEvent upEvent = Query.one(SyncUpEvent.class, select).get();
 
-        return upEvent;
+        return upEvent == null ? new SyncUpEvent() : upEvent;
 	}
 
     private SyncDownEvent getLastSyncDownTime() {
          String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncDownEvent.class) +
-                " ORDERED BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+                " ORDER BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
         SyncDownEvent downEvent = Query.one(SyncDownEvent.class, select).get();
 
-        return downEvent;
+        return downEvent == null ? new SyncDownEvent() : downEvent;
     }
 
 	private void updateLastSyncTimes(SyncDownEvent lastDownSyncTimes, SyncUpEvent lastUpSyncTimes) {

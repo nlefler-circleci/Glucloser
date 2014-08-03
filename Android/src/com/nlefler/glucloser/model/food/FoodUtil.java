@@ -50,7 +50,7 @@ public class FoodUtil {
 	 */
 	public static List<String> getAllFoodNamesStartingWith(String start) {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
-                " WHERE lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(?%) ORDERED BY " +
+                " WHERE lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(?%) ORDER BY " +
                 Food.NAME_DB_COLUMN_KEY + " ASC";
 
         // TODO: Unique on name
@@ -77,7 +77,7 @@ public class FoodUtil {
 	 */
 	public static List<Food> getAllFoodsForName(String foodName) {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(Food.class) +
-                " WHERE lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(?) ORDERED BY " +
+                " WHERE lower(" + Food.NAME_DB_COLUMN_KEY + ") LIKE lower(?) ORDER BY " +
                 Food.NAME_DB_COLUMN_KEY + " ASC";
 
 		List<Food> foods = Query.many(Food.class, select, foodName).get().asList();
