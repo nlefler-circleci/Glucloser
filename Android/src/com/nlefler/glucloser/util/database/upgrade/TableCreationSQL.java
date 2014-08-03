@@ -5,4 +5,5 @@ package com.nlefler.glucloser.util.database.upgrade;
  */
 public abstract class TableCreationSQL {
     public static String creationSQL;
+    public static String initializationSQL;
 }

@@ -48,6 +48,8 @@ public class Meal extends GlucloserBaseModel implements Serializable {
         super();
 
 		this.dateEaten = (Calendar.getInstance(TimeZone.getTimeZone("Etc/Zulu"))).getTime();
+        this.placeGlucloserId = "";
+        this.foods = new ArrayList<Food>();
 	}
 
     public Place getPlace () {

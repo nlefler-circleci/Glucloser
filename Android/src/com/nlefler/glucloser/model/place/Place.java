@@ -60,6 +60,9 @@ public class Place extends GlucloserBaseModel implements Serializable {
         super();
 
         lastVisited = new Date();
+        foursquareId = "";
+        name = "";
+        readableAddress = "";
 	}
 
     public Location getLocation() {

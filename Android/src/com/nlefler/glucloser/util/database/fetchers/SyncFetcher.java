@@ -34,20 +34,23 @@ public class SyncFetcher {
 	public Date importRecordsSince(Date sinceDate) {
         Log.i(LOG_TAG, "Starting fetch from Parse");
 
+        if (sinceDate == null) {
+            sinceDate = new Date(0);
+        }
         List<ParseObject> parseObjects =
                 fetchParseObjectsForModelSinceDate(modelClass, sinceDate, LOG_TAG);
 
         Date lastDate = null;
         for (ParseObject object : parseObjects) {
             GlucloserBaseModel model = GlucloserBaseModel.fromParseObject(modelClass, object);
-            if (model.save()) {
+            if (model != null && model.save()) {
                 if (lastDate == null || model.updatedAt.compareTo(lastDate) == 1) {
                     lastDate = model.updatedAt;
                 }
             }
         }
 
-        return lastDate;
+        return lastDate == null ? new Date() : lastDate;
     }
 	
 	protected List<ParseObject> fetchParseObjectsForModelSinceDate(Class modelClass,

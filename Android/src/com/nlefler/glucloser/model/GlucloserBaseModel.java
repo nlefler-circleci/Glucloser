@@ -27,8 +27,8 @@ public class GlucloserBaseModel extends Model {
     @Key
     @AutoIncrement
     @Column(DatabaseUtil.ID_COLUMN_NAME)
-    private int id;
-    public int getId() {
+    private long id;
+    public long getId() {
         return id;
     }
 
@@ -75,6 +75,7 @@ public class GlucloserBaseModel extends Model {
                 if (column != null) {
                     String fieldName = column.value();
                     try {
+                        field.setAccessible(true);
                         field.set(object, parseObject.get(fieldName));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -119,12 +120,9 @@ public class GlucloserBaseModel extends Model {
             if (column != null) {
                 String fieldName = column.value();
                 try {
-                    Object fieldValue = field.getType().newInstance();
-                    field.get(fieldValue);
+                    field.setAccessible(true);
+                    Object fieldValue = field.get(this);
                     object.put(fieldName, fieldValue);
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                    return false;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                     return false;

@@ -3,6 +3,7 @@ package com.nlefler.glucloser.model.sync;
 import com.nlefler.glucloser.model.GlucloserBaseModel;
 import com.nlefler.glucloser.model.bolus.Bolus;
 import com.nlefler.glucloser.model.food.Food;
+import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.model.meterdata.MeterData;
 import com.nlefler.glucloser.model.place.Place;
 
@@ -17,6 +18,7 @@ public class SyncEvent extends GlucloserBaseModel {
 
     protected static final String BolusColumnName = "bolus";
     protected static final String FoodColumnName = "food";
+    protected static final String MealColumnName = "meal";
     protected static final String MeterDataColumnName = "meterdata";
     protected static final String PlaceColumnName = "place";
 
@@ -32,6 +34,9 @@ public class SyncEvent extends GlucloserBaseModel {
     @Column(SyncEvent.PlaceColumnName)
     protected Date placeSyncTime;
 
+    @Column(SyncEvent.MealColumnName)
+    protected Date mealSyncTime;
+
     public Date getTimeForModel(Class modelClass) {
          // TODO
         if (modelClass.equals(Bolus.class)) {
@@ -45,6 +50,9 @@ public class SyncEvent extends GlucloserBaseModel {
         }
         else if (modelClass.equals(Place.class)) {
             return placeSyncTime;
+        }
+        else if (modelClass.equals(Meal.class)) {
+            return mealSyncTime;
         }
         return null;
     }
@@ -62,6 +70,9 @@ public class SyncEvent extends GlucloserBaseModel {
         }
         else if (modelClass.equals(Place.class)) {
             placeSyncTime = newTime;
+        }
+        else if (modelClass.equals(Meal.class)) {
+            mealSyncTime = newTime;
         }
     }
 }

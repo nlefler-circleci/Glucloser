@@ -55,6 +55,8 @@ public class Food extends GlucloserBaseModel implements Serializable {
 		this.carbs = -1;
 		this.isCorrection = false;
 		this.dateEaten = new Date();
+        this.mealGlucloserId = "";
+        this.name = "";
 	}
 
 	public void setNowAsDateEaten() {

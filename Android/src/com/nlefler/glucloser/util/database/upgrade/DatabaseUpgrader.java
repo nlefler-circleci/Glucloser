@@ -15,6 +15,10 @@ public abstract class DatabaseUpgrader extends Migration {
 		return new String[] {};
 	}
 
+    protected String[] getUpdateCommands() {
+        return new String[] {};
+    }
+
     @Override
     public void onPreMigrate() {
 
@@ -57,6 +61,18 @@ public abstract class DatabaseUpgrader extends Migration {
 	 * @param db The database to update
 	 */
 	public void updateData(SQLiteDatabase db) {
+        db.beginTransaction();
+
+		try {
+			for (String command : getUpdateCommands()) {
+				db.execSQL(command);
+			}
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			Log.e(LOG_TAG, e.getMessage());
+		} finally {
+			db.endTransaction();
+		}
 	}
 
 }
