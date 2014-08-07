@@ -114,7 +114,7 @@ public class GlucloserBaseModel extends Model {
     }
 
     private boolean populateParseObject(ParseObject object) {
-        Field[] allFields = this.getClass().getDeclaredFields();
+        Field[] allFields = this.getClass().getFields();
         for (Field field : allFields) {
             Column column = (Column)field.getAnnotation(Column.class);
             if (column != null) {
