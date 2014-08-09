@@ -3,6 +3,7 @@ package com.nlefler.glucloser.util.database;
 import java.lang.annotation.Annotation;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -182,7 +183,7 @@ public class DatabaseUtil {
 
 	private SyncUpEvent getLastUpSyncTime() {
         String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncUpEvent.class) +
-                " ORDER BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+                " ORDER BY " + DatabaseUtil.UPDATED_AT_COLUMN_NAME + " DESC";
         SyncUpEvent upEvent = Query.one(SyncUpEvent.class, select).get();
 
         return upEvent == null ? new SyncUpEvent() : upEvent;
@@ -190,7 +191,7 @@ public class DatabaseUtil {
 
     private SyncDownEvent getLastSyncDownTime() {
          String select = "SELECT * FROM " + DatabaseUtil.tableNameForModel(SyncDownEvent.class) +
-                " ORDER BY " + DatabaseUtil.CREATED_AT_COLUMN_NAME + " DESC";
+                " ORDER BY " + DatabaseUtil.UPDATED_AT_COLUMN_NAME + " DESC";
         SyncDownEvent downEvent = Query.one(SyncDownEvent.class, select).get();
 
         return downEvent == null ? new SyncDownEvent() : downEvent;

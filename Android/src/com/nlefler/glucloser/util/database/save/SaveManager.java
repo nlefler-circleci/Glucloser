@@ -131,6 +131,7 @@ public class SaveManager {
 					return null;
 				}
 				Food food = params[0];
+                food.needsUpload = true;
 				
 				if (!FoodUtil.saveFood(food)) {
 					return null;
