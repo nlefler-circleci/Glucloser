@@ -76,7 +76,15 @@ public class GlucloserBaseModel extends Model {
                     String fieldName = column.value();
                     try {
                         field.setAccessible(true);
-                        field.set(object, parseObject.get(fieldName));
+                        Object fieldValue = parseObject.get(fieldName);
+                        if (fieldName.equals("createdAt")) {
+                            fieldValue = parseObject.getCreatedAt();
+                        } else if (fieldName.equals("updatedAt")) {
+                            fieldValue = parseObject.getUpdatedAt();
+                        } else if (fieldName.equals("objectId")) {
+                            fieldValue = parseObject.getObjectId();
+                        }
+                        field.set(object, fieldValue);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                         return null;
@@ -119,6 +127,11 @@ public class GlucloserBaseModel extends Model {
             Column column = (Column)field.getAnnotation(Column.class);
             if (column != null) {
                 String fieldName = column.value();
+                if (fieldName.equals("createdAt") ||
+                        fieldName.equals("updatedAt") ||
+                        fieldName.equals("parseId")) {
+                    continue;
+                }
                 try {
                     field.setAccessible(true);
                     Object fieldValue = field.get(this);

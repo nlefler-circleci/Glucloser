@@ -5,7 +5,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TimeZone;
+import java.util.TreeSet;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -432,11 +434,28 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				}
 			}.execute();
 		} else {
-			new AsyncTask<Void, Void, List<Place>>() {
+            com.nlefler.glucloser.util.Callback<List<Place>> callback =
+                    new com.nlefler.glucloser.util.Callback<List<Place>>() {
+                        @Override
+                        public void call(List<Place> data) {
+                            placesList.addAll(data);
+                        }
 
+                        @Override
+                        public void error(String message) {
+                        }
+                    };
+            NLFoursquareClientParameters clientParameters = new NLFoursquareClientParameters(
+                    getString(R.string.foursquare_client_id),
+                    getString(R.string.foursquare_client_secret)
+            );
+            FoursquareUtil.placesNearCurrentLocation(clientParameters, callback);
+
+			new AsyncTask<Void, Void, List<Place>>() {
 				@Override
-				protected List<Place> doInBackground(Void... params) {
-					return PlaceUtil.getPlacesNear(loc);
+                protected List<Place> doInBackground(Void... params) {
+
+                    return PlaceUtil.getPlacesNear(loc);
 				}
 
 				@Override
@@ -468,32 +487,10 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 		// Create and show the dialog.
 		// +2 = Show All, Add a Place, Edit Place
 
-        com.nlefler.glucloser.util.Callback<List<String>> callback =
-                new com.nlefler.glucloser.util.Callback<List<String>>() {
-            @Override
-            public void call(List<String> data) {
-                showSelectPlaceDialogWithFoursquareNames(data);
-            }
-
-            @Override
-            public void error(String message) {
-                showSelectPlaceDialogWithFoursquareNames(new ArrayList<String>());
-            }
-        };
-        NLFoursquareClientParameters clientParameters = new NLFoursquareClientParameters(
-                getString(R.string.foursquare_client_id),
-                getString(R.string.foursquare_client_secret)
-        );
-        FoursquareUtil.placeNamesNearCurrentLocation(clientParameters, callback);
-
-	}
-     private void showSelectPlaceDialogWithFoursquareNames(List<String> foursquarePlaces) {
-        final CharSequence[] nearbyPlaceNames = new CharSequence[placesList.size() + 3 + foursquarePlaces.size()];
-        for (int i = 0; i < placesList.size(); i++) {
-            nearbyPlaceNames[i] = placesList.get(i).name;
-        }
-        for (int i = placesList.size(); i < foursquarePlaces.size(); i++) {
-            nearbyPlaceNames[i] = foursquarePlaces.get(i);
+        final CharSequence[] nearbyPlaceNames = new CharSequence[placesList.size() + 3];
+        int idx = 0;
+        for (Place place : placesList) {
+            nearbyPlaceNames[idx++] = place.name;
         }
 
         nearbyPlaceNames[nearbyPlaceNames.length - 3] = "Show All";
@@ -506,7 +503,7 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 
 	protected void setSelectedPlaceFromList(int i) {
 		try {
-			Place p = placesList.get(i);
+            Place p = placesList.get(i);
 			setSelectedPlace(p);
 		} catch (IndexOutOfBoundsException ex) {
 			Log.i(LOG_TAG, "Tried to select place out of bounds of list, assuming command");

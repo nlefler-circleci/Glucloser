@@ -44,6 +44,7 @@ public class SyncPusher {
                 try {
                     parseObject.save();
                     record.needsUpload = false;
+                    record.parseId = parseObject.getObjectId();
                     record.save();
                     lastSyncDate = record.updatedAt;
                 } catch (ParseException e) {

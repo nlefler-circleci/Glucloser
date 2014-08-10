@@ -4,6 +4,9 @@ import android.location.Location;
 import android.util.Log;
 
 import com.nlefler.glucloser.R;
+import com.nlefler.glucloser.model.place.Place;
+import com.nlefler.glucloser.model.place.PlaceUtil;
+import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.nlefler.nlfoursquare.Explore.NLFoursquareVenueExplore;
 import com.nlefler.nlfoursquare.Explore.NLFoursquareVenueExploreParametersBuilder;
 import com.nlefler.nlfoursquare.Explore.NLFoursquareVenueExploreSection;
@@ -27,13 +30,61 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import se.emilsjolander.sprinkles.Query;
 
 /**
  * Created by nathan on 8/1/14.
  */
 public class FoursquareUtil {
+
+    private static class DataExtractor<T> {
+        public List<T> extract(List<NLFoursquareVenue> venues) {
+            return new ArrayList<T>();
+        }
+    }
+
+    private static final DataExtractor<String> extractNames = new DataExtractor<String>() {
+        @Override
+        public List<String> extract(List<NLFoursquareVenue> venues) {
+            List<String> names = new ArrayList<String>();
+            for (NLFoursquareVenue venue : venues) {
+                names.add(venue.name);
+            }
+            return names;
+        }
+    };
+
     public static void placeNamesNearCurrentLocation(final NLFoursquareClientParameters clientParameters,
                                                      final com.nlefler.glucloser.util.Callback<List<String>> callback) {
+        foursquareVenuesNearCurrentLocation(clientParameters, callback, extractNames);
+    }
+
+    private static final DataExtractor<Place> extractPlaces = new DataExtractor<Place>() {
+        @Override
+        public List<Place> extract(List<NLFoursquareVenue> venues) {
+            List<Place> places = new ArrayList<Place>();
+            for (NLFoursquareVenue venue : venues) {
+                Place place = PlaceUtil.getPlaceWithFoursquareId(venue.id);
+                if (place == null) {
+                    place = new Place();
+                    place.foursquareId = venue.id;
+                    place.name = venue.name;
+                }
+                places.add(place);
+            }
+
+            return places;
+        }
+    };
+
+    public static void placesNearCurrentLocation(final NLFoursquareClientParameters clientParameters,
+                                                 final com.nlefler.glucloser.util.Callback<List<Place>> callback) {
+        foursquareVenuesNearCurrentLocation(clientParameters, callback, extractPlaces);
+    }
+
+    private static <T> void foursquareVenuesNearCurrentLocation(final NLFoursquareClientParameters clientParameters,
+                                                     final com.nlefler.glucloser.util.Callback<List<T>> callback,
+                                                     final DataExtractor<T> dataExtractor) {
         Location location = LocationUtil.getLastKnownLocation();
         if (location != null) {
             NLFoursquareVenueExploreParametersBuilder paramsBuilder = new NLFoursquareVenueExploreParametersBuilder();
@@ -51,14 +102,13 @@ public class FoursquareUtil {
                         @Override
                         public void success(NLFoursquareResponse<NLFoursquareVenueExploreResponse> foursquareResponse,
                                             Response response) {
-                            List<String> foursquarePlaces = new ArrayList<String>();
+                            List<NLFoursquareVenue> venues = new ArrayList<NLFoursquareVenue>();
                             for (NLFoursquareVenueExploreGroup group : foursquareResponse.response.groups) {
                                 for (NLFoursquareVenueExploreGroupRecommendedItem item : group.items) {
-                                    NLFoursquareVenue venue = item.venue;
-                                    foursquarePlaces.add(venue.name);
+                                    venues.add(item.venue);
                                 }
                             }
-                            callback.call(foursquarePlaces);
+                            callback.call(dataExtractor.extract(venues));
                         }
 
                         @Override
