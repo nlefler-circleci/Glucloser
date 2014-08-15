@@ -43,6 +43,7 @@ public class SyncFetcher {
         Date lastDate = null;
         for (ParseObject object : parseObjects) {
             GlucloserBaseModel model = GlucloserBaseModel.fromParseObject(modelClass, object);
+            boolean exists = model.exists();
             if (model != null && model.save()) {
                 if (lastDate == null || model.updatedAt.compareTo(lastDate) == 1) {
                     lastDate = model.updatedAt;
