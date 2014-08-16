@@ -138,8 +138,7 @@ public class GlucloserBaseModel extends Model {
             Column column = (Column)field.getAnnotation(Column.class);
             String fieldName = column.value();
             if (fieldName.equals(DatabaseUtil.CREATED_AT_COLUMN_NAME) ||
-                    fieldName.equals(DatabaseUtil.UPDATED_AT_COLUMN_NAME) ||
-                    fieldName.equals(DatabaseUtil.PARSE_ID_COLUMN_NAME)) {
+                    fieldName.equals(DatabaseUtil.UPDATED_AT_COLUMN_NAME)) {
                 continue;
             }
             try {
