@@ -166,7 +166,7 @@ public class GlucloserActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.layout.glucloser_main_activity_options_menu, menu);
+		inflater.inflate(R.menu.glucloser_main_activity_options_menu, menu);
 
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView)menu.findItem(R.id.search_bar).getActionView();
