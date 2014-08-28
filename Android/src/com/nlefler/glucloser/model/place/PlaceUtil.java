@@ -231,6 +231,15 @@ public class PlaceUtil {
 		return place;
 	}
 
+    public static Place getPlaceWithFoursquareId(String foursquareId) {
+        String selectClause = "SELECT * FROM " +
+                DatabaseUtil.tableNameForModel(Place.class) + " WHERE " +
+                Place.FOURSQUARE_ID_COLUMN_KEY + " = ?";
+        Place place = Query.one(Place.class, selectClause, foursquareId).get();
+
+        return place;
+    }
+
 	/**
 	 * Get all places in the database whose name contains the provided
 	 * string.

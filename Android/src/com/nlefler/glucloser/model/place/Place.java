@@ -85,13 +85,7 @@ public class Place extends GlucloserBaseModel implements Serializable {
         if (foursquareId != null ? !foursquareId.equals(place.foursquareId) : place.foursquareId != null)
             return false;
         if (!glucloserId.equals(place.glucloserId)) return false;
-        if (lastVisited != null ? !lastVisited.equals(place.lastVisited) : place.lastVisited != null)
-            return false;
-        if (location != null ? !location.equals(place.location) : place.location != null)
-            return false;
         if (!name.equals(place.name)) return false;
-        if (readableAddress != null ? !readableAddress.equals(place.readableAddress) : place.readableAddress != null)
-            return false;
 
         return true;
     }
@@ -101,9 +95,6 @@ public class Place extends GlucloserBaseModel implements Serializable {
         int result = glucloserId.hashCode();
         result = 31 * result + (foursquareId != null ? foursquareId.hashCode() : 0);
         result = 31 * result + name.hashCode();
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + (lastVisited != null ? lastVisited.hashCode() : 0);
-        result = 31 * result + (readableAddress != null ? readableAddress.hashCode() : 0);
         result = 31 * result + dataVersion;
         return result;
     }

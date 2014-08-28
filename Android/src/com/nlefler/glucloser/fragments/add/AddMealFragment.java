@@ -5,7 +5,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TimeZone;
+import java.util.TreeSet;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -18,6 +20,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,12 +43,27 @@ import com.nlefler.glucloser.model.place.PlaceUtil;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.model.meal.Meal;
 import com.nlefler.glucloser.model.food.FoodUtil;
+import com.nlefler.glucloser.util.FoursquareUtil;
 import com.nlefler.glucloser.util.LocationUtil;
 import com.nlefler.glucloser.util.database.save.FoodUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.MealUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.PlaceUpdatedEvent;
 import com.nlefler.glucloser.util.database.save.SaveManager;
+import com.nlefler.nlfoursquare.Explore.NLFoursquareVenueExplore;
+import com.nlefler.nlfoursquare.Explore.NLFoursquareVenueExploreParametersBuilder;
+import com.nlefler.nlfoursquare.Explore.NLFoursquareVenueExploreSection;
+import com.nlefler.nlfoursquare.Model.FoursquareResponse.NLFoursquareResponse;
+import com.nlefler.nlfoursquare.Model.NLFoursquareClientParameters;
+import com.nlefler.nlfoursquare.Model.Venue.Explore.NLFoursquareVenueExploreGroup;
+import com.nlefler.nlfoursquare.Model.Venue.Explore.NLFoursquareVenueExploreGroupRecommendedItem;
+import com.nlefler.nlfoursquare.Model.Venue.Explore.NLFoursquareVenueExploreResponse;
+import com.nlefler.nlfoursquare.Model.Venue.NLFoursquareVenue;
 import com.squareup.otto.Subscribe;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 @SuppressLint("ValidFragment")
 public class AddMealFragment extends Fragment 
@@ -416,11 +434,28 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 				}
 			}.execute();
 		} else {
-			new AsyncTask<Void, Void, List<Place>>() {
+            com.nlefler.glucloser.util.Callback<List<Place>> callback =
+                    new com.nlefler.glucloser.util.Callback<List<Place>>() {
+                        @Override
+                        public void call(List<Place> data) {
+                            placesList.addAll(data);
+                        }
 
+                        @Override
+                        public void error(String message) {
+                        }
+                    };
+            NLFoursquareClientParameters clientParameters = new NLFoursquareClientParameters(
+                    getString(R.string.foursquare_client_id),
+                    getString(R.string.foursquare_client_secret)
+            );
+            FoursquareUtil.placesNearCurrentLocation(clientParameters, callback);
+
+			new AsyncTask<Void, Void, List<Place>>() {
 				@Override
-				protected List<Place> doInBackground(Void... params) {
-					return PlaceUtil.getPlacesNear(loc);
+                protected List<Place> doInBackground(Void... params) {
+
+                    return PlaceUtil.getPlacesNear(loc);
 				}
 
 				@Override
@@ -451,21 +486,24 @@ implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListene
 	private void showSelectPlaceDialog() {
 		// Create and show the dialog.
 		// +2 = Show All, Add a Place, Edit Place
-		CharSequence[] nearbyPlaceNames = new CharSequence[placesList.size() + 3];
-		for (int i = 0; i < placesList.size(); i++) {
-			nearbyPlaceNames[i] = placesList.get(i).name;
-		}
-		nearbyPlaceNames[nearbyPlaceNames.length - 3] = "Show All";
-		nearbyPlaceNames[nearbyPlaceNames.length - 2] = "Add a place";
-		nearbyPlaceNames[nearbyPlaceNames.length - 1] = "Edit this place";
 
-		DialogFragment newFragment = new SelectPlaceDialogFragment(nearbyPlaceNames);
-		newFragment.show(getFragmentManager(), "dialog");
-	}
+        final CharSequence[] nearbyPlaceNames = new CharSequence[placesList.size() + 3];
+        int idx = 0;
+        for (Place place : placesList) {
+            nearbyPlaceNames[idx++] = place.name;
+        }
+
+        nearbyPlaceNames[nearbyPlaceNames.length - 3] = "Show All";
+        nearbyPlaceNames[nearbyPlaceNames.length - 2] = "Add a place";
+        nearbyPlaceNames[nearbyPlaceNames.length - 1] = "Edit this place";
+
+        DialogFragment newFragment = new SelectPlaceDialogFragment(nearbyPlaceNames);
+        newFragment.show(getFragmentManager(), "dialog");
+     }
 
 	protected void setSelectedPlaceFromList(int i) {
 		try {
-			Place p = placesList.get(i);
+            Place p = placesList.get(i);
 			setSelectedPlace(p);
 		} catch (IndexOutOfBoundsException ex) {
 			Log.i(LOG_TAG, "Tried to select place out of bounds of list, assuming command");

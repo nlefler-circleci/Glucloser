@@ -1,6 +1,7 @@
 package com.nlefler.glucloser.model;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import com.nlefler.glucloser.util.database.DatabaseUtil;
 import com.parse.Parse;
@@ -10,7 +11,12 @@ import com.parse.ParseQuery;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import se.emilsjolander.sprinkles.Model;
@@ -24,19 +30,12 @@ import se.emilsjolander.sprinkles.typeserializers.TypeSerializer;
  */
 public class GlucloserBaseModel extends Model {
 
-    @Key
-    @AutoIncrement
-    @Column(DatabaseUtil.ID_COLUMN_NAME)
-    private long id;
-    public long getId() {
-        return id;
-    }
+    private final static String LOG_TAG = "Glucloser_Base_Model";
 
     @Key
     @Column(DatabaseUtil.GLUCLOSER_ID_COLUMN_NAME)
     public String glucloserId;
 
-    @Key
     @Column(DatabaseUtil.PARSE_ID_COLUMN_NAME)
     public String parseId;
 
@@ -54,7 +53,7 @@ public class GlucloserBaseModel extends Model {
 
     public GlucloserBaseModel() {
         this.glucloserId = UUID.randomUUID().toString();
-        this.parseId = UUID.randomUUID().toString();
+        this.parseId = "";
         this.createdAt = new Date();
         this.dataVersion = 1;
     }
@@ -63,6 +62,17 @@ public class GlucloserBaseModel extends Model {
     public void beforeSave() {
         this.updatedAt = new Date();
         this.needsUpload = true;
+
+        for (Field field : allFields()) {
+            field.setAccessible(true);
+            try {
+                if (field.get(this) == null) {
+                    Log.e(LOG_TAG + " " + this.getClass().getName(), "Null field " + field.getName());
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static <T extends GlucloserBaseModel> T fromParseObject(Class<T> modelClass,
@@ -70,17 +80,23 @@ public class GlucloserBaseModel extends Model {
         try {
             T object = modelClass.newInstance();
             Field[] allFields = modelClass.getDeclaredFields();
-            for (Field field : allFields) {
+            for (Field field : object.allFields()) {
                 Column column = (Column)field.getAnnotation(Column.class);
-                if (column != null) {
-                    String fieldName = column.value();
-                    try {
-                        field.setAccessible(true);
-                        field.set(object, parseObject.get(fieldName));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        return null;
+                String fieldName = column.value();
+                try {
+                    field.setAccessible(true);
+                    Object fieldValue = parseObject.get(fieldName);
+                    if (fieldName.equals(DatabaseUtil.CREATED_AT_COLUMN_NAME)) {
+                        fieldValue = parseObject.getCreatedAt();
+                    } else if (fieldName.equals(DatabaseUtil.UPDATED_AT_COLUMN_NAME)) {
+                        fieldValue = parseObject.getUpdatedAt();
+                    } else if (fieldName.equals(DatabaseUtil.PARSE_ID_COLUMN_NAME)) {
+                        fieldValue = parseObject.getObjectId();
                     }
+                    field.set(object, fieldValue);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    return null;
                 }
             }
 
@@ -98,14 +114,18 @@ public class GlucloserBaseModel extends Model {
         ParseObject object;
         boolean success = false;
         String tableName = DatabaseUtil.tableNameForModel(this.getClass());
-		try {
-			ParseQuery query = new ParseQuery(tableName);
-            object = query.get(parseId);
-			success = populateParseObject(object);
-		} catch (ParseException e) {
+        if (this.parseId == null || this.parseId.isEmpty()) {
             object = new ParseObject(tableName);
-			success = populateParseObject(object);
-		}
+        }
+        else {
+            try {
+                ParseQuery query = new ParseQuery(tableName);
+                object = query.get(parseId);
+            } catch (ParseException e) {
+                object = new ParseObject(tableName);
+            }
+        }
+        success = populateParseObject(object);
 
         if (success) {
             return object;
@@ -114,21 +134,48 @@ public class GlucloserBaseModel extends Model {
     }
 
     private boolean populateParseObject(ParseObject object) {
-        Field[] allFields = this.getClass().getFields();
-        for (Field field : allFields) {
+        for (Field field : allFields()) {
             Column column = (Column)field.getAnnotation(Column.class);
-            if (column != null) {
-                String fieldName = column.value();
-                try {
-                    field.setAccessible(true);
-                    Object fieldValue = field.get(this);
-                    object.put(fieldName, fieldValue);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    return false;
+            String fieldName = column.value();
+            if (fieldName.equals(DatabaseUtil.CREATED_AT_COLUMN_NAME) ||
+                    fieldName.equals(DatabaseUtil.UPDATED_AT_COLUMN_NAME)) {
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+                Object fieldValue = field.get(this);
+                if (fieldValue == null) {
+                    Log.e(LOG_TAG + " " + this.getClass().getName(), "Null value for " + fieldName);
                 }
+                object.put(fieldName, fieldValue);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return false;
             }
         }
         return true;
+    }
+
+    protected  Collection<Field> allFields() {
+        Map<String, Field> fields = new HashMap<String, Field>();
+        for (Field field : this.getClass().getFields()) {
+            Column column = (Column)field.getAnnotation(Column.class);
+            if (column == null) {
+                continue;
+            }
+            if (!fields.containsKey(field.getName())) {
+                fields.put(field.getName(), field);
+            }
+        }
+        for (Field field : this.getClass().getDeclaredFields()) {
+            Column column = (Column)field.getAnnotation(Column.class);
+            if (column == null) {
+                continue;
+            }
+            if (!fields.containsKey(field.getName())) {
+                fields.put(field.getName(), field);
+            }
+        }
+        return fields.values();
     }
 }
