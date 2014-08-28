@@ -31,6 +31,11 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
 
+
+    defaultConfig{
+        minSdkVersion 15
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
