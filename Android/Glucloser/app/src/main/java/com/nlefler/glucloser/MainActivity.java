@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.os.Build;
 
 import com.parse.Parse;
+import com.parse.ParseAnalytics;
 import com.parse.ParseCrashReporting;
 
 
@@ -30,6 +31,8 @@ public class MainActivity extends ActionBarActivity {
         ParseCrashReporting.enable(this);
         Parse.initialize(this, this.getString(R.string.parse_app_id),
                 this.getString(R.string.parse_client_key));
+
+        ParseAnalytics.trackAppOpened(getIntent());
     }
 
 
