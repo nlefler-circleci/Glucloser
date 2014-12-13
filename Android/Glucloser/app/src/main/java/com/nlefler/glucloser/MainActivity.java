@@ -28,10 +28,6 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
-        ParseCrashReporting.enable(this);
-        Parse.initialize(this, this.getString(R.string.parse_app_id),
-                this.getString(R.string.parse_client_key));
-
         ParseAnalytics.trackAppOpened(getIntent());
     }
 
