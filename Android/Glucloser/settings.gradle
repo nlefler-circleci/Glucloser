@@ -1,1 +1,1 @@
-include ':app', ':nlfoursquare'
+include ':app', ':nlfoursquare', ':android-reactive-location'
