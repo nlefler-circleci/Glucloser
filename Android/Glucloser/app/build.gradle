@@ -24,7 +24,7 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.1.2'
     compile fileTree(dir: 'libs/Parse-1.8.0', include: 'Parse-*.jar')
     compile fileTree(dir: 'libs/Parse-1.8.0', include: 'ParseCrashReporting-*.jar')
-    compile 'io.realm:realm-android:0.75.1'
+    compile 'io.realm:realm-android:0.76.0'
     compile 'io.reactivex:rxandroid:0.23.0'
     //    compile 'pl.charmas.android:android-reactive-location:0.2@aar'
     compile fileTree(dir: 'libs', include: ['*.jar'])
