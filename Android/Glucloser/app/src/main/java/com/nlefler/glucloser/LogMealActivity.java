@@ -4,18 +4,28 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.nlefler.glucloser.actions.LogMealAction;
 import com.nlefler.glucloser.ui.PlaceSelectionFragment;
 
 
 public class LogMealActivity extends ActionBarActivity {
+    private static String LOG_TAG = "LogMealActivity";
 
+    private LogMealAction logMealAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_meal);
         PlaceSelectionFragment fragment = new PlaceSelectionFragment();
+
         if (savedInstanceState == null) {
+            this.logMealAction = new LogMealAction();
+            Bundle args = new Bundle();
+            args.putParcelable(PlaceSelectionFragment.LogMealActionBundleKey,
+                    this.logMealAction);
+            fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();

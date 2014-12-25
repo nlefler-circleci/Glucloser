@@ -42,5 +42,4 @@ public class Place extends RealmObject {
     public void setLongitude(float longitude) {
         this.longitude = longitude;
     }
-
 }

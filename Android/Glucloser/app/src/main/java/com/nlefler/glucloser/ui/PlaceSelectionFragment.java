@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nlefler.glucloser.R;
+import com.nlefler.glucloser.actions.LogMealAction;
 import com.nlefler.glucloser.dataSource.PlaceSelectionRecyclerAdapter;
 import com.nlefler.glucloser.foursquare.FoursquarePlaceHelper;
 import com.nlefler.glucloser.models.Place;
@@ -34,16 +35,18 @@ public class PlaceSelectionFragment
         PlaceSelectionDelegate {
     private static String LOG_TAG = "PlaceSelectionFragment";
 
+    public static final String LogMealActionBundleKey = "LogMealActionBundleKey";
+
     private FoursquarePlaceHelper foursquareHelper;
     private Subscription closestPlacesSubscription;
     private Scheduler subscriptionScheduler;
+    private LogMealAction logMealAction;
 
     private RecyclerView placeSelectionList;
     private PlaceSelectionRecyclerAdapter placeSelectionAdapter;
     private RecyclerView.LayoutManager placeSelectionLayoutManager;
 
     public PlaceSelectionFragment() {
-
     }
 
     @Override
@@ -56,6 +59,10 @@ public class PlaceSelectionFragment
                 foursquareHelper.closestVenues())
                 .subscribeOn(subscriptionScheduler)
                 .subscribe(this);
+
+        if (getArguments().get(LogMealActionBundleKey) != null) {
+            this.logMealAction = (LogMealAction)getArguments().get(LogMealActionBundleKey);
+        }
     }
 
     @Override
@@ -100,6 +107,8 @@ public class PlaceSelectionFragment
 
     /** PlaceSelectionDelegate */
     public void placeSelected(Place place) {
-        Log.d(LOG_TAG, "Place selected: " + place.getName());
+        if (this.logMealAction != null) {
+            this.logMealAction.setPlace(place);
+        }
     }
 }
