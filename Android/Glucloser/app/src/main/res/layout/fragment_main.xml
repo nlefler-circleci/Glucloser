@@ -62,8 +62,6 @@
         <include layout="@layout/main_add_card" />
         <include layout="@layout/main_add_card" />
 
-
-
         </LinearLayout>
 
 </ScrollView>

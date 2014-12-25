@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nlefler.glucloser.LogMealActivity;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.actions.LogMealAction;
 import com.nlefler.glucloser.dataSource.PlaceSelectionRecyclerAdapter;
@@ -35,7 +36,6 @@ public class PlaceSelectionFragment
         PlaceSelectionDelegate {
     private static String LOG_TAG = "PlaceSelectionFragment";
 
-    public static final String LogMealActionBundleKey = "LogMealActionBundleKey";
 
     private FoursquarePlaceHelper foursquareHelper;
     private Subscription closestPlacesSubscription;
@@ -59,16 +59,12 @@ public class PlaceSelectionFragment
                 foursquareHelper.closestVenues())
                 .subscribeOn(subscriptionScheduler)
                 .subscribe(this);
-
-        if (getArguments().get(LogMealActionBundleKey) != null) {
-            this.logMealAction = (LogMealAction)getArguments().get(LogMealActionBundleKey);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_log_meal, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_select_place, container, false);
         this.placeSelectionList = (RecyclerView)rootView.findViewById(R.id.place_selection_list);
 
         this.placeSelectionLayoutManager = new LinearLayoutManager(getActivity());
@@ -107,8 +103,9 @@ public class PlaceSelectionFragment
 
     /** PlaceSelectionDelegate */
     public void placeSelected(Place place) {
-        if (this.logMealAction != null) {
-            this.logMealAction.setPlace(place);
+        if (!(getActivity() instanceof PlaceSelectionDelegate)) {
+            return;
         }
+        ((PlaceSelectionDelegate)getActivity()).placeSelected(place);
     }
 }

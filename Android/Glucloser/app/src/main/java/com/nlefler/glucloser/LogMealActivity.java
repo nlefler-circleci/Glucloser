@@ -6,10 +6,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.nlefler.glucloser.actions.LogMealAction;
+import com.nlefler.glucloser.models.Meal;
+import com.nlefler.glucloser.models.MealDetailDelegate;
+import com.nlefler.glucloser.models.Place;
+import com.nlefler.glucloser.models.PlaceSelectionDelegate;
+import com.nlefler.glucloser.ui.MealDetailsFragment;
 import com.nlefler.glucloser.ui.PlaceSelectionFragment;
 
 
-public class LogMealActivity extends ActionBarActivity {
+public class LogMealActivity
+        extends ActionBarActivity
+        implements PlaceSelectionDelegate, MealDetailDelegate {
     private static String LOG_TAG = "LogMealActivity";
 
     private LogMealAction logMealAction;
@@ -22,18 +29,10 @@ public class LogMealActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             this.logMealAction = new LogMealAction();
-            Bundle args = new Bundle();
-            args.putParcelable(PlaceSelectionFragment.LogMealActionBundleKey,
-                    this.logMealAction);
-            fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
     }
 
     @Override
@@ -58,4 +57,29 @@ public class LogMealActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /** PlaceSelectionDelegate */
+    public void placeSelected(Place place) {
+        this.logMealAction.setPlace(place);
+        switchToMealEditFragment();
+    }
+
+    /** MealDetailDelegate */
+    public void mealUpdated(Meal meal) {
+        this.logMealAction.setMeal(meal);
+        finishLoggingMeal();
+    }
+
+    /** Helpers */
+    private void switchToMealEditFragment() {
+        MealDetailsFragment fragment = new MealDetailsFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void finishLoggingMeal() {
+
+    }
 }

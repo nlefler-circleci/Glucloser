@@ -89,8 +89,8 @@
     <orderEntry type="library" exported="" name="rxandroid-0.23.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="Parse-1.8.0" level="project" />
+    <orderEntry type="library" exported="" name="realm-android-0.76.0" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.8.0" level="project" />
-    <orderEntry type="library" exported="" name="realm-android-0.75.1" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.0.0-rc.9" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="ParseCrashReporting-1.8.0" level="project" />

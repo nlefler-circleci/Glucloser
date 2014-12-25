@@ -4,7 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.nlefler.glucloser.dataSource.MealFactory;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
+import com.nlefler.glucloser.models.Meal;
+import com.nlefler.glucloser.models.MealParcelable;
 import com.nlefler.glucloser.models.Place;
 import com.nlefler.glucloser.models.PlaceParcelable;
 
@@ -15,6 +18,7 @@ public class LogMealAction implements Parcelable {
     private static String LOG_TAG = "LogMealAction";
 
     private Place place;
+    private Meal meal;
 
     public LogMealAction() {
 
@@ -22,6 +26,10 @@ public class LogMealAction implements Parcelable {
 
     public void setPlace(Place place) {
         this.place = place;
+    }
+
+    public void setMeal(Meal meal) {
+        this.meal = meal;
     }
 
     public void log() {
@@ -32,6 +40,8 @@ public class LogMealAction implements Parcelable {
     public LogMealAction(Parcel parcel) {
         this.place = PlaceFactory.PlaceFromParcelable(
                 (PlaceParcelable)parcel.readParcelable(PlaceParcelable.class.getClassLoader()));
+        this.meal = MealFactory.MealFromParcelable(
+                (MealParcelable) parcel.readParcelable(MealParcelable.class.getClassLoader()));
     }
 
     public int describeContents() {
@@ -40,6 +50,7 @@ public class LogMealAction implements Parcelable {
 
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(PlaceFactory.ParcelableFromPlace(this.place), flags);
+        out.writeParcelable(MealFactory.ParcelableFromMeal(this.meal), flags);
     }
 
     public static final Parcelable.Creator<LogMealAction> CREATOR
