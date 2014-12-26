@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
-        ParseAnalytics.trackAppOpened(getIntent());
+        ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }
 
 
