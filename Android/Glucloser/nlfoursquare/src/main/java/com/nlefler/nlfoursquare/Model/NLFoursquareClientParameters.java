@@ -10,6 +10,7 @@ public class NLFoursquareClientParameters {
     private String _clientID;
     private String _clientSecret;
     private String _clientAPIVersion = "20140518";
+    private String _clientMode = "foursquare";
 
     public NLFoursquareClientParameters(String clientID, String clientSecret) {
         _clientID = clientID;
@@ -37,6 +38,7 @@ public class NLFoursquareClientParameters {
             put("client_id", _clientID);
             put("client_secret", _clientSecret);
             put("v", _clientAPIVersion);
+            put("m", _clientMode);
         }};
     }
 }
