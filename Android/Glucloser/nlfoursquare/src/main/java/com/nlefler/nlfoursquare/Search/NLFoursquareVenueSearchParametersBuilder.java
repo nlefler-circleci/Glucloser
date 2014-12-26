@@ -127,7 +127,7 @@ public class NLFoursquareVenueSearchParametersBuilder extends NLFoursquareEndpoi
      * Limits results to within this this many meters of the anchor point.
      */
     public NLFoursquareVenueSearchParametersBuilder radius(double radius) {
-        _params.put("radius", String.valueOf("radius"));
+        _params.put("radius", String.valueOf(radius));
 
         return this;
     }
