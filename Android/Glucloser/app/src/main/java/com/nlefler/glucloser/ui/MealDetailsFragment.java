@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.nlefler.glucloser.R;
@@ -30,6 +31,7 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
 
     private EditText carbValueField;
     private EditText insulinValueField;
+    private CheckBox correctionValueBox;
     private Button saveButton;
 
     public MealDetailsFragment() {
@@ -46,7 +48,7 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
             mealParcelable = bundle.getParcelable(MealDetailMealBundleKey);
         }
         if (mealParcelable != null) {
-            this.meal = MealFactory.MealFromParcelable((MealParcelable)mealParcelable, getActivity());
+            this.meal = MealFactory.MealFromParcelable((MealParcelable) mealParcelable, getActivity());
         }
     }
 
@@ -57,6 +59,7 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
 
         this.carbValueField = (EditText)rootView.findViewById(R.id.meal_edit_detail_carb_value);
         this.insulinValueField = (EditText)rootView.findViewById(R.id.meal_edit_detail_insulin_value);
+        this.correctionValueBox = (CheckBox)rootView.findViewById(R.id.meal_edit_detail_correction_value);
         this.saveButton = (Button)rootView.findViewById(R.id.meal_edit_detail_save_button);
         this.saveButton.setOnClickListener(this);
 
@@ -76,6 +79,7 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
         realm.beginTransaction();
         this.meal.setCarbs(Integer.valueOf(this.carbValueField.getText().toString()));
         this.meal.setInsulin(Float.valueOf(this.insulinValueField.getText().toString()));
+        this.meal.setCorrection(this.correctionValueBox.isSelected());
         realm.commitTransaction();
 
         ((MealDetailDelegate)getActivity()).mealUpdated(this.meal);

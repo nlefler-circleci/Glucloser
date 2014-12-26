@@ -14,6 +14,7 @@ public class MealParcelable implements Parcelable {
     private Place place;
     private int carbs;
     private float insulin;
+    private boolean correction;
 
     public MealParcelable() {
 
@@ -51,6 +52,14 @@ public class MealParcelable implements Parcelable {
         this.insulin = insulin;
     }
 
+    public boolean getCorrection() {
+        return this.correction;
+    }
+
+    public void setCorrection(boolean correction) {
+        this.correction = correction;
+    }
+
     /** Parcelable */
     protected MealParcelable(Parcel in) {
         mealId = in.readString();
@@ -58,6 +67,7 @@ public class MealParcelable implements Parcelable {
                 GlucloserApplication.SharedApplication().getApplicationContext());
         carbs = in.readInt();
         insulin = in.readFloat();
+        correction = in.readInt() != 0;
     }
 
     @Override
@@ -71,6 +81,7 @@ public class MealParcelable implements Parcelable {
         dest.writeParcelable(PlaceFactory.ParcelableFromPlace(place), flags);
         dest.writeInt(carbs);
         dest.writeFloat(insulin);
+        dest.writeInt(correction ? 1 : 0);
     }
 
     @SuppressWarnings("unused")

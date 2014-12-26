@@ -23,6 +23,9 @@ public class Meal extends RealmObject {
     public static final String InsulinFieldName = "insulin";
     private float insulin;
 
+    @Ignore static final String CorrectionFieldName = "correction";
+    private boolean correction;
+
     public String getMealId() {
         return mealId;
     }
@@ -53,5 +56,13 @@ public class Meal extends RealmObject {
 
     public void setInsulin(float insulin) {
         this.insulin = insulin;
+    }
+
+    public boolean getCorrection() {
+        return this.correction;
+    }
+
+    public void setCorrection(boolean correction) {
+        this.correction = correction;
     }
 }
