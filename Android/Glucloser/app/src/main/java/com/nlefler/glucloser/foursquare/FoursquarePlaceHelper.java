@@ -2,6 +2,7 @@ package com.nlefler.glucloser.foursquare;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.location.LocationRequest;
 import com.nlefler.glucloser.R;
@@ -11,6 +12,7 @@ import com.nlefler.nlfoursquare.Model.NLFoursquareClientParameters;
 import com.nlefler.nlfoursquare.Model.Venue.NLFoursquareVenue;
 import com.nlefler.nlfoursquare.Model.Venue.Search.NLFoursquareVenueSearchResponse;
 import com.nlefler.nlfoursquare.Search.NLFoursquareVenueSearch;
+import com.nlefler.nlfoursquare.Search.NLFoursquareVenueSearchIntent;
 import com.nlefler.nlfoursquare.Search.NLFoursquareVenueSearchParametersBuilder;
 
 import java.util.ArrayList;
@@ -34,18 +36,13 @@ public class FoursquarePlaceHelper {
 
     private RestAdapter restAdapter;
     private NLFoursquareClientParameters clientParameters;
+    private List<String> foursquareSearchCategories;
     private ReactiveLocationProvider locationProvider;
     private Subscription locationSubscription;
     private Location lastLocation;
 
     public FoursquarePlaceHelper(Context ctx) {
-        String appId = ctx.getString(R.string.foursquare_app_id);
-        String appSecret = ctx.getString(R.string.foursquare_app_secret);
-        this.clientParameters = new NLFoursquareClientParameters(appId, appSecret);
-
         this.locationProvider = new ReactiveLocationProvider(ctx);
-
-
         this.locationSubscription = locationProvider.getUpdatedLocation(createLocationRequest())
                 .subscribe(new Action1<Location>() {
                     @Override
@@ -54,9 +51,16 @@ public class FoursquarePlaceHelper {
                     }
                 });
 
+        String appId = ctx.getString(R.string.foursquare_app_id);
+        String appSecret = ctx.getString(R.string.foursquare_app_secret);
+        this.clientParameters = new NLFoursquareClientParameters(appId, appSecret);
         this.restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FOURSQUARE_ENDPOINT)
                 .build();
+        this.foursquareSearchCategories = new ArrayList<String>();
+        this.foursquareSearchCategories.add("4d4b7105d754a06374d81259"); // Food
+        this.foursquareSearchCategories.add("4d4b7105d754a06376d81259"); // Nightlife
+        // TODO: Bodegas, etc.
     }
 
     @Override
@@ -93,7 +97,10 @@ public class FoursquarePlaceHelper {
          NLFoursquareVenueSearchParametersBuilder parametersBuilder =
                 new NLFoursquareVenueSearchParametersBuilder();
         parametersBuilder.latLon(location.getLatitude(),
-                location.getLongitude());
+                location.getLongitude())
+        .intent(NLFoursquareVenueSearchIntent.NLFoursquareVenueSearchIntentCheckIn)
+        .radius(100.0)
+        .limitToCategories(this.foursquareSearchCategories);
 
         NLFoursquareVenueSearch venueSearch = restAdapter.create(NLFoursquareVenueSearch.class);
         venueSearch.search(parametersBuilder.buildWithClientParameters(clientParameters),
@@ -106,6 +113,8 @@ public class FoursquarePlaceHelper {
 
                     @Override
                     public void failure(RetrofitError error) {
+                        Log.e("4SQ", error.getMessage());
+                        Log.e("4SQ", error.getBody().toString());
                         subscriber.onNext(new ArrayList<NLFoursquareVenue>());
                     }
                 });
