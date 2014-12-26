@@ -7,6 +7,7 @@
     <string name="title_activity_log_meal">Log Meal</string>
     <string name="carbs_noun">Carbs</string>
     <string name="insulin_noun">Insulin</string>
+    <string name="correction_noun">Correction</string>
     <string name="save_meal_verb">Save</string>
 
     <string name="insulin_unit_abrev_units">u</string>
