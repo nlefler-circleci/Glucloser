@@ -1,15 +1,19 @@
 package com.nlefler.glucloser.actions;
 
+import android.app.Application;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.nlefler.glucloser.GlucloserApplication;
 import com.nlefler.glucloser.dataSource.MealFactory;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealParcelable;
 import com.nlefler.glucloser.models.Place;
 import com.nlefler.glucloser.models.PlaceParcelable;
+
+import io.realm.Realm;
 
 /**
  * Created by Nathan Lefler on 12/24/14.
@@ -33,15 +37,27 @@ public class LogMealAction implements Parcelable {
     }
 
     public void log() {
+        if (this.place == null ||
+                this.meal == null) {
+            Log.e(LOG_TAG, "Can't log meal, meal or place null");
+            return;
+        }
         Log.d(LOG_TAG, "Logging meal at " + this.place.getName());
+
+        Realm realm = Realm.getInstance(GlucloserApplication.SharedApplication().getApplicationContext());
+        realm.beginTransaction();
+        this.meal.setPlace(this.place);
+        realm.commitTransaction();
     }
 
     /** Parcelable */
     public LogMealAction(Parcel parcel) {
         this.place = PlaceFactory.PlaceFromParcelable(
-                (PlaceParcelable)parcel.readParcelable(PlaceParcelable.class.getClassLoader()));
+                (PlaceParcelable)parcel.readParcelable(PlaceParcelable.class.getClassLoader()),
+                GlucloserApplication.SharedApplication().getApplicationContext());
         this.meal = MealFactory.MealFromParcelable(
-                (MealParcelable) parcel.readParcelable(MealParcelable.class.getClassLoader()));
+                (MealParcelable) parcel.readParcelable(MealParcelable.class.getClassLoader()),
+                GlucloserApplication.SharedApplication().getApplicationContext());
     }
 
     public int describeContents() {

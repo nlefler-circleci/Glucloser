@@ -80,6 +80,7 @@ public class LogMealActivity
     }
 
     private void finishLoggingMeal() {
-
+        this.logMealAction.log();
+        finish();
     }
 }

@@ -1,6 +1,7 @@
 package com.nlefler.glucloser.ui;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,12 @@ import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealDetailDelegate;
 import com.nlefler.glucloser.models.MealParcelable;
 
+import io.realm.Realm;
+
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
-public class MealDetailsFragment extends Fragment {
+public class MealDetailsFragment extends Fragment implements View.OnClickListener {
     private static String LOG_TAG = "MealDetailsFragment";
 
     private static final String MealDetailMealBundleKey = "MealDetailMealBundleKey";
@@ -36,12 +39,16 @@ public class MealDetailsFragment extends Fragment {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
+        Parcelable mealParcelable = null;
         if ((bundle != null && bundle.getParcelable(MealDetailMealBundleKey) != null)) {
-            this.meal = MealFactory.MealFromParcelable((MealParcelable)bundle.getParcelable(MealDetailMealBundleKey));
+            mealParcelable = bundle.getParcelable(MealDetailMealBundleKey);
         } else if (getArguments() != null && getArguments().getParcelable(MealDetailMealBundleKey) != null) {
-            this.meal = MealFactory.MealFromParcelable((MealParcelable)bundle.getParcelable(MealDetailMealBundleKey));
+            mealParcelable = bundle.getParcelable(MealDetailMealBundleKey);
+        }
+        if (mealParcelable != null) {
+            this.meal = MealFactory.MealFromParcelable((MealParcelable)mealParcelable, getActivity());
         } else {
-            this.meal = MealFactory.Meal();
+            this.meal = MealFactory.Meal(getActivity());
         }
     }
 
@@ -53,17 +60,22 @@ public class MealDetailsFragment extends Fragment {
         this.carbValueField = (EditText)rootView.findViewById(R.id.meal_edit_detail_carb_value);
         this.insulinValueField = (EditText)rootView.findViewById(R.id.meal_edit_detail_insulin_value);
         this.saveButton = (Button)rootView.findViewById(R.id.meal_edit_detail_save_button);
+        this.saveButton.setOnClickListener(this);
 
         return rootView;
     }
 
-    public void saveMeal(View view) {
+    /** OnClickListener */
+    public void onClick(View view) {
         if (!(getActivity() instanceof MealDetailDelegate)) {
             return;
         }
 
+        Realm realm  = Realm.getInstance(getActivity());
+        realm.beginTransaction();
         this.meal.setCarbs(Integer.valueOf(this.carbValueField.getText().toString()));
         this.meal.setInsulin(Float.valueOf(this.insulinValueField.getText().toString()));
+        realm.commitTransaction();
 
         ((MealDetailDelegate)getActivity()).mealUpdated(this.meal);
     }

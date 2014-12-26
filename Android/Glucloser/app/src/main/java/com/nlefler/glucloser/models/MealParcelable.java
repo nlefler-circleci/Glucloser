@@ -3,6 +3,7 @@ package com.nlefler.glucloser.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.nlefler.glucloser.GlucloserApplication;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
 
 /**
@@ -53,7 +54,8 @@ public class MealParcelable implements Parcelable {
     /** Parcelable */
     protected MealParcelable(Parcel in) {
         mealId = in.readString();
-        place = PlaceFactory.PlaceFromParcelable((PlaceParcelable) in.readValue(PlaceParcelable.class.getClassLoader()));
+        place = PlaceFactory.PlaceFromParcelable((PlaceParcelable) in.readValue(PlaceParcelable.class.getClassLoader()),
+                GlucloserApplication.SharedApplication().getApplicationContext());
         carbs = in.readInt();
         insulin = in.readFloat();
     }

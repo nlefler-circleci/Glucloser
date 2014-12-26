@@ -1,14 +1,26 @@
 package com.nlefler.glucloser.models;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 
 /**
  * Created by Nathan Lefler on 12/11/14.
  */
 public class Meal extends RealmObject {
+    @Ignore
+    public static final String MealIdFieldName = "mealId";
     private String mealId;
+
+    @Ignore
+    public static final String PlaceFieldName = "place";
     private Place place;
+
+    @Ignore
+    public static final String CarbsFieldName = "carbs";
     private int carbs;
+
+    @Ignore
+    public static final String InsulinFieldName = "insulin";
     private float insulin;
 
     public String getMealId() {

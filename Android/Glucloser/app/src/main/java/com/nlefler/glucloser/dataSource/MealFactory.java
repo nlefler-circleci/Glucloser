@@ -1,17 +1,26 @@
 package com.nlefler.glucloser.dataSource;
 
+import android.content.Context;
+
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealParcelable;
 
 import java.util.UUID;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
 public class MealFactory {
-    public static Meal Meal() {
-        Meal meal = new Meal();
+    public static Meal Meal(Context ctx) {
+        Realm realm = Realm.getInstance(ctx);
+
+        realm.beginTransaction();
+        Meal meal = CreateOrFetchForMealId(null, realm);
         meal.setMealId(UUID.randomUUID().toString());
+        realm.commitTransaction();
 
         return meal;
     }
@@ -26,13 +35,33 @@ public class MealFactory {
         return parcelable;
     }
 
-    public static Meal MealFromParcelable(MealParcelable parcelable) {
-        Meal meal = new Meal();
+    public static Meal MealFromParcelable(MealParcelable parcelable, Context ctx) {
+        Realm realm = Realm.getInstance(ctx);
+
+        realm.beginTransaction();
+        Meal meal = CreateOrFetchForMealId(parcelable.getMealId(), realm);
         meal.setInsulin(parcelable.getInsulin());
         meal.setMealId(parcelable.getMealId());
         meal.setCarbs(parcelable.getCarbs());
         meal.setPlace(parcelable.getPlace());
+        realm.commitTransaction();
 
         return meal;
+    }
+    private static Meal CreateOrFetchForMealId(String id, Realm realm) {
+        if (id == null || id.isEmpty()) {
+            return realm.createObject(Meal.class);
+        }
+
+        RealmQuery<Meal> query = realm.where(Meal.class);
+
+        query.equalTo(Meal.MealIdFieldName, id);
+        Meal result = query.findFirst();
+
+        if (result == null) {
+            result = realm.createObject(Meal.class);
+        }
+
+        return result;
     }
 }
