@@ -47,8 +47,6 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
         }
         if (mealParcelable != null) {
             this.meal = MealFactory.MealFromParcelable((MealParcelable)mealParcelable, getActivity());
-        } else {
-            this.meal = MealFactory.Meal(getActivity());
         }
     }
 
@@ -71,6 +69,9 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
             return;
         }
 
+        if (this.meal == null) {
+            this.meal = MealFactory.Meal(getActivity());
+        }
         Realm realm  = Realm.getInstance(getActivity());
         realm.beginTransaction();
         this.meal.setCarbs(Integer.valueOf(this.carbValueField.getText().toString()));
