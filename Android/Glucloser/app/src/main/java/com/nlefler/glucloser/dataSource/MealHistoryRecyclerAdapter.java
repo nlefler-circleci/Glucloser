@@ -65,7 +65,12 @@ public class MealHistoryRecyclerAdapter extends RecyclerView.Adapter<MealHistory
 
         Meal meal = this.meals.get(i);
         viewHolder.meal = meal;
-        viewHolder.placeName.setText(meal.getPlace().getName());
+        if (meal.getPlace() != null) {
+            viewHolder.placeName.setText(meal.getPlace().getName());
+        } else {
+            // TODO: Loc
+            viewHolder.placeName.setText("No Place");
+        }
     }
 
     @Override
