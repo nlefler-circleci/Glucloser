@@ -60,6 +60,7 @@ public class FoursquarePlaceHelper {
         this.foursquareSearchCategories = new ArrayList<String>();
         this.foursquareSearchCategories.add("4d4b7105d754a06374d81259"); // Food
         this.foursquareSearchCategories.add("4d4b7105d754a06376d81259"); // Nightlife
+        this.foursquareSearchCategories.add("4bf58dd8d48988d103941735"); // Private Homes
         // TODO: Bodegas, etc.
     }
 
@@ -99,8 +100,9 @@ public class FoursquarePlaceHelper {
         parametersBuilder.latLon(location.getLatitude(),
                 location.getLongitude())
         .intent(NLFoursquareVenueSearchIntent.NLFoursquareVenueSearchIntentCheckIn)
-        .radius(100.0)
-        .limitToCategories(this.foursquareSearchCategories);
+        .radius(150.0)
+        .limitToCategories(this.foursquareSearchCategories)
+        .limit(50);
 
         NLFoursquareVenueSearch venueSearch = restAdapter.create(NLFoursquareVenueSearch.class);
         venueSearch.search(parametersBuilder.buildWithClientParameters(clientParameters),
@@ -109,13 +111,14 @@ public class FoursquarePlaceHelper {
                     public void success(NLFoursquareResponse<NLFoursquareVenueSearchResponse> foursquareResponse,
                                         Response response) {
                         subscriber.onNext(foursquareResponse.response.venues);
+                        subscriber.onCompleted();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         Log.e("4SQ", error.getMessage());
                         Log.e("4SQ", error.getBody().toString());
-                        subscriber.onNext(new ArrayList<NLFoursquareVenue>());
+                        subscriber.onError(error);
                     }
                 });
     }
