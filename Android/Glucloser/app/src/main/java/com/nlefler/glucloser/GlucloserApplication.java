@@ -1,6 +1,7 @@
 package com.nlefler.glucloser;
 
 import android.app.Application;
+import android.os.Debug;
 
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
@@ -18,7 +19,10 @@ public class GlucloserApplication extends Application {
         super.onCreate();
         _sharedApplication = this;
 
-//        ParseCrashReporting.enable(this);
+        if (!Debug.isDebuggerConnected()) {
+            ParseCrashReporting.enable(this);
+        }
+
         Parse.initialize(this, this.getString(R.string.parse_app_id),
                 this.getString(R.string.parse_client_key));
     }
