@@ -93,7 +93,9 @@ public class PlaceSelectionFragment
 
     @Override
     public void onError(Throwable e) {
-        Log.e("E", e.toString());
+        // TODO: Show UI
+        Log.e(LOG_TAG, "Unable to get places from 4sq " + e.toString());
+        getActivity().finish();
     }
 
     @Override
