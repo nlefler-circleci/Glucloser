@@ -40,3 +40,6 @@ xcshareddata/
 # CocoaPods
 Pods/
 Podfile.lock
+
+# Keys
+keys.xml
