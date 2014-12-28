@@ -33,4 +33,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile project(':nlfoursquare')
     compile project(':android-reactive-location')
+    compile project(':foursquareoauthlibrary')
 }
