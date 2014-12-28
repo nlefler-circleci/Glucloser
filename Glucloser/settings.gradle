@@ -1,1 +1,2 @@
 include ':app', ':nlfoursquare', ':android-reactive-location'
+include ':foursquareoauthlibrary'
