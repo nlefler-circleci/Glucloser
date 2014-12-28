@@ -34,14 +34,15 @@ import rx.functions.Action1;
 public class FoursquarePlaceHelper {
     private static String FOURSQUARE_ENDPOINT = "https://api.foursquare.com/v2";
 
+    private Context context;
     private RestAdapter restAdapter;
-    private NLFoursquareClientParameters clientParameters;
     private List<String> foursquareSearchCategories;
     private ReactiveLocationProvider locationProvider;
     private Subscription locationSubscription;
     private Location lastLocation;
 
     public FoursquarePlaceHelper(Context ctx) {
+        this.context = ctx;
         this.locationProvider = new ReactiveLocationProvider(ctx);
         this.locationSubscription = locationProvider.getUpdatedLocation(createLocationRequest())
                 .subscribe(new Action1<Location>() {
@@ -51,9 +52,6 @@ public class FoursquarePlaceHelper {
                     }
                 });
 
-        String appId = ctx.getString(R.string.foursquare_app_id);
-        String appSecret = ctx.getString(R.string.foursquare_app_secret);
-        this.clientParameters = new NLFoursquareClientParameters(appId, appSecret);
         this.restAdapter = new RestAdapter.Builder()
                 .setEndpoint(FOURSQUARE_ENDPOINT)
                 .build();
@@ -105,7 +103,8 @@ public class FoursquarePlaceHelper {
         .limit(50);
 
         NLFoursquareVenueSearch venueSearch = restAdapter.create(NLFoursquareVenueSearch.class);
-        venueSearch.search(parametersBuilder.buildWithClientParameters(clientParameters),
+        venueSearch.search(parametersBuilder.buildWithClientParameters(
+                        FoursquareAuthManager.SharedManager().getClientAuthParameters(this.context)),
                 new Callback<NLFoursquareResponse<NLFoursquareVenueSearchResponse>>() {
                     @Override
                     public void success(NLFoursquareResponse<NLFoursquareVenueSearchResponse> foursquareResponse,

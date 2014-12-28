@@ -4,6 +4,11 @@
     <string name="app_name">Glucloser</string>
     <string name="action_settings">Settings</string>
 
+    <string name="nav_drawer_item_home">Home</string>
+    <string name="nav_drawer_item_foursquare_login">Foursquare Login</string>
+    <string name="nav_drawer_open">Open</string>
+    <string name="nav_drawer_closed">Closed</string>
+
     <string name="title_activity_log_meal">Log Meal</string>
     <string name="carbs_noun">Carbs</string>
     <string name="insulin_noun">Insulin</string>

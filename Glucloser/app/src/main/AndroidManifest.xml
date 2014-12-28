@@ -28,6 +28,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nlefler.glucloser.MainActivity" />
         </activity>
+
+        <activity
+            android:name="com.foursquare.android.nativeoauth.TokenExchangeActivity"
+            android:theme="@android:style/Theme.Dialog" />
+
     </application>
 
 </manifest>

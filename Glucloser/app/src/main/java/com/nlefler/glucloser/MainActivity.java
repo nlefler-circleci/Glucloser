@@ -1,9 +1,12 @@
 package com.nlefler.glucloser;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,8 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter;
+import com.nlefler.glucloser.foursquare.FoursquareAuthManager;
 import com.nlefler.glucloser.models.Meal;
 import com.parse.ParseAnalytics;
 
@@ -24,7 +31,13 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
+    private static final String LOG_TAG = "MainActivity";
+
+    private String[] navBarItems;
+    private DrawerLayout navDrawerLayout;
+    private ListView navDrawerListView;
+    private ActionBarDrawerToggle navDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +49,38 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
+        this.navBarItems = new String[] {
+                getString(R.string.nav_drawer_item_home),
+                getString(R.string.nav_drawer_item_foursquare_login)
+        };
+        this.navDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        this.navDrawerListView = (ListView)findViewById(R.id.left_drawer);
+        this.navDrawerListView.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, this.navBarItems));
+        this.navDrawerListView.setOnItemClickListener(this);
+
+        this.navDrawerToggle = new ActionBarDrawerToggle(this, this.navDrawerLayout,
+                R.string.nav_drawer_open, R.string.nav_drawer_closed);
+        this.navDrawerLayout.setDrawerListener(this.navDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        this.navDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        this.navDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,6 +100,12 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (this.navDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
     }
@@ -68,6 +116,30 @@ public class MainActivity extends ActionBarActivity {
     public void launchAddMealActivity(View view) {
         Intent intent = new Intent(this, LogMealActivity.class);
         startActivity(intent);
+    }
+
+    /** OnClickListener */
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id) {
+        if (position == 1) {
+            FoursquareAuthManager.SharedManager().startAuthRequest(this);
+        }
+    }
+
+    /** Foursquare Connect Intent */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case FoursquareAuthManager.FOURSQUARE_CONNECT_INTENT_CODE: {
+                FoursquareAuthManager.SharedManager().gotAuthResponse(this, resultCode, data);
+                break;
+            }
+            case FoursquareAuthManager.FOURSQUARE_TOKEN_EXCHG_INTENT_CODE:
+            {
+                FoursquareAuthManager.SharedManager().gotTokenExchangeResponse(this, resultCode, data);
+                break;
+            }
+        }
     }
 
     /**
