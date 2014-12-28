@@ -24,4 +24,4 @@ android:
     - sys-img-armeabi-v7a-android-21
     - sys-img-x86-android-21
 install:
-      - cd Android/Glucloser
+      - cd Glucloser
