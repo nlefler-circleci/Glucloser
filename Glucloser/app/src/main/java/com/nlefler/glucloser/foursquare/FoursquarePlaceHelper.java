@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.location.LocationRequest;
 import com.nlefler.glucloser.R;
+import com.nlefler.nlfoursquare.Common.NLFoursquareEndpoint;
 import com.nlefler.nlfoursquare.Common.NLFoursquareEndpointParametersBuilder;
 import com.nlefler.nlfoursquare.Model.FoursquareResponse.NLFoursquareResponse;
 import com.nlefler.nlfoursquare.Model.NLFoursquareClientParameters;
@@ -32,7 +33,7 @@ import rx.functions.Action1;
  * Created by Nathan Lefler on 12/12/14.
  */
 public class FoursquarePlaceHelper {
-    private static String FOURSQUARE_ENDPOINT = "https://api.foursquare.com/v2";
+    private static String LOG_TAG = "FoursquarePlaceHelper";
 
     private Context context;
     private RestAdapter restAdapter;
@@ -53,7 +54,7 @@ public class FoursquarePlaceHelper {
                 });
 
         this.restAdapter = new RestAdapter.Builder()
-                .setEndpoint(FOURSQUARE_ENDPOINT)
+                .setEndpoint(NLFoursquareEndpoint.NLFOURSQUARE_V2_ENDPOINT)
                 .build();
         this.foursquareSearchCategories = new ArrayList<String>();
         this.foursquareSearchCategories.add("4d4b7105d754a06374d81259"); // Food
