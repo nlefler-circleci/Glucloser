@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "Glucloser": {
+            "applicationId": "83TDdLkjmUFZIHEbaQhUrWGScRkAQ8MMlVmQzxvx", 
+            "masterKey": "x4k6wXKrw35PDI9C7tPYY6TuT9TCJUWF4WYDd6wz"
+        }, 
+        "_default": {
+            "link": "Glucloser"
+        }
+    }
+}
