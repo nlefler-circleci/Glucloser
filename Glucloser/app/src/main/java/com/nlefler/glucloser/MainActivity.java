@@ -22,6 +22,7 @@ import android.widget.ListView;
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter;
 import com.nlefler.glucloser.foursquare.FoursquareAuthManager;
 import com.nlefler.glucloser.models.Meal;
+import com.nlefler.glucloser.ui.DividerItemDecoration;
 import com.parse.ParseAnalytics;
 
 import java.util.ArrayList;
@@ -167,6 +168,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
             this.mealHistoryAdapter = new MealHistoryRecyclerAdapter(new ArrayList<Meal>());
             this.mealHistoryListView.setAdapter(this.mealHistoryAdapter);
+            this.mealHistoryListView.addItemDecoration(new DividerItemDecoration(getActivity(), null));
 
             updateMealHistory();
 
@@ -177,7 +179,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             Realm realm = Realm.getInstance(getActivity());
             RealmQuery<Meal> query = realm.where(Meal.class);
             RealmResults<Meal> results = query.findAll();
-            Log.d(LOG_TAG, "Found meals " + results.size());
             this.mealHistoryAdapter.setMeals(results);
         }
     }
