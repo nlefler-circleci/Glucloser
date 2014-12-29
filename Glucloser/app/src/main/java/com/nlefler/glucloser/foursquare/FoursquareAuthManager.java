@@ -78,6 +78,8 @@ public class FoursquareAuthManager {
         if (tokenResponse.getException() == null) {
             _userAccessToken = tokenResponse.getAccessToken();
             this.encryptAndStoreAuthToken(managingActivity, this._userAccessToken);
+
+            (new FoursquareUserHelper()).fetchAndStoreUserId();
         }
     }
 
