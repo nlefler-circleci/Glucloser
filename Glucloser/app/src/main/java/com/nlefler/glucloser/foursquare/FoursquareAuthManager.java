@@ -3,12 +3,23 @@ package com.nlefler.glucloser.foursquare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Base64;
 
+import com.facebook.crypto.Crypto;
+import com.facebook.crypto.Entity;
+import com.facebook.crypto.exception.CryptoInitializationException;
+import com.facebook.crypto.exception.KeyChainException;
+import com.facebook.crypto.keychain.SharedPrefsBackedKeyChain;
+import com.facebook.crypto.util.SystemNativeCryptoLibrary;
 import com.foursquare.android.nativeoauth.FoursquareOAuth;
 import com.foursquare.android.nativeoauth.model.AccessTokenResponse;
 import com.foursquare.android.nativeoauth.model.AuthCodeResponse;
+import com.nlefler.glucloser.GlucloserApplication;
 import com.nlefler.glucloser.R;
 import com.nlefler.nlfoursquare.Model.NLFoursquareClientParameters;
+
+import java.io.IOException;
 
 /**
  * Created by Nathan Lefler on 12/28/14.
@@ -16,9 +27,14 @@ import com.nlefler.nlfoursquare.Model.NLFoursquareClientParameters;
 public class FoursquareAuthManager {
     private static final String LOG_TAG = "FoursquareAuthManager";
 
+    private static final String SHARED_PREFS_NAME = "com.nlefler.glucloser.foursquareprefs";
+    private static final String SHARED_PREFS_4SQ_TOKEN_KEY = "com.nlefler.glucloser.4sqtkn";
+    private static final String CONCEAL_ENTITY_NAME = "com.nlefler.glucloser.concealentity";
+
     public static final int FOURSQUARE_CONNECT_INTENT_CODE = 39228;
     public static final int FOURSQUARE_TOKEN_EXCHG_INTENT_CODE = 39229;
 
+    private Crypto crypto;
     private String _userAccessToken = "";
 
     private static FoursquareAuthManager _sharedInstance;
@@ -27,6 +43,21 @@ public class FoursquareAuthManager {
             _sharedInstance = new FoursquareAuthManager();
         }
         return _sharedInstance;
+    }
+
+    private FoursquareAuthManager() {
+        Context ctx = GlucloserApplication.SharedApplication().getApplicationContext();
+        this.crypto = new Crypto(
+                new SharedPrefsBackedKeyChain(ctx),
+                new SystemNativeCryptoLibrary());
+
+        // Check for whether the crypto functionality is available
+        // This might fail if Android does not load libaries correctly.
+        if (!crypto.isAvailable()) {
+            return;
+        }
+
+        this._userAccessToken = this.getDecryptedAuthToken();
     }
 
     public void startAuthRequest(Activity managingActivity) {
@@ -52,6 +83,7 @@ public class FoursquareAuthManager {
         AccessTokenResponse tokenResponse = FoursquareOAuth.getTokenFromResult(responseCode, responseData);
         if (tokenResponse.getException() == null) {
             _userAccessToken = tokenResponse.getAccessToken();
+            this.encryptAndStoreAuthToken(managingActivity, this._userAccessToken);
         }
     }
 
@@ -67,5 +99,40 @@ public class FoursquareAuthManager {
         }
 
         return params;
+    }
+
+    private void encryptAndStoreAuthToken(Context ctx, String token) {
+        if (!this.crypto.isAvailable()) {
+            return;
+        }
+        Entity entity = new Entity(CONCEAL_ENTITY_NAME);
+        try {
+            byte[] encryptedToken = this.crypto.encrypt(token.getBytes(), entity);
+            String encryptedBase64Token = Base64.encodeToString(encryptedToken, Base64.DEFAULT);
+            SharedPreferences sharedPreferences = ctx.getSharedPreferences(SHARED_PREFS_NAME,
+                Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(SHARED_PREFS_4SQ_TOKEN_KEY, encryptedBase64Token);
+            editor.apply();
+        } catch (KeyChainException | CryptoInitializationException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getDecryptedAuthToken() {
+        if (!this.crypto.isAvailable()) {
+            return "";
+        }
+        try {
+            SharedPreferences sharedPref = GlucloserApplication.SharedApplication()
+                    .getApplicationContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+            String encryptedBase64Token = sharedPref.getString(SHARED_PREFS_4SQ_TOKEN_KEY, "");
+            Entity entity = new Entity(CONCEAL_ENTITY_NAME);
+            byte[] encryptedToken = Base64.decode(encryptedBase64Token, Base64.DEFAULT);
+            return new String(this.crypto.decrypt(encryptedToken, entity), "UTF-8");
+        } catch (KeyChainException | CryptoInitializationException | IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
