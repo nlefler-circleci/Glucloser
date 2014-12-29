@@ -1,6 +1,13 @@
-
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-// For example:
-Parse.Cloud.define("hello", function(request, response) {
-  response.success("Hello world!");
+var express = require('express');
+var app = express();
+ 
+// Global app configuration section
+app.use(express.bodyParser());  // Populate req.body
+ 
+app.post('/foursquareCheckin',
+         function(req, res) {
+  console.log(req.body);
+  res.send(200);
 });
+ 
+app.listen();
