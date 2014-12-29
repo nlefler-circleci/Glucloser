@@ -96,7 +96,7 @@ public class FoursquareAuthManager {
     }
 
     private void encryptAndStoreAuthToken(Context ctx, String token) {
-        if (!this.crypto.isAvailable()) {
+        if (!this.crypto.isAvailable() || token == null || token.isEmpty()) {
             return;
         }
         Entity entity = new Entity(CONCEAL_ENTITY_NAME);
@@ -123,7 +123,12 @@ public class FoursquareAuthManager {
             String encryptedBase64Token = sharedPref.getString(SHARED_PREFS_4SQ_TOKEN_KEY, "");
             Entity entity = new Entity(CONCEAL_ENTITY_NAME);
             byte[] encryptedToken = Base64.decode(encryptedBase64Token, Base64.DEFAULT);
-            return new String(this.crypto.decrypt(encryptedToken, entity), "UTF-8");
+
+            if (encryptedToken.length > 0) {
+                return new String(this.crypto.decrypt(encryptedToken, entity), "UTF-8");
+            } else {
+                return "";
+            }
         } catch (KeyChainException | CryptoInitializationException | IOException e) {
             e.printStackTrace();
             return "";

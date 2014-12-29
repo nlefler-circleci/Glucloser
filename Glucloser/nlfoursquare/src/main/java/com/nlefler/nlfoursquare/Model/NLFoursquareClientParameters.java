@@ -30,7 +30,7 @@ public class NLFoursquareClientParameters {
     }
 
     public boolean isValid() {
-        return !_clientID.isEmpty() &&
+        return (this._clientID != null && !this._clientID.isEmpty()) &&
                 ((this._clientSecret != null && !this._clientSecret.isEmpty()) ||
                         (this._userOAuthToken != null && !this._userOAuthToken.isEmpty()));
     }
