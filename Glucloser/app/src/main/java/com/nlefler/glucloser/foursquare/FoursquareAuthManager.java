@@ -51,12 +51,6 @@ public class FoursquareAuthManager {
                 new SharedPrefsBackedKeyChain(ctx),
                 new SystemNativeCryptoLibrary());
 
-        // Check for whether the crypto functionality is available
-        // This might fail if Android does not load libaries correctly.
-        if (!crypto.isAvailable()) {
-            return;
-        }
-
         this._userAccessToken = this.getDecryptedAuthToken();
     }
 
