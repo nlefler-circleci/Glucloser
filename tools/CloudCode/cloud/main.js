@@ -13,6 +13,15 @@ function getFoursquareVenueName(checkinData) {
 	return checkinData.venue.name || false;
 }
 
+function getAppData(checkinData) {
+	return {
+		venueName: getFoursquareVenueName(checkinData) || "",
+		venueId: checkinData.venue.id || "",
+		venueLat: checkinData.venue.location.lat || "",
+		venueLon: checkinData.venue.location.lng || ""
+	};
+}
+
 // Global app configuration section
 app.use(express.bodyParser());  // Populate req.body
  
@@ -43,6 +52,8 @@ app.post('/foursquareCheckin',
   }
   notifTitle += ". Log a meal?";
 
+  var appData = getAppData(checkinData) || {};
+
   var query = new Parse.Query(Parse.Installation);
   query.equalTo('channels', 'foursquareCheckin');
   query.equalTo('foursquareUserId', foursquareUserId);
@@ -50,21 +61,21 @@ app.post('/foursquareCheckin',
   Parse.Push.send({
   		where: query,
 		data: {
-		alert: notifTitle,
-		uri: "com.nlefler.glucloser://logMeal",
-		checkinData: checkinData
+			alert: notifTitle,
+			uri: "com.nlefler.glucloser://logMeal",
+			checkInData: appData
 		}
 	}, {
 		success: function() {
 			console.log("Pushed");
-			res.send(200);
 		},
 		error: function(error) {
 			console.log("Push failed");
 			console.log(JSON.stringify(error));
-			res.send(500);
 		}
 	});
+
+	res.send(200);
 });
  
 app.listen();
