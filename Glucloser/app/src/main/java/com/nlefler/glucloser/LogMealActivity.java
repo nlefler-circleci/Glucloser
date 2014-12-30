@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.nlefler.glucloser.actions.LogMealAction;
+import com.nlefler.glucloser.dataSource.MealFactory;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealDetailDelegate;
@@ -39,7 +40,6 @@ public class LogMealActivity
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        Log.d(LOG_TAG, extras.get("com.parse.Data").toString());
         if (extras != null) {
             Place place = PlaceFactory.PlaceFromCheckInData(this, extras);
             if (place != null) {
@@ -73,7 +73,7 @@ public class LogMealActivity
     /** PlaceSelectionDelegate */
     public void placeSelected(Place place) {
         this.logMealAction.setPlace(place);
-        switchToMealEditFragment();
+        switchToMealEditFragment(place);
     }
 
     /** MealDetailDelegate */
@@ -83,8 +83,13 @@ public class LogMealActivity
     }
 
     /** Helpers */
-    private void switchToMealEditFragment() {
+    private void switchToMealEditFragment(Place place) {
         MealDetailsFragment fragment = new MealDetailsFragment();
+
+        Bundle args = new Bundle();
+        args.putParcelable(MealDetailsFragment.MealDetailPlaceBundleKey,
+                PlaceFactory.ParcelableFromPlace(place));
+        fragment.setArguments(args);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
