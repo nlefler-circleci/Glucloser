@@ -23,8 +23,8 @@ public class PlaceFactory {
     public static Place FromFoursquareVenue(NLFoursquareVenue venue, Context ctx) {
         Realm realm = Realm.getInstance(ctx);
 
-        realm.beginTransaction();
         Place place = CreateOrFetchForFoursquareId(venue.id, realm);
+        realm.beginTransaction();
         place.setName(venue.name);
         place.setFoursquareId(venue.id);
         place.setLatitude(venue.location.lat);
@@ -47,8 +47,8 @@ public class PlaceFactory {
     public static Place PlaceFromParcelable(PlaceParcelable parcelable, Context ctx) {
         Realm realm = Realm.getInstance(ctx);
 
-        realm.beginTransaction();
         Place place = CreateOrFetchForFoursquareId(parcelable.getFoursquareId(), realm);
+        realm.beginTransaction();
         place.setName(parcelable.getName());
         place.setFoursquareId(parcelable.getFoursquareId());
         place.setLatitude(parcelable.getLatitude());

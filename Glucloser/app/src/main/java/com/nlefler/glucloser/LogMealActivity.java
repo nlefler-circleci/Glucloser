@@ -39,7 +39,6 @@ public class LogMealActivity
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        Log.d(LOG_TAG, extras.get("com.parse.Data").toString());
         if (extras != null) {
             Place place = PlaceFactory.PlaceFromCheckInData(this, extras);
             if (place != null) {
