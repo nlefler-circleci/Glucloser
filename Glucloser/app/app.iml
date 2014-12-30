@@ -93,11 +93,11 @@
     <orderEntry type="library" exported="" name="realm-android-0.76.0" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.8.0" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.0.0-rc.9" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="ParseCrashReporting-1.8.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.1.2" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="module" module-name="nlfoursquare" exported="" />
     <orderEntry type="module" module-name="foursquareoauthlibrary" exported="" />
     <orderEntry type="module" module-name="android-reactive-location" exported="" />

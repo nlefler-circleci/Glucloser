@@ -1,11 +1,14 @@
 package com.nlefler.glucloser;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.nlefler.glucloser.actions.LogMealAction;
+import com.nlefler.glucloser.dataSource.PlaceFactory;
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealDetailDelegate;
 import com.nlefler.glucloser.models.Place;
@@ -32,6 +35,16 @@ public class LogMealActivity
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
                     .commit();
+        }
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        Log.d(LOG_TAG, extras.get("com.parse.Data").toString());
+        if (extras != null) {
+            Place place = PlaceFactory.PlaceFromCheckInData(this, extras);
+            if (place != null) {
+                this.placeSelected(place);
+            }
         }
     }
 
