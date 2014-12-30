@@ -14,6 +14,7 @@ public class MealParcelable implements Parcelable {
     private Place place;
     private int carbs;
     private float insulin;
+    private int beforeSugar;
     private boolean correction;
 
     public MealParcelable() {
@@ -60,6 +61,14 @@ public class MealParcelable implements Parcelable {
         this.correction = correction;
     }
 
+    public int getBeforeSugar() {
+        return beforeSugar;
+    }
+
+    public void setBeforeSugar(int beforeSugar) {
+        this.beforeSugar = beforeSugar;
+    }
+
     /** Parcelable */
     protected MealParcelable(Parcel in) {
         mealId = in.readString();
@@ -68,6 +77,7 @@ public class MealParcelable implements Parcelable {
         carbs = in.readInt();
         insulin = in.readFloat();
         correction = in.readInt() != 0;
+        beforeSugar = in.readInt();
     }
 
     @Override
@@ -82,6 +92,7 @@ public class MealParcelable implements Parcelable {
         dest.writeInt(carbs);
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
+        dest.writeInt(beforeSugar);
     }
 
     @SuppressWarnings("unused")

@@ -12,6 +12,7 @@
     <string name="title_activity_log_meal">Log Meal</string>
     <string name="carbs_noun">Carbs</string>
     <string name="insulin_noun">Insulin</string>
+    <string name="blood_sugar_before_phrase">Blood Sugar Before</string>
     <string name="correction_noun">Correction</string>
     <string name="save_meal_verb">Save</string>
 

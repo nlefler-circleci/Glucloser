@@ -25,7 +25,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="numberSigned"
+            android:inputType="number"
             android:ems="10"
             android:id="@+id/meal_edit_detail_carb_value"
             android:layout_weight="0.80" />
@@ -53,20 +53,43 @@
             android:layout_weight="0.80" />
 
     </LinearLayout>
-<LinearLayout
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1">
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/correction_noun"
-        android:id="@+id/meal_edit_detail_correction_value"
-        android:layout_weight="1.0" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/blood_sugar_before_phrase"
+            android:layout_weight="0.20" />
 
-</LinearLayout>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/meal_edit_detail_blood_sugar_before_value"
+            android:layout_weight="0.80" />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/correction_noun"
+            android:id="@+id/meal_edit_detail_correction_value"
+            android:layout_weight="1.0" />
+
+    </LinearLayout>
 
 </LinearLayout>
 

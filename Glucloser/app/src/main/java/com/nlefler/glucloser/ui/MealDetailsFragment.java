@@ -31,6 +31,7 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
 
     private EditText carbValueField;
     private EditText insulinValueField;
+    private EditText beforeSugarValueField;
     private CheckBox correctionValueBox;
     private Button saveButton;
 
@@ -59,6 +60,7 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
 
         this.carbValueField = (EditText)rootView.findViewById(R.id.meal_edit_detail_carb_value);
         this.insulinValueField = (EditText)rootView.findViewById(R.id.meal_edit_detail_insulin_value);
+        this.beforeSugarValueField = (EditText)rootView.findViewById(R.id.meal_edit_detail_blood_sugar_before_value);
         this.correctionValueBox = (CheckBox)rootView.findViewById(R.id.meal_edit_detail_correction_value);
         this.saveButton = (Button)rootView.findViewById(R.id.meal_edit_detail_save_button);
         this.saveButton.setOnClickListener(this);
@@ -75,11 +77,20 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
         if (this.meal == null) {
             this.meal = MealFactory.Meal(getActivity());
         }
+        String beforeSugarString = this.beforeSugarValueField.getText().toString();
+        int beforeSugar = -1;
+        if (beforeSugarString != null && !beforeSugarString.isEmpty()) {
+            beforeSugar = Integer.valueOf(beforeSugarString);
+        }
+
         Realm realm  = Realm.getInstance(getActivity());
         realm.beginTransaction();
         this.meal.setCarbs(Integer.valueOf(this.carbValueField.getText().toString()));
         this.meal.setInsulin(Float.valueOf(this.insulinValueField.getText().toString()));
         this.meal.setCorrection(this.correctionValueBox.isSelected());
+        if (beforeSugar >= 0) {
+            this.meal.setBeforeSugar(beforeSugar);
+        }
         realm.commitTransaction();
 
         ((MealDetailDelegate)getActivity()).mealUpdated(this.meal);

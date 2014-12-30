@@ -23,6 +23,10 @@ public class Meal extends RealmObject {
     public static final String InsulinFieldName = "insulin";
     private float insulin;
 
+    @Ignore
+    public static final String BeforeSugarFieldName = "beforeSugar";
+    private int beforeSugar;
+
     @Ignore static final String CorrectionFieldName = "correction";
     private boolean correction;
 
@@ -56,6 +60,14 @@ public class Meal extends RealmObject {
 
     public void setInsulin(float insulin) {
         this.insulin = insulin;
+    }
+
+    public int getBeforeSugar() {
+        return beforeSugar;
+    }
+
+    public void setBeforeSugar(int beforeSugar) {
+        this.beforeSugar = beforeSugar;
     }
 
     public boolean getCorrection() {

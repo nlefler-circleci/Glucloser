@@ -32,6 +32,7 @@ public class MealFactory {
         parcelable.setInsulin(meal.getInsulin());
         parcelable.setMealId(meal.getMealId());
         parcelable.setCorrection(meal.getCorrection());
+        parcelable.setBeforeSugar(meal.getBeforeSugar());
 
         return parcelable;
     }
@@ -46,6 +47,7 @@ public class MealFactory {
         meal.setCarbs(parcelable.getCarbs());
         meal.setPlace(parcelable.getPlace());
         meal.setCorrection(parcelable.getCorrection());
+        meal.setBeforeSugar(parcelable.getBeforeSugar());
         realm.commitTransaction();
 
         return meal;
