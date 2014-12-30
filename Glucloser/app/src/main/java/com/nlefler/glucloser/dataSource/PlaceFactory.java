@@ -1,7 +1,11 @@
 package com.nlefler.glucloser.dataSource;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.nlefler.glucloser.models.CheckInPushedData;
 import com.nlefler.glucloser.models.Place;
 import com.nlefler.glucloser.models.PlaceParcelable;
 import com.nlefler.nlfoursquare.Model.Venue.NLFoursquareVenue;
@@ -14,6 +18,8 @@ import io.realm.RealmResults;
  * Created by Nathan Lefler on 12/24/14.
  */
 public class PlaceFactory {
+    private static String LOG_TAG = "PlaceFactory";
+
     public static Place FromFoursquareVenue(NLFoursquareVenue venue, Context ctx) {
         Realm realm = Realm.getInstance(ctx);
 
@@ -52,6 +58,48 @@ public class PlaceFactory {
         return place;
     }
 
+    public static Place PlaceFromCheckInData(Context ctx, Bundle data) {
+        if (ctx == null || data == null) {
+            Log.e(LOG_TAG, "Cannot create Place from check-in data, context or bundle null");
+            return null;
+        }
+        String checkInDataSerialized = data.getString("com.parse.Data");
+        if (checkInDataSerialized == null || checkInDataSerialized.isEmpty()) {
+            Log.e(LOG_TAG, "Cannot create Place from check-in data, parse bundle null");
+            return null;
+        }
+        CheckInPushedData checkInData = (new Gson()).fromJson(checkInDataSerialized, CheckInPushedData.class);
+        if (checkInData == null) {
+            Log.e(LOG_TAG, "Cannot create Place from check-in data, couldn't parse data");
+            return null;
+        }
+
+        Realm realm = Realm.getInstance(ctx);
+        Place place = CreateOrFetchForFoursquareId(checkInData.getVenueId(), realm);
+        boolean modified = false;
+        realm.beginTransaction();
+        if (checkInData.getVenueName() != null && !checkInData.getVenueName().isEmpty() &&
+                !place.getName().equals(checkInData.getVenueName())) {
+            modified = true;
+            place.setName(checkInData.getVenueName());
+        }
+        if (checkInData.getVenueLat() != place.getLatitude()) {
+            modified = true;
+            place.setLatitude(checkInData.getVenueLat());
+        }
+        if (checkInData.getVenueLon() != place.getLongitude()) {
+            modified = true;
+            place.setLongitude(checkInData.getVenueLon());
+        }
+        if (modified) {
+            realm.commitTransaction();
+        } else {
+            realm.cancelTransaction();
+        }
+
+        return place;
+    }
+
     private static Place CreateOrFetchForFoursquareId(String id, Realm realm) {
         if (id == null || id.isEmpty()) {
             return realm.createObject(Place.class);
@@ -63,7 +111,9 @@ public class PlaceFactory {
         Place result = query.findFirst();
 
         if (result == null) {
+            realm.beginTransaction();
             result = realm.createObject(Place.class);
+            realm.commitTransaction();
         }
 
         return result;
