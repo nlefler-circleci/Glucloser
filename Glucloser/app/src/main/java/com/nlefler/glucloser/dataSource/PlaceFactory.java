@@ -102,7 +102,7 @@ public class PlaceFactory {
 
     private static Place CreateOrFetchForFoursquareId(String id, Realm realm) {
         if (id == null || id.isEmpty()) {
-            return realm.createObject(Place.class);
+            return null;
         }
 
         RealmQuery<Place> query = realm.where(Place.class);
@@ -113,6 +113,7 @@ public class PlaceFactory {
         if (result == null) {
             realm.beginTransaction();
             result = realm.createObject(Place.class);
+            result.setFoursquareId(id);
             realm.commitTransaction();
         }
 
