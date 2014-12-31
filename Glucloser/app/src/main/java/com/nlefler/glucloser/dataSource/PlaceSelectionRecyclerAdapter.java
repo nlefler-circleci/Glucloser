@@ -1,7 +1,6 @@
 package com.nlefler.glucloser.dataSource;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +42,7 @@ public class PlaceSelectionRecyclerAdapter extends RecyclerView.Adapter<PlaceSel
         }
 
         private Place getPlace() {
-            return PlaceFactory.FromFoursquareVenue(this.venue,
+            return PlaceFactory.PlaceFromFoursquareVenue(this.venue,
                     GlucloserApplication.SharedApplication().getApplicationContext());
         }
     }

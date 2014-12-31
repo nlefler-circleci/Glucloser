@@ -8,6 +8,9 @@ import io.realm.annotations.Ignore;
  */
 public class Meal extends RealmObject {
     @Ignore
+    public static final String ParseClassName = "Meal";
+
+    @Ignore
     public static final String MealIdFieldName = "mealId";
     private String mealId;
 
@@ -27,7 +30,8 @@ public class Meal extends RealmObject {
     public static final String BeforeSugarFieldName = "beforeSugar";
     private int beforeSugar;
 
-    @Ignore static final String CorrectionFieldName = "correction";
+    @Ignore
+    public static final String CorrectionFieldName = "correction";
     private boolean correction;
 
     public String getMealId() {
