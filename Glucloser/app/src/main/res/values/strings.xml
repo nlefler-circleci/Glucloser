@@ -3,6 +3,7 @@
 
     <string name="app_name">Glucloser</string>
     <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
 
     <string name="nav_drawer_item_home">Home</string>
     <string name="nav_drawer_item_foursquare_login">Foursquare Login</string>
@@ -17,5 +18,8 @@
     <string name="save_meal_verb">Save</string>
 
     <string name="insulin_unit_abrev_units">u</string>
+
+    <string name="place_name_placeholder">Venue Name</string>
+    <string name="numerical_placeholder">0</string>
 
 </resources>

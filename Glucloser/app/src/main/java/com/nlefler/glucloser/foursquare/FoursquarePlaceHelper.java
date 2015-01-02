@@ -69,12 +69,16 @@ public class FoursquarePlaceHelper {
     }
 
     public Observable<List<NLFoursquareVenue>> closestVenues() {
+        return this.closestVenues(null);
+    }
+
+    public Observable<List<NLFoursquareVenue>> closestVenues(final String searchTerm) {
         return Observable.create(
                 new Observable.OnSubscribe<List<NLFoursquareVenue>>() {
                     @Override
                     public void call(final Subscriber<? super List<NLFoursquareVenue>> subscriber) {
                         if (lastLocation != null) {
-                            closestVenuesHelper(lastLocation, subscriber);
+                            closestVenuesHelper(lastLocation, searchTerm, subscriber);
                         }
                         else {
                             LocationSubscription subscription = new LocationSubscription();
@@ -82,7 +86,7 @@ public class FoursquarePlaceHelper {
                                         @Override
                                         public void call(Location location) {
                                             locationSubscription.unsubscribe();
-                                            closestVenuesHelper(location, subscriber);
+                                            closestVenuesHelper(location, searchTerm, subscriber);
                                         }
                                     };
                             subscription.subscribe(action);
@@ -93,6 +97,7 @@ public class FoursquarePlaceHelper {
     }
 
     private void closestVenuesHelper(Location location,
+                                     String searchTerm,
                                      final Subscriber<? super List<NLFoursquareVenue>> subscriber) {
          NLFoursquareVenueSearchParametersBuilder parametersBuilder =
                 new NLFoursquareVenueSearchParametersBuilder();
@@ -102,6 +107,9 @@ public class FoursquarePlaceHelper {
         .radius(150.0)
         .limitToCategories(this.foursquareSearchCategories)
         .limit(50);
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            parametersBuilder.query(searchTerm);
+        }
 
         NLFoursquareVenueSearch venueSearch = restAdapter.create(NLFoursquareVenueSearch.class);
         venueSearch.search(parametersBuilder.buildWithClientParameters(
