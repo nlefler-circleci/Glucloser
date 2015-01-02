@@ -19,4 +19,7 @@
 
     <string name="insulin_unit_abrev_units">u</string>
 
+    <string name="place_name_placeholder">Venue Name</string>
+    <string name="numerical_placeholder">0</string>
+
 </resources>
