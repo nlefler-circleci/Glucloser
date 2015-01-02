@@ -19,12 +19,16 @@ public class MealHistoryRecyclerAdapter extends RecyclerView.Adapter<MealHistory
     public static class ViewHolder extends RecyclerView.ViewHolder {
         protected Meal meal;
         protected TextView placeName;
+        protected TextView carbsValue;
+        protected TextView insulinValue;
         protected View.OnClickListener clickListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             this.placeName = (TextView)itemView.findViewById(R.id.meal_detail_card_place_name);
+            this.carbsValue = (TextView)itemView.findViewById(R.id.meal_detail_card_carbs_value);
+            this.insulinValue = (TextView)itemView.findViewById(R.id.meal_detail_card_insulin_value);
             this.clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -67,10 +71,9 @@ public class MealHistoryRecyclerAdapter extends RecyclerView.Adapter<MealHistory
         viewHolder.meal = meal;
         if (meal.getPlace() != null) {
             viewHolder.placeName.setText(meal.getPlace().getName());
-        } else {
-            // TODO: Loc
-            viewHolder.placeName.setText("No Place");
         }
+        viewHolder.carbsValue.setText(String.valueOf(meal.getCarbs()));
+        viewHolder.insulinValue.setText(String.valueOf(meal.getInsulin()));
     }
 
     @Override
