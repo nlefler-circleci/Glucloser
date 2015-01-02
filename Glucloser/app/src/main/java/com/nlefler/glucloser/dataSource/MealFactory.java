@@ -17,6 +17,7 @@ import java.util.UUID;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import rx.functions.Action1;
+import rx.functions.Action2;
 
 /**
  * Created by Nathan Lefler on 12/24/14.
@@ -133,51 +134,48 @@ public class MealFactory {
         return meal;
     }
 
-    protected static void ParseObjectFromMeal(final Meal meal, final Action1<ParseObject> action) {
+    /**
+     * Fetches or creates a ParseObject representing the provided Meal
+     * @param meal
+     * @param action Returns the ParseObject, and true if the object was created and should be saved.
+     */
+    protected static void ParseObjectFromMeal(final Meal meal, final ParseObject placeObject,
+                                              final Action2<ParseObject, Boolean> action) {
         if (action == null) {
             Log.e(LOG_TAG, "Unable to create Parse object from Meal, action null");
             return;
         }
         if (meal == null || meal.getMealId() == null || meal.getMealId().isEmpty()) {
             Log.e(LOG_TAG, "Unable to create Parse object from Meal, meal null or no id");
-            action.call(null);
+            action.call(null, false);
             return;
         }
 
-        Action1<ParseObject> onPlaceAction = new Action1<ParseObject>() {
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Meal.ParseClassName);
+        parseQuery.whereEqualTo(Meal.MealIdFieldName, meal.getMealId());
+
+        parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void call(final ParseObject placeParseObject) {
-                        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Meal.ParseClassName);
-                parseQuery.whereEqualTo(Meal.MealIdFieldName, meal.getMealId());
-
-                parseQuery.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> parseObjects, ParseException e) {
-                        ParseObject parseObject;
-                        if (parseObjects.isEmpty()) {
-                            parseObject = new ParseObject(Meal.ParseClassName);
-                        } else {
-                            parseObject = parseObjects.get(0);
-                        }
-                        parseObject.put(Meal.MealIdFieldName, meal.getMealId());
-                        if (placeParseObject != null) {
-                            parseObject.put(Meal.PlaceFieldName, placeParseObject);
-                        }
-                        parseObject.put(Meal.CorrectionFieldName, meal.getCorrection());
-                        parseObject.put(Meal.BeforeSugarFieldName, meal.getBeforeSugar());
-                        parseObject.put(Meal.CarbsFieldName, meal.getCarbs());
-                        parseObject.put(Meal.InsulinFieldName, meal.getInsulin());
-                        action.call(parseObject);
-                    }
-                });
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                ParseObject parseObject;
+                boolean created = false;
+                if (parseObjects.isEmpty()) {
+                    parseObject = new ParseObject(Meal.ParseClassName);
+                    created = true;
+                } else {
+                    parseObject = parseObjects.get(0);
+                }
+                parseObject.put(Meal.MealIdFieldName, meal.getMealId());
+                if (placeObject != null) {
+                    parseObject.put(Meal.PlaceFieldName, placeObject);
+                }
+                parseObject.put(Meal.CorrectionFieldName, meal.getCorrection());
+                parseObject.put(Meal.BeforeSugarFieldName, meal.getBeforeSugar());
+                parseObject.put(Meal.CarbsFieldName, meal.getCarbs());
+                parseObject.put(Meal.InsulinFieldName, meal.getInsulin());
+                action.call(parseObject, created);
             }
-        };
-
-        if (meal.getPlace() != null) {
-            PlaceFactory.ParseObjectFromPlace(meal.getPlace(), onPlaceAction);
-        } else {
-            onPlaceAction.call(null);
-        }
+        });
     }
 
     public boolean AreMealsEqual(Meal meal1, Meal meal2) {

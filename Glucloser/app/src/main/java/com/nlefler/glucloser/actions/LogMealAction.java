@@ -50,8 +50,8 @@ public class LogMealAction implements Parcelable {
         this.meal.setPlace(this.place);
         realm.commitTransaction();
 
-        ParseUploader.UploadPlace(this.place);
-        ParseUploader.UploadMeal(this.meal);
+        ParseUploader.SharedInstance().uploadPlace(this.place);
+        ParseUploader.SharedInstance().uploadMeal(this.meal);
     }
 
     /** Parcelable */

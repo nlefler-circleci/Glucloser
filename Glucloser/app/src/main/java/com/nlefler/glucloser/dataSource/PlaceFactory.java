@@ -21,6 +21,7 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import rx.functions.Action1;
+import rx.functions.Action2;
 
 /**
  * Created by Nathan Lefler on 12/24/14.
@@ -150,14 +151,20 @@ public class PlaceFactory {
         return place;
     }
 
-    protected static void ParseObjectFromPlace(final Place place, final Action1<ParseObject> action) {
+    /**
+     * Fetches or creates a ParseObject representing the provided Place.
+     * @param place
+     * @param action Returns the fetched/created ParseObject, and true if the object was created
+     *               and should be saved.
+     */
+    protected static void ParseObjectFromPlace(final Place place, final Action2<ParseObject, Boolean> action) {
         if (action == null) {
             Log.e(LOG_TAG, "Unable to create Parse object from Place, action null");
             return;
         }
         if (place == null || place.getFoursquareId() == null || place.getFoursquareId().isEmpty()) {
             Log.e(LOG_TAG, "Unable to create Parse object from Place, place null or no Foursquare id");
-            action.call(null);
+            action.call(null, false);
             return;
         }
 
@@ -168,8 +175,10 @@ public class PlaceFactory {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 ParseObject parseObject;
+                boolean created = false;
                 if (parseObjects.isEmpty()) {
                     parseObject = new ParseObject(Place.ParseClassName);
+                    created = true;
                 } else {
                     parseObject = parseObjects.get(0);
                 }
@@ -177,7 +186,7 @@ public class PlaceFactory {
                 parseObject.put(Place.NameFieldName, place.getName());
                 parseObject.put(Place.LatitudeFieldName, place.getLatitude());
                 parseObject.put(Place.LongitudeFieldName, place.getLongitude());
-                action.call(parseObject);
+                action.call(parseObject, created);
             }
         });
     }
