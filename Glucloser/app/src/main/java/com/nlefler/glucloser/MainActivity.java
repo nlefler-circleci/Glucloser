@@ -179,6 +179,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             Realm realm = Realm.getInstance(getActivity());
             RealmQuery<Meal> query = realm.where(Meal.class);
             RealmResults<Meal> results = query.findAll();
+            results.sort(Meal.MealDateFieldName, false);
             this.mealHistoryAdapter.setMeals(results);
         }
     }
