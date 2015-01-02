@@ -11,6 +11,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -77,6 +78,7 @@ public class MealFactory {
         parcelable.setMealId(meal.getMealId());
         parcelable.setCorrection(meal.getCorrection());
         parcelable.setBeforeSugar(meal.getBeforeSugar());
+        parcelable.setMealDate(meal.getMealDate());
 
         return parcelable;
     }
@@ -92,6 +94,7 @@ public class MealFactory {
         meal.setPlace(parcelable.getPlace());
         meal.setCorrection(parcelable.getCorrection());
         meal.setBeforeSugar(parcelable.getBeforeSugar());
+        meal.setMealDate(parcelable.getMealDate());
         realm.commitTransaction();
 
         return meal;
@@ -110,6 +113,7 @@ public class MealFactory {
         float insulin = (float)parseObject.getDouble(Meal.InsulinFieldName);
         int beforeSugar = parseObject.getInt(Meal.BeforeSugarFieldName);
         boolean correction = parseObject.getBoolean(Meal.CorrectionFieldName);
+        Date mealDate = parseObject.getDate(Meal.MealDateFieldName);
         Place place = PlaceFactory.PlaceFromParseObject(parseObject.getParseObject(Meal.PlaceFieldName), realm);
 
         realm.beginTransaction();
@@ -128,6 +132,9 @@ public class MealFactory {
         }
         if (place != null && !PlaceFactory.ArePlacesEqual(place, meal.getPlace())) {
             meal.setPlace(place);
+        }
+        if (mealDate != null) {
+            meal.setMealDate(mealDate);
         }
         realm.commitTransaction();
 
@@ -173,6 +180,7 @@ public class MealFactory {
                 parseObject.put(Meal.BeforeSugarFieldName, meal.getBeforeSugar());
                 parseObject.put(Meal.CarbsFieldName, meal.getCarbs());
                 parseObject.put(Meal.InsulinFieldName, meal.getInsulin());
+                parseObject.put(Meal.MealDateFieldName, meal.getMealDate());
                 action.call(parseObject, created);
             }
         });
@@ -189,8 +197,9 @@ public class MealFactory {
         boolean insulinOK = meal1.getInsulin() == meal2.getInsulin();
         boolean correctionOK = meal1.getCorrection() == meal2.getCorrection();
         boolean beforeSugarOK = meal1.getBeforeSugar() == meal2.getBeforeSugar();
+        boolean dateOK = meal1.getMealDate().equals(meal2.getMealDate());
 
-        return idOK && placeOK && carbsOK && insulinOK && correctionOK && beforeSugarOK;
+        return idOK && placeOK && carbsOK && insulinOK && correctionOK && beforeSugarOK && dateOK;
     }
 
     private static Meal MealForMealId(String id, Realm realm, boolean create) {

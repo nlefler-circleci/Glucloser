@@ -14,6 +14,8 @@ import com.nlefler.glucloser.models.MealParcelable;
 import com.nlefler.glucloser.models.Place;
 import com.nlefler.glucloser.models.PlaceParcelable;
 
+import java.util.Date;
+
 import io.realm.Realm;
 
 /**
@@ -48,6 +50,7 @@ public class LogMealAction implements Parcelable {
         Realm realm = Realm.getInstance(GlucloserApplication.SharedApplication().getApplicationContext());
         realm.beginTransaction();
         this.meal.setPlace(this.place);
+        this.meal.setMealDate(new Date());
         realm.commitTransaction();
 
         ParseUploader.SharedInstance().uploadPlace(this.place);

@@ -1,5 +1,7 @@
 package com.nlefler.glucloser.models;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 
@@ -13,6 +15,10 @@ public class Meal extends RealmObject {
     @Ignore
     public static final String MealIdFieldName = "mealId";
     private String mealId;
+
+    @Ignore
+    public static final String MealDateFieldName = "date";
+    private Date mealDate;
 
     @Ignore
     public static final String PlaceFieldName = "place";
@@ -42,6 +48,13 @@ public class Meal extends RealmObject {
         this.mealId = mealId;
     }
 
+    public Date getMealDate() {
+        return mealDate;
+    }
+
+    public void setMealDate(Date mealDate) {
+        this.mealDate = mealDate;
+    }
     public Place getPlace() {
         return place;
     }
