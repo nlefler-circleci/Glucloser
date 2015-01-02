@@ -6,11 +6,14 @@ import android.os.Parcelable;
 import com.nlefler.glucloser.GlucloserApplication;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
 
+import java.util.Date;
+
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
 public class MealParcelable implements Parcelable {
     private String mealId;
+    private Date mealDate;
     private Place place;
     private int carbs;
     private float insulin;
@@ -27,6 +30,14 @@ public class MealParcelable implements Parcelable {
 
     public void setMealId(String mealId) {
         this.mealId = mealId;
+    }
+
+    public Date getMealDate() {
+        return mealDate;
+    }
+
+    public void setMealDate(Date mealDate) {
+        this.mealDate = mealDate;
     }
 
     public Place getPlace() {
