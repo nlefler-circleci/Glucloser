@@ -2,14 +2,18 @@ package com.nlefler.glucloser.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nlefler.glucloser.LogMealActivity;
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.actions.LogMealAction;
 import com.nlefler.glucloser.dataSource.PlaceSelectionRecyclerAdapter;
@@ -53,12 +57,11 @@ public class PlaceSelectionFragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
+        this.setHasOptionsMenu(true);
+
         foursquareHelper = new FoursquarePlaceHelper(getActivity());
         subscriptionScheduler = Schedulers.newThread();
-        closestPlacesSubscription = AndroidObservable.bindFragment(this,
-                foursquareHelper.closestVenues())
-                .subscribeOn(subscriptionScheduler)
-                .subscribe(this);
+        getClosestPlaces(null);
     }
 
     @Override
@@ -76,6 +79,31 @@ public class PlaceSelectionFragment
         this.placeSelectionList.addItemDecoration(new DividerItemDecoration(getActivity(), null));
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_place_selection, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_place_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getClosestPlaces(searchView.getQuery().toString());
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                getClosestPlaces(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
     }
 
     @Override
@@ -109,5 +137,16 @@ public class PlaceSelectionFragment
             return;
         }
         ((PlaceSelectionDelegate)getActivity()).placeSelected(place);
+    }
+
+    /** Helpers */
+    private void getClosestPlaces(String searchTerm) {
+        if (closestPlacesSubscription != null) {
+            closestPlacesSubscription.unsubscribe();
+        }
+        closestPlacesSubscription = AndroidObservable.bindFragment(this,
+                foursquareHelper.closestVenues(searchTerm))
+                .subscribeOn(subscriptionScheduler)
+                .subscribe(this);
     }
 }
