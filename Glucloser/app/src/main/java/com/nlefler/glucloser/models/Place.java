@@ -8,6 +8,9 @@ import io.realm.annotations.Ignore;
  */
 public class Place extends RealmObject {
     @Ignore
+    public static final String ParseClassName = "Place";
+
+    @Ignore
     public static final String NameFieldName = "name";
     private String name;
 

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.nlefler.glucloser.GlucloserApplication;
 import com.nlefler.glucloser.dataSource.MealFactory;
+import com.nlefler.glucloser.dataSource.ParseUploader;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealParcelable;
@@ -48,6 +49,9 @@ public class LogMealAction implements Parcelable {
         realm.beginTransaction();
         this.meal.setPlace(this.place);
         realm.commitTransaction();
+
+        ParseUploader.SharedInstance().uploadPlace(this.place);
+        ParseUploader.SharedInstance().uploadMeal(this.meal);
     }
 
     /** Parcelable */
