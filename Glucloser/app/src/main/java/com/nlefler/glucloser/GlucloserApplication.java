@@ -34,7 +34,7 @@ public class GlucloserApplication extends Application {
         this.subscribeToPush();
     }
 
-    public static GlucloserApplication SharedApplication() {
+    public static synchronized GlucloserApplication SharedApplication() {
         return _sharedApplication;
     }
 

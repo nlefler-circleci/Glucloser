@@ -38,7 +38,7 @@ public class FoursquareAuthManager {
     private String _userAccessToken = "";
 
     private static FoursquareAuthManager _sharedInstance;
-    public static FoursquareAuthManager SharedManager() {
+    public static synchronized FoursquareAuthManager SharedManager() {
         if (_sharedInstance == null) {
             _sharedInstance = new FoursquareAuthManager();
         }
