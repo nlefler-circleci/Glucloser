@@ -17,7 +17,7 @@ public class Meal extends RealmObject {
     private String mealId;
 
     @Ignore
-    public static final String MealDateFieldName = "date";
+    public static final String MealDateFieldName = "mealDate";
     private Date mealDate;
 
     @Ignore
