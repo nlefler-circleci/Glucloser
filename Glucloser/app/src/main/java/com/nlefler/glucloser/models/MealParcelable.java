@@ -89,6 +89,7 @@ public class MealParcelable implements Parcelable {
         insulin = in.readFloat();
         correction = in.readInt() != 0;
         beforeSugar = in.readInt();
+        mealDate = new Date(in.readLong());
     }
 
     @Override
@@ -104,6 +105,7 @@ public class MealParcelable implements Parcelable {
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
         dest.writeInt(beforeSugar);
+        dest.writeLong(mealDate.getTime());
     }
 
     @SuppressWarnings("unused")
