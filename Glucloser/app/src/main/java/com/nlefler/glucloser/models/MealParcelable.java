@@ -92,6 +92,7 @@ public class MealParcelable implements Parcelable {
         beforeSugar = BloodSugarFactory.BloodSugarFromParcelable(
                 (BloodSugarParcelable)in.readParcelable(BloodSugar.class.getClassLoader()),
                 GlucloserApplication.SharedApplication().getApplicationContext());
+        mealDate = new Date(in.readLong());
     }
 
     @Override
@@ -107,6 +108,7 @@ public class MealParcelable implements Parcelable {
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
         dest.writeParcelable(BloodSugarFactory.ParcelableFromBloodSugar(beforeSugar), flags);
+        dest.writeLong(mealDate.getTime());
     }
 
     @SuppressWarnings("unused")
