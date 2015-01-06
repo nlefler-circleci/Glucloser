@@ -34,7 +34,7 @@ public class Meal extends RealmObject {
 
     @Ignore
     public static final String BeforeSugarFieldName = "beforeSugar";
-    private int beforeSugar;
+    private BloodSugar beforeSugar;
 
     @Ignore
     public static final String CorrectionFieldName = "correction";
@@ -79,11 +79,11 @@ public class Meal extends RealmObject {
         this.insulin = insulin;
     }
 
-    public int getBeforeSugar() {
+    public BloodSugar getBeforeSugar() {
         return beforeSugar;
     }
 
-    public void setBeforeSugar(int beforeSugar) {
+    public void setBeforeSugar(BloodSugar beforeSugar) {
         this.beforeSugar = beforeSugar;
     }
 

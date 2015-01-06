@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.nlefler.glucloser.GlucloserApplication;
+import com.nlefler.glucloser.dataSource.BloodSugarFactory;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
 
 import java.util.Date;
@@ -17,7 +18,7 @@ public class MealParcelable implements Parcelable {
     private Place place;
     private int carbs;
     private float insulin;
-    private int beforeSugar;
+    private BloodSugar beforeSugar;
     private boolean correction;
 
     public MealParcelable() {
@@ -72,11 +73,11 @@ public class MealParcelable implements Parcelable {
         this.correction = correction;
     }
 
-    public int getBeforeSugar() {
+    public BloodSugar getBeforeSugar() {
         return beforeSugar;
     }
 
-    public void setBeforeSugar(int beforeSugar) {
+    public void setBeforeSugar(BloodSugar beforeSugar) {
         this.beforeSugar = beforeSugar;
     }
 
@@ -88,7 +89,9 @@ public class MealParcelable implements Parcelable {
         carbs = in.readInt();
         insulin = in.readFloat();
         correction = in.readInt() != 0;
-        beforeSugar = in.readInt();
+        beforeSugar = BloodSugarFactory.BloodSugarFromParcelable(
+                (BloodSugarParcelable)in.readParcelable(BloodSugar.class.getClassLoader()),
+                GlucloserApplication.SharedApplication().getApplicationContext());
         mealDate = new Date(in.readLong());
     }
 
@@ -104,7 +107,7 @@ public class MealParcelable implements Parcelable {
         dest.writeInt(carbs);
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
-        dest.writeInt(beforeSugar);
+        dest.writeParcelable(BloodSugarFactory.ParcelableFromBloodSugar(beforeSugar), flags);
         dest.writeLong(mealDate.getTime());
     }
 
