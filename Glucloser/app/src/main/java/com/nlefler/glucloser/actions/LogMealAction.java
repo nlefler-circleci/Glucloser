@@ -50,7 +50,6 @@ public class LogMealAction implements Parcelable {
         Realm realm = Realm.getInstance(GlucloserApplication.SharedApplication().getApplicationContext());
         realm.beginTransaction();
         this.meal.setPlace(this.place);
-        this.meal.setMealDate(new Date());
         realm.commitTransaction();
 
         ParseUploader.SharedInstance().uploadPlace(this.place);

@@ -1,5 +1,8 @@
 package com.nlefler.glucloser.dataSource;
 
+import android.util.Log;
+
+import com.nlefler.glucloser.models.BloodSugar;
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.Place;
 import com.parse.ParseException;
@@ -12,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Action2;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Nathan Lefler on 12/30/14.
@@ -49,25 +54,59 @@ public class ParseUploader {
     public void uploadMeal(final Meal meal) {
         final Place place = meal.getPlace();
         final String placeId = place.getFoursquareId();
-        Action1<ParseObject> action = new Action1<ParseObject>() {
+
+        final BloodSugar beforeSugar = meal.getBeforeSugar();
+        final String beforeSugarId = beforeSugar.getId();
+
+        Observable<ParseObject> placeFetchObservable = getUploadedObjectObservable(placeId, place);
+        Observable<ParseObject> beforeSugarObservable = getUploadedObjectObservable(beforeSugarId, beforeSugar);
+
+        placeFetchObservable.subscribeOn(Schedulers.io());
+        Observable.merge(placeFetchObservable, beforeSugarObservable).subscribe(new Observer<ParseObject>() {
+            private ParseObject placeParseObject;
+            private ParseObject beforeSugarParseObject;
+
             @Override
-            public void call(ParseObject placeObject) {
-                inProgressUploads.remove(placeId);
+            public void onCompleted() {
                 final String mealId = meal.getMealId();
-                getUploadedObjectObservable(mealId, meal, placeObject).subscribe(new Action1<ParseObject>() {
-                    @Override
-                    public void call(ParseObject mealObject) {
-                        mealObject.saveInBackground();
-                        inProgressUploads.remove(mealId);
-                    }
-                });
+                getUploadedObjectObservable(mealId, meal, placeParseObject, beforeSugarParseObject)
+                        .subscribe(new Action1<ParseObject>() {
+                            @Override
+                            public void call(ParseObject mealObject) {
+                                mealObject.saveInBackground();
+                                inProgressUploads.remove(mealId);
+                            }
+                        });
             }
-        };
-        if (place != null) {
-            getUploadedObjectObservable(placeId, place).subscribe(action);
-        } else {
-            action.call(null);
-        }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(LOG_TAG, "Unable to save Meal to Parse: " + e.getMessage());
+            }
+
+            @Override
+            public void onNext(ParseObject parseObject) {
+                String className = parseObject.getClassName();
+                if (className.equals(Place.ParseClassName)) {
+                    placeParseObject = parseObject;
+                    inProgressUploads.remove(placeId);
+                } else if (className.equals(BloodSugar.ParseClassName)) {
+                    beforeSugarParseObject = parseObject;
+                    inProgressUploads.remove(beforeSugarId);
+                }
+            }
+        });
+    }
+
+    public void uploadBloodSugar(final BloodSugar sugar) {
+        final String sugarId = sugar.getId();
+        this.getUploadedObjectObservable(sugarId, sugar).subscribe(new Action1<ParseObject>() {
+            @Override
+            public void call(ParseObject parseObject) {
+                parseObject.saveInBackground();
+                inProgressUploads.remove(sugarId);
+            }
+        });
     }
 
     /** Helpers */
@@ -87,11 +126,19 @@ public class ParseUploader {
                     if (toUpload instanceof Place) {
                         PlaceFactory.ParseObjectFromPlace((Place)toUpload, createParseObjectReadyAction(subscriber));
                     } else if (toUpload instanceof Meal) {
-                        if (args == null || args.length < 1 || !(args[0] instanceof ParseObject)) {
+                        if (args == null || args.length < 2 ||
+                                !(args[0] instanceof ParseObject) ||
+                                !(args[1] instanceof ParseObject)) {
                             subscriber.onError(new IllegalArgumentException("Invalid specific arguments"));
                             return;
                         }
-                        MealFactory.ParseObjectFromMeal((Meal)toUpload, (ParseObject)args[0], createParseObjectReadyAction(subscriber));
+                        MealFactory.ParseObjectFromMeal((Meal)toUpload,
+                                (ParseObject)args[0],
+                                (ParseObject)args[1],
+                                createParseObjectReadyAction(subscriber));
+                    } else if (toUpload instanceof BloodSugar) {
+                        BloodSugarFactory.ParseObjectFromBloodSugar((BloodSugar)toUpload,
+                                createParseObjectReadyAction(subscriber));
                     } else {
                         subscriber.onError(new IllegalArgumentException("Invalid type for upload object"));
                     }
@@ -106,7 +153,12 @@ public class ParseUploader {
         return new Action2<ParseObject, Boolean>() {
                             @Override
                             public void call(final ParseObject parseObject, Boolean created) {
-                                if (parseObject != null && created) {
+                                if (parseObject == null) {
+                                    subscriber.onError(new RuntimeException("Unable to create ParseObject"));
+                                    return;
+                                }
+
+                                if (created) {
                                     parseObject.saveInBackground(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {

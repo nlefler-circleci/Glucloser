@@ -3,6 +3,7 @@ package com.nlefler.glucloser.dataSource;
 import android.content.Context;
 import android.util.Log;
 
+import com.nlefler.glucloser.models.BloodSugar;
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealParcelable;
 import com.nlefler.glucloser.models.Place;
@@ -31,7 +32,6 @@ public class MealFactory {
 
         realm.beginTransaction();
         Meal meal = MealForMealId(null, realm, true);
-        meal.setMealId(UUID.randomUUID().toString());
         realm.commitTransaction();
 
         return meal;
@@ -111,10 +111,10 @@ public class MealFactory {
         }
         int carbs = parseObject.getInt(Meal.CarbsFieldName);
         float insulin = (float)parseObject.getDouble(Meal.InsulinFieldName);
-        int beforeSugar = parseObject.getInt(Meal.BeforeSugarFieldName);
         boolean correction = parseObject.getBoolean(Meal.CorrectionFieldName);
         Date mealDate = parseObject.getDate(Meal.MealDateFieldName);
         Place place = PlaceFactory.PlaceFromParseObject(parseObject.getParseObject(Meal.PlaceFieldName), realm);
+        BloodSugar beforeSugar = BloodSugarFactory.BloodSugarFromParseObject(parseObject.getParseObject(Meal.BeforeSugarFieldName), realm);
 
         realm.beginTransaction();
         Meal meal = MealForMealId(mealId, realm, true);
@@ -124,7 +124,7 @@ public class MealFactory {
         if (insulin >= 0 && meal.getInsulin() != insulin) {
             meal.setInsulin(insulin);
         }
-        if (beforeSugar >= 0 && meal.getBeforeSugar() != beforeSugar) {
+        if (beforeSugar != null && !BloodSugarFactory.AreBloodSugarsEqual(meal.getBeforeSugar(), beforeSugar)) {
             meal.setBeforeSugar(beforeSugar);
         }
         if (meal.getCorrection() != correction) {
@@ -146,7 +146,9 @@ public class MealFactory {
      * @param meal
      * @param action Returns the ParseObject, and true if the object was created and should be saved.
      */
-    protected static void ParseObjectFromMeal(final Meal meal, final ParseObject placeObject,
+    protected static void ParseObjectFromMeal(final Meal meal,
+                                              final ParseObject placeObject,
+                                              final ParseObject beforeSugarObject,
                                               final Action2<ParseObject, Boolean> action) {
         if (action == null) {
             Log.e(LOG_TAG, "Unable to create Parse object from Meal, action null");
@@ -176,8 +178,10 @@ public class MealFactory {
                 if (placeObject != null) {
                     parseObject.put(Meal.PlaceFieldName, placeObject);
                 }
+                if (beforeSugarObject != null) {
+                    parseObject.put(Meal.BeforeSugarFieldName, beforeSugarObject);
+                }
                 parseObject.put(Meal.CorrectionFieldName, meal.getCorrection());
-                parseObject.put(Meal.BeforeSugarFieldName, meal.getBeforeSugar());
                 parseObject.put(Meal.CarbsFieldName, meal.getCarbs());
                 parseObject.put(Meal.InsulinFieldName, meal.getInsulin());
                 parseObject.put(Meal.MealDateFieldName, meal.getMealDate());
@@ -196,7 +200,7 @@ public class MealFactory {
         boolean carbsOK = meal1.getCarbs() == meal2.getCarbs();
         boolean insulinOK = meal1.getInsulin() == meal2.getInsulin();
         boolean correctionOK = meal1.getCorrection() == meal2.getCorrection();
-        boolean beforeSugarOK = meal1.getBeforeSugar() == meal2.getBeforeSugar();
+        boolean beforeSugarOK = BloodSugarFactory.AreBloodSugarsEqual(meal1.getBeforeSugar(), meal2.getBeforeSugar());
         boolean dateOK = meal1.getMealDate().equals(meal2.getMealDate());
 
         return idOK && placeOK && carbsOK && insulinOK && correctionOK && beforeSugarOK && dateOK;
@@ -204,7 +208,9 @@ public class MealFactory {
 
     private static Meal MealForMealId(String id, Realm realm, boolean create) {
         if (create && (id == null || id.isEmpty())) {
-            return realm.createObject(Meal.class);
+            Meal meal = realm.createObject(Meal.class);
+            meal.setMealId(UUID.randomUUID().toString());
+            return meal;
         }
 
         RealmQuery<Meal> query = realm.where(Meal.class);
@@ -214,6 +220,7 @@ public class MealFactory {
 
         if (result == null && create) {
             result = realm.createObject(Meal.class);
+            result.setMealId(id);
         }
 
         return result;

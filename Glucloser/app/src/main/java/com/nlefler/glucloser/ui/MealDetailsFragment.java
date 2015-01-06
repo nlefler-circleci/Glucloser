@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import com.nlefler.glucloser.R;
 import com.nlefler.glucloser.actions.LogMealAction;
+import com.nlefler.glucloser.dataSource.BloodSugarFactory;
 import com.nlefler.glucloser.dataSource.MealFactory;
 import com.nlefler.glucloser.dataSource.PlaceFactory;
+import com.nlefler.glucloser.models.BloodSugar;
 import com.nlefler.glucloser.models.Meal;
 import com.nlefler.glucloser.models.MealDetailDelegate;
 import com.nlefler.glucloser.models.MealParcelable;
@@ -22,6 +24,8 @@ import com.nlefler.glucloser.models.Place;
 import com.nlefler.glucloser.models.PlaceParcelable;
 
 import org.w3c.dom.Text;
+
+import java.util.Date;
 
 import io.realm.Realm;
 
@@ -85,19 +89,28 @@ public class MealDetailsFragment extends Fragment implements View.OnClickListene
             this.meal = MealFactory.Meal(getActivity());
         }
         String beforeSugarString = this.beforeSugarValueField.getText().toString();
-        int beforeSugar = -1;
+        int beforeSugarValue = -1;
         if (beforeSugarString != null && !beforeSugarString.isEmpty()) {
-            beforeSugar = Integer.valueOf(beforeSugarString);
+            beforeSugarValue = Integer.valueOf(beforeSugarString);
         }
+        Date mealDate = new Date();
 
         Realm realm  = Realm.getInstance(getActivity());
+
+        BloodSugar beforeSugar = BloodSugarFactory.BloodSugar(getActivity());
+        realm.beginTransaction();
+        beforeSugar.setValue(beforeSugarValue);
+        beforeSugar.setDate(mealDate);
+        realm.commitTransaction();
+
         realm.beginTransaction();
         this.meal.setCarbs(Integer.valueOf(this.carbValueField.getText().toString()));
         this.meal.setInsulin(Float.valueOf(this.insulinValueField.getText().toString()));
         this.meal.setCorrection(this.correctionValueBox.isSelected());
-        if (beforeSugar >= 0) {
+        if (beforeSugarValue >= 0) {
             this.meal.setBeforeSugar(beforeSugar);
         }
+        this.meal.setMealDate(mealDate);
         realm.commitTransaction();
 
         ((MealDetailDelegate)getActivity()).mealUpdated(this.meal);

@@ -9,11 +9,20 @@ import java.util.Date;
  * Created by Nathan Lefler on 1/4/15.
  */
 public class BloodSugarParcelable implements Parcelable {
+    private String id;
     private int value;
     private Date date;
 
     public BloodSugarParcelable() {
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getValue() {
@@ -34,6 +43,7 @@ public class BloodSugarParcelable implements Parcelable {
 
     /** Parcelable */
     protected BloodSugarParcelable(Parcel in) {
+        id = in.readString();
         value = in.readInt();
         date = new Date(in.readLong());
     }
@@ -45,6 +55,7 @@ public class BloodSugarParcelable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeInt(value);
         dest.writeLong(date.getTime());
     }

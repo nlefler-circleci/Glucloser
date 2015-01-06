@@ -13,12 +13,24 @@ public class BloodSugar extends RealmObject {
     public static final String ParseClassName = "BloodSugar";
 
     @Ignore
+    public static final String IdFieldName = "id";
+    private String id;
+
+    @Ignore
     public static final String ValueFieldName = "value";
     private int value;
 
     @Ignore
     public static final String DateFieldName = "date";
     private Date date;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public int getValue() {
         return value;
