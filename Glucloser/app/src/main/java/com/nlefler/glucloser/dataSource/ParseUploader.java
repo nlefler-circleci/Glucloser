@@ -56,13 +56,22 @@ public class ParseUploader {
         final String placeId = place.getFoursquareId();
 
         final BloodSugar beforeSugar = meal.getBeforeSugar();
-        final String beforeSugarId = beforeSugar.getId();
+        final String beforeSugarId = beforeSugar != null ? beforeSugar.getId() : null;
 
         Observable<ParseObject> placeFetchObservable = getUploadedObjectObservable(placeId, place);
-        Observable<ParseObject> beforeSugarObservable = getUploadedObjectObservable(beforeSugarId, beforeSugar);
+        Observable<ParseObject> beforeSugarObservable = null;
+        if (beforeSugarId != null) {
+            beforeSugarObservable = getUploadedObjectObservable(beforeSugarId, beforeSugar);
+        }
 
-        placeFetchObservable.subscribeOn(Schedulers.io());
-        Observable.merge(placeFetchObservable, beforeSugarObservable).subscribe(new Observer<ParseObject>() {
+        Observable<ParseObject> finalObservable = null;
+        if (beforeSugarObservable != null) {
+            placeFetchObservable.subscribeOn(Schedulers.io());
+            finalObservable = Observable.merge(placeFetchObservable, beforeSugarObservable);
+        } else {
+            finalObservable = placeFetchObservable;
+        }
+        finalObservable.subscribe(new Observer<ParseObject>() {
             private ParseObject placeParseObject;
             private ParseObject beforeSugarParseObject;
 
@@ -127,8 +136,7 @@ public class ParseUploader {
                         PlaceFactory.ParseObjectFromPlace((Place)toUpload, createParseObjectReadyAction(subscriber));
                     } else if (toUpload instanceof Meal) {
                         if (args == null || args.length < 2 ||
-                                !(args[0] instanceof ParseObject) ||
-                                !(args[1] instanceof ParseObject)) {
+                                !(args[0] instanceof ParseObject)) {
                             subscriber.onError(new IllegalArgumentException("Invalid specific arguments"));
                             return;
                         }
