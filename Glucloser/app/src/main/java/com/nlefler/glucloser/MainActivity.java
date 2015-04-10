@@ -1,7 +1,10 @@
 package com.nlefler.glucloser;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Outline;
+import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -9,12 +12,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -46,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new HistoryListFragment())
                     .commit();
         }
 
@@ -146,14 +149,14 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class HistoryListFragment extends Fragment {
         private static String LOG_TAG = "PlaceholderFragment";
 
         private RecyclerView mealHistoryListView;
         private RecyclerView.LayoutManager mealHistoryLayoutManager;
         private MealHistoryRecyclerAdapter mealHistoryAdapter;
 
-        public PlaceholderFragment() {
+        public HistoryListFragment() {
         }
 
         @Override
@@ -169,6 +172,22 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             this.mealHistoryAdapter = new MealHistoryRecyclerAdapter(new ArrayList<Meal>());
             this.mealHistoryListView.setAdapter(this.mealHistoryAdapter);
             this.mealHistoryListView.addItemDecoration(new DividerItemDecoration(getActivity(), null));
+
+            View addButton = rootView.findViewById(R.id.add_button);
+            addButton.setOutlineProvider(new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    int diameter = getResources().getDimensionPixelSize(R.dimen.add_button_diameter);
+                    outline.setOval(0, 0, diameter, diameter);
+                }
+            });
+            addButton.setClipToOutline(true);
+            addButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((MainActivity)getActivity()).launchAddMealActivity(view);
+                }
+            });
 
             updateMealHistory();
 
