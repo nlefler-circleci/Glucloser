@@ -1,6 +1,7 @@
 package com.nlefler.glucloser;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Outline;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter;
 import com.nlefler.glucloser.foursquare.FoursquareAuthManager;
 import com.nlefler.glucloser.models.Meal;
@@ -118,8 +120,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
      * Called when user clicks on button in add card
      */
     public void launchAddMealActivity(View view) {
-        Intent intent = new Intent(this, LogMealActivity.class);
-        startActivity(intent);
     }
 
     /** OnClickListener */
@@ -173,19 +173,20 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             this.mealHistoryListView.setAdapter(this.mealHistoryAdapter);
             this.mealHistoryListView.addItemDecoration(new DividerItemDecoration(getActivity(), null));
 
-            View addButton = rootView.findViewById(R.id.add_button);
-            addButton.setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    int diameter = getResources().getDimensionPixelSize(R.dimen.add_button_diameter);
-                    outline.setOval(0, 0, diameter, diameter);
-                }
-            });
-            addButton.setClipToOutline(true);
-            addButton.setOnClickListener(new View.OnClickListener() {
+            FloatingActionButton logMealButton = (FloatingActionButton) rootView.findViewById(R.id.fab_log_meal_item);
+            logMealButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)getActivity()).launchAddMealActivity(view);
+                    Intent intent = new Intent(view.getContext(), LogMealActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
+            FloatingActionButton logSnackButton = (FloatingActionButton) rootView.findViewById(R.id.fab_log_meal_item);
+            logSnackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), LogMealActivity.class);
+                    view.getContext().startActivity(intent);
                 }
             });
 
