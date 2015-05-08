@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "com.nlefler.glucloser"
@@ -19,6 +20,9 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
@@ -54,4 +58,18 @@ dependencies {
     compile project(':nlfoursquare')
     compile project(':android-reactive-location')
     compile project(':foursquareoauthlibrary')
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+}
+buildscript {
+    ext.kotlin_version = '0.11.91.4'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
 }

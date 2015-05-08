@@ -24,4 +24,6 @@
 
     <string name="title_activity_log_snack">Log A Snack</string>
 
+    <string name="hello_world">Hello world!</string>
+
 </resources>
