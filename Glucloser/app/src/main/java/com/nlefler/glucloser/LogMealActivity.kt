@@ -81,7 +81,7 @@ public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, Bolu
         args.putParcelable(MealDetailsFragment.MealDetailBolusEventParcelableBundleKey, MealParcelable())
         fragment.setArguments(args)
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit()
+        getSupportFragmentManager().beginTransaction().replace(R.id.log_meal_activity_container, fragment).addToBackStack(null).commit()
     }
 
     private fun finishLoggingMeal() {

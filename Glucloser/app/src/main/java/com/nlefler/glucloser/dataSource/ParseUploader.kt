@@ -173,8 +173,8 @@ public class ParseUploader private() {
         }
     }
 
-    private fun createParseObjectReadyAction(subscriber: Subscriber<in ParseObject>): Action2<ParseObject, Boolean> {
-        return object : Action2<ParseObject, Boolean> {
+    private fun createParseObjectReadyAction(subscriber: Subscriber<in ParseObject>): Action2<ParseObject?, Boolean> {
+        return object : Action2<ParseObject?, Boolean> {
             override fun call(parseObject: ParseObject?, created: Boolean?) {
                 if (parseObject == null) {
                     subscriber.onError(RuntimeException("Unable to create ParseObject"))

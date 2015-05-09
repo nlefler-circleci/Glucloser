@@ -83,7 +83,10 @@ public class FoursquarePlaceHelper(private val context: Context) {
 
     private fun closestVenuesHelper(location: Location, searchTerm: String?, subscriber: Subscriber<in List<NLFoursquareVenue>>) {
         val parametersBuilder = NLFoursquareVenueSearchParametersBuilder()
-        parametersBuilder.latLon(location.getLatitude(), location.getLongitude()).intent(NLFoursquareVenueSearchIntent.NLFoursquareVenueSearchIntentCheckIn).radius(150.0).limitToCategories(this.foursquareSearchCategories).limit(50)
+        parametersBuilder.latLon(location.getLatitude(), location.getLongitude())
+                .intent(NLFoursquareVenueSearchIntent.NLFoursquareVenueSearchIntentCheckIn)
+                .radius(500.0).limitToCategories(this.foursquareSearchCategories)
+                .limit(100)
         if (searchTerm?.length() ?: 0 > 0) {
             parametersBuilder.query(searchTerm)
         }

@@ -171,9 +171,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
 
         private fun updateMealHistory() {
             val realm = Realm.getInstance(getActivity())
-            val query = realm.where<Meal>(javaClass<Meal>())
-            val results = query.findAll()
-            results.sort(Meal.MealDateFieldName, false)
+            val results = realm.allObjectsSorted(javaClass<Meal>(), Meal.MealDateFieldName, false)
             this.mealHistoryAdapter!!.setMeals(results)
         }
 

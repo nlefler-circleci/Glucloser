@@ -2,8 +2,10 @@ package com.nlefler.glucloser.dataSource
 
 import android.content.Context
 import android.util.Log
+import com.nlefler.glucloser.models.BloodSugar
 import com.nlefler.glucloser.models.Meal
 import com.nlefler.glucloser.models.MealParcelable
+import com.nlefler.glucloser.models.Place
 
 import com.parse.FindCallback
 import com.parse.ParseException
@@ -104,16 +106,23 @@ public class MealFactory {
         public fun MealFromParcelable(parcelable: MealParcelable, ctx: Context): Meal {
             val realm = Realm.getInstance(ctx)
 
+            var place: Place? = null
+            if (parcelable.getPlaceParcelable() != null) {
+                place = PlaceFactory.PlaceFromParcelable(parcelable.getPlaceParcelable(), ctx)
+            }
+
+            var beforeSugar: BloodSugar? = null
+            if (parcelable.getBeforeSugarParcelable() != null) {
+                beforeSugar = BloodSugarFactory.BloodSugarFromParcelable(parcelable.getBeforeSugarParcelable(), ctx)
+            }
+
             realm.beginTransaction()
             val meal = MealForMealId(parcelable.getMealId(), realm, true)!!
             meal.setInsulin(parcelable.getInsulin())
-            meal.setMealId(parcelable.getMealId())
             meal.setCarbs(parcelable.getCarbs())
-            meal.setPlace(PlaceFactory.PlaceFromParcelable(parcelable.getPlaceParcelable()!!, ctx))
+            meal.setPlace(place);
+            meal.setBeforeSugar(beforeSugar);
             meal.setCorrection(parcelable.isCorrection())
-            if (parcelable.getBeforeSugarParcelable() != null) {
-                meal.setBeforeSugar(BloodSugarFactory.BloodSugarFromParcelable(parcelable.getBeforeSugarParcelable()!!, ctx))
-            }
             meal.setDate(parcelable.getDate())
             realm.commitTransaction()
 
@@ -167,7 +176,9 @@ public class MealFactory {
          * *
          * @param action Returns the ParseObject, and true if the object was created and should be saved.
          */
-        internal fun ParseObjectFromMeal(meal: Meal, placeObject: ParseObject?, beforeSugarObject: ParseObject?, action: Action2<ParseObject, Boolean>?) {
+        internal fun ParseObjectFromMeal(meal: Meal, placeObject: ParseObject?,
+                                         beforeSugarObject: ParseObject?,
+                                         action: Action2<ParseObject?, Boolean>?) {
             if (action == null) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Meal, action null")
                 return
@@ -182,7 +193,7 @@ public class MealFactory {
             parseQuery.whereEqualTo(Meal.MealIdFieldName, meal.getMealId())
 
             parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-                override fun done(parseObjects: List<ParseObject>, e: ParseException) {
+                override fun done(parseObjects: List<ParseObject>, e: ParseException?) {
                     val parseObject: ParseObject
                     var created = false
                     if (parseObjects.isEmpty()) {

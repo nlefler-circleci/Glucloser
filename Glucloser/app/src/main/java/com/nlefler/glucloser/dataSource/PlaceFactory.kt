@@ -171,7 +171,7 @@ public class PlaceFactory {
          * @param action Returns the fetched/created ParseObject, and true if the object was created
          * *               and should be saved.
          */
-        internal fun ParseObjectFromPlace(place: Place?, action: Action2<ParseObject, Boolean>?) {
+        internal fun ParseObjectFromPlace(place: Place?, action: Action2<ParseObject?, Boolean>?) {
             if (action == null) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Place, action null")
                 return
@@ -186,7 +186,7 @@ public class PlaceFactory {
             parseQuery.whereEqualTo(Place.FoursquareIdFieldName, place.getFoursquareId())
 
             parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-                override fun done(parseObjects: List<ParseObject>, e: ParseException) {
+                override fun done(parseObjects: List<ParseObject>, e: ParseException?) {
                     val parseObject: ParseObject
                     var created = false
                     if (parseObjects.isEmpty()) {

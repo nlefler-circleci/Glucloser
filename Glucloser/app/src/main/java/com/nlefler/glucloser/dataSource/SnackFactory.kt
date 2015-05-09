@@ -163,7 +163,7 @@ public class SnackFactory {
          * *
          * @param action Returns the ParseObject, and true if the object was created and should be saved.
          */
-        internal fun ParseObjectFromSnack(snack: Snack?, beforeSugarObject: ParseObject?, action: Action2<ParseObject, Boolean>?) {
+        internal fun ParseObjectFromSnack(snack: Snack?, beforeSugarObject: ParseObject?, action: Action2<ParseObject?, Boolean>?) {
             if (action == null) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Snack, action null")
                 return
@@ -178,7 +178,7 @@ public class SnackFactory {
             parseQuery.whereEqualTo(Snack.SnackIdFieldName, snack!!.getSnackId())
 
             parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-                override fun done(parseObjects: List<ParseObject>, e: ParseException) {
+                override fun done(parseObjects: List<ParseObject>, e: ParseException?) {
                     val parseObject: ParseObject
                     var created = false
                     if (parseObjects.isEmpty()) {
