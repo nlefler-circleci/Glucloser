@@ -9,8 +9,6 @@ import com.nlefler.glucloser.GlucloserApplication
 import com.nlefler.glucloser.dataSource.BloodSugarFactory
 import com.nlefler.glucloser.dataSource.ParseUploader
 import com.nlefler.glucloser.dataSource.SnackFactory
-import com.nlefler.glucloser.models.BloodSugar
-import com.nlefler.glucloser.models.Snack
 import com.nlefler.glucloser.models.SnackParcelable
 import com.parse.Parse
 

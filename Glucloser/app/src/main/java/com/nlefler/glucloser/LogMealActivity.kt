@@ -11,18 +11,12 @@ import android.view.MenuItem
 import com.nlefler.glucloser.actions.LogMealAction
 import com.nlefler.glucloser.dataSource.MealFactory
 import com.nlefler.glucloser.dataSource.PlaceFactory
-import com.nlefler.glucloser.models.BolusEventParcelable
-import com.nlefler.glucloser.models.Meal
-import com.nlefler.glucloser.models.MealDetailDelegate
-import com.nlefler.glucloser.models.MealParcelable
-import com.nlefler.glucloser.models.Place
-import com.nlefler.glucloser.models.PlaceParcelable
-import com.nlefler.glucloser.models.PlaceSelectionDelegate
+import com.nlefler.glucloser.models.*
 import com.nlefler.glucloser.ui.MealDetailsFragment
 import com.nlefler.glucloser.ui.PlaceSelectionFragment
 
 
-public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, MealDetailDelegate {
+public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, BolusEventDetailDelegate {
 
     private var logMealAction: LogMealAction? = null
 
@@ -73,7 +67,7 @@ public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, Meal
     }
 
     /** MealDetailDelegate  */
-    override fun bolusEventParcelableUpdated(bolusEventParcelable: BolusEventParcelable) {
+    override fun bolusEventDetailUpdated(bolusEventParcelable: BolusEventParcelable) {
         this.logMealAction!!.setMealParcelable(bolusEventParcelable as MealParcelable)
         finishLoggingMeal()
     }
@@ -83,7 +77,7 @@ public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, Meal
         val fragment = MealDetailsFragment()
 
         val args = Bundle()
-        args.putString(MealDetailsFragment.MealDetailPlaceNameBundleKey, placeParcelable.name)
+        args.putString(MealDetailsFragment.MealDetailPlaceNameBundleKey, placeParcelable.getName())
         args.putParcelable(MealDetailsFragment.MealDetailBolusEventParcelableBundleKey, MealParcelable())
         fragment.setArguments(args)
 

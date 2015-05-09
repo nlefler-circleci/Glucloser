@@ -68,10 +68,10 @@ public class PlaceFactory {
             }
 
             val parcelable = PlaceParcelable()
-            parcelable.name = venue.name
-            parcelable.foursquareId = venue.id
-            parcelable.latitude = venue.location.lat
-            parcelable.longitude = venue.location.lng
+            parcelable.setName(venue.name)
+            parcelable.setFoursquareId(venue.id)
+            parcelable.setLatitude(venue.location.lat)
+            parcelable.setLongitude(venue.location.lng)
 
             return parcelable
         }
@@ -86,10 +86,10 @@ public class PlaceFactory {
 
             realm.beginTransaction()
             val place = PlaceForFoursquareId(venue.id, realm, true)
-            place!!.name = venue.name
-            place.foursquareId = venue.id
-            place.latitude = venue.location.lat
-            place.longitude = venue.location.lng
+            place!!.setName(venue.name)
+            place.setFoursquareId(venue.id)
+            place.setLatitude(venue.location.lat)
+            place.setLongitude(venue.location.lng)
             realm.commitTransaction()
 
             return place
@@ -97,10 +97,10 @@ public class PlaceFactory {
 
         public fun ParcelableFromPlace(place: Place): PlaceParcelable? {
             val parcelable = PlaceParcelable()
-            parcelable.name = place.name
-            parcelable.foursquareId = place.foursquareId
-            parcelable.latitude = place.latitude
-            parcelable.longitude = place.longitude
+            parcelable.setName(place.getName())
+            parcelable.setFoursquareId(place.getFoursquareId())
+            parcelable.setLatitude(place.getLatitude())
+            parcelable.setLongitude(place.getLongitude())
 
             return parcelable
         }
@@ -109,11 +109,11 @@ public class PlaceFactory {
             val realm = Realm.getInstance(ctx)
 
             realm.beginTransaction()
-            val place = PlaceForFoursquareId(parcelable.foursquareId, realm, true)
-            place!!.name = parcelable.name
-            place.foursquareId = parcelable.foursquareId
-            place.latitude = parcelable.latitude
-            place.longitude = parcelable.longitude
+            val place = PlaceForFoursquareId(parcelable.getFoursquareId(), realm, true)
+            place!!.setName(parcelable.getName())
+            place.setFoursquareId(parcelable.getFoursquareId())
+            place.setLatitude(parcelable.getLatitude())
+            place.setLongitude(parcelable.getLongitude())
             realm.commitTransaction()
 
             return place
@@ -124,10 +124,10 @@ public class PlaceFactory {
                 return false
             }
 
-            val idOK = place1.foursquareId == place2.foursquareId
-            val nameOK = place1.name == place2.name
-            val latOK = place1.latitude == place2.latitude
-            val lonOK = place1.longitude == place2.longitude
+            val idOK = place1.getFoursquareId() == place2.getFoursquareId()
+            val nameOK = place1.getName() == place2.getName()
+            val latOK = place1.getLatitude() == place2.getLatitude()
+            val lonOK = place1.getLongitude() == place2.getLongitude()
 
             return idOK && nameOK && latOK && lonOK
         }
@@ -147,17 +147,17 @@ public class PlaceFactory {
 
             realm.beginTransaction()
             val place = PlaceForFoursquareId(foursquareId, realm, true)!!
-            if (place.foursquareId?.isEmpty() ?: false) {
-                place.foursquareId = foursquareId
+            if (place.getFoursquareId()?.isEmpty() ?: false) {
+                place.setFoursquareId(foursquareId)
             }
-            if (name != null && !name.isEmpty() && place.name != name) {
-                place.name = name
+            if (name != null && !name.isEmpty() && place.getName().equals(name)) {
+                place.setName(name)
             }
-            if (lat != 0f && place.latitude != lat) {
-                place.latitude = lat
+            if (lat != 0f && place.getLatitude() != lat) {
+                place.setLatitude(lat)
             }
-            if (lon != 0f && place.longitude != lon) {
-                place.longitude = lon
+            if (lon != 0f && place.getLongitude() != lon) {
+                place.setLongitude(lon)
             }
             realm.commitTransaction()
 
@@ -176,14 +176,14 @@ public class PlaceFactory {
                 Log.e(LOG_TAG, "Unable to create Parse object from Place, action null")
                 return
             }
-            if (place == null || place.foursquareId == null || place.foursquareId!!.isEmpty()) {
+            if (place == null || place.getFoursquareId()== null || place.getFoursquareId()!!.isEmpty()) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Place, place null or no Foursquare id")
                 action.call(null, false)
                 return
             }
 
             val parseQuery = ParseQuery.getQuery<ParseObject>(Place.ParseClassName)
-            parseQuery.whereEqualTo(Place.FoursquareIdFieldName, place.foursquareId)
+            parseQuery.whereEqualTo(Place.FoursquareIdFieldName, place.getFoursquareId())
 
             parseQuery.findInBackground(object : FindCallback<ParseObject>() {
                 override fun done(parseObjects: List<ParseObject>, e: ParseException) {
@@ -195,10 +195,10 @@ public class PlaceFactory {
                     } else {
                         parseObject = parseObjects.get(0)
                     }
-                    parseObject.put(Place.FoursquareIdFieldName, place.foursquareId)
-                    parseObject.put(Place.NameFieldName, place.name)
-                    parseObject.put(Place.LatitudeFieldName, place.latitude)
-                    parseObject.put(Place.LongitudeFieldName, place.longitude)
+                    parseObject.put(Place.FoursquareIdFieldName, place.getFoursquareId())
+                    parseObject.put(Place.NameFieldName, place.getName())
+                    parseObject.put(Place.LatitudeFieldName, place.getLatitude())
+                    parseObject.put(Place.LongitudeFieldName, place.getLongitude())
                     action.call(parseObject, created)
                 }
             })
@@ -221,13 +221,13 @@ public class PlaceFactory {
             }
 
             val placeParcelable = PlaceParcelable()
-            placeParcelable.foursquareId = checkInData.getVenueId()
-            placeParcelable.name = checkInData.getVenueName()
+            placeParcelable.setFoursquareId(checkInData.getVenueId())
+            placeParcelable.setName(checkInData.getVenueName())
             if (checkInData.getVenueLat() != 0f) {
-                placeParcelable.latitude = checkInData.getVenueLat()
+                placeParcelable.setLatitude(checkInData.getVenueLat())
             }
             if (checkInData.getVenueLon() != 0f) {
-                placeParcelable.longitude = checkInData.getVenueLon()
+                placeParcelable.setLongitude(checkInData.getVenueLon())
             }
 
             return placeParcelable
@@ -245,7 +245,7 @@ public class PlaceFactory {
 
             if (result == null && create) {
                 result = realm.createObject<Place>(javaClass<Place>())
-                result!!.foursquareId = id
+                result!!.setFoursquareId(id)
             }
 
             return result

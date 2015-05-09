@@ -1,11 +1,11 @@
 package com.nlefler.glucloser.dataSource
 
 import android.util.Log
-
 import com.nlefler.glucloser.models.BloodSugar
 import com.nlefler.glucloser.models.Meal
 import com.nlefler.glucloser.models.Place
 import com.nlefler.glucloser.models.Snack
+
 import com.parse.ParseException
 import com.parse.ParseObject
 import com.parse.SaveCallback
@@ -31,7 +31,7 @@ public class ParseUploader private() {
     }
 
     public fun uploadPlace(place: Place) {
-        val placeId = place.foursquareId!!
+        val placeId = place.getFoursquareId()!!
         this.getUploadedObjectObservable(placeId, place).subscribe(object : Action1<ParseObject> {
             override fun call(parseObject: ParseObject) {
                 parseObject.saveInBackground()
@@ -42,7 +42,7 @@ public class ParseUploader private() {
 
     public fun uploadSnack(snack: Snack) {
         val beforeSugar = snack.getBeforeSugar()
-        val beforeSugarId = beforeSugar?.id ?: null
+        val beforeSugarId = beforeSugar?.getId() ?: null
 
         var beforeSugarObservable: Observable<ParseObject>?
         if (beforeSugarId != null) {
@@ -52,7 +52,7 @@ public class ParseUploader private() {
                 private var beforeSugarParseObject: ParseObject? = null
 
                 override fun onCompleted() {
-                    val snackId = snack.snackId!!
+                    val snackId = snack.getSnackId()!!
                     getUploadedObjectObservable(snackId, snack, beforeSugarParseObject).subscribe(object : Action1<ParseObject> {
                         override fun call(snackObject: ParseObject) {
                             snackObject.saveInBackground()
@@ -74,11 +74,11 @@ public class ParseUploader private() {
     }
 
     public fun uploadMeal(meal: Meal) {
-        val place = meal.place!!
-        val placeId = place.foursquareId!!
+        val place = meal.getPlace()!!
+        val placeId = place.getFoursquareId()!!
 
         val beforeSugar = meal.getBeforeSugar()
-        val beforeSugarId = beforeSugar?.id ?: null
+        val beforeSugarId = beforeSugar?.getId() ?: null
 
         val placeFetchObservable = getUploadedObjectObservable(placeId, place)
         var beforeSugarObservable: Observable<ParseObject>? = null
@@ -98,7 +98,7 @@ public class ParseUploader private() {
             private var beforeSugarParseObject: ParseObject? = null
 
             override fun onCompleted() {
-                val mealId = meal.mealId!!
+                val mealId = meal.getMealId()!!
                 getUploadedObjectObservable(mealId, meal, placeParseObject, beforeSugarParseObject).subscribe(object : Action1<ParseObject> {
                     override fun call(mealObject: ParseObject) {
                         mealObject.saveInBackground()
@@ -125,7 +125,7 @@ public class ParseUploader private() {
     }
 
     public fun uploadBloodSugar(sugar: BloodSugar) {
-        val sugarId = sugar.id!!
+        val sugarId = sugar.getId()!!
         this.getUploadedObjectObservable(sugarId, sugar).subscribe(object : Action1<ParseObject> {
             override fun call(parseObject: ParseObject) {
                 parseObject.saveInBackground()

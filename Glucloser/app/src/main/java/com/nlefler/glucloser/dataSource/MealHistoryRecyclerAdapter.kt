@@ -56,7 +56,7 @@ public class MealHistoryRecyclerAdapter(private var meals: List<Meal>?) : Recycl
 
         val meal = this.meals!!.get(i)
         viewHolder.meal = meal
-        viewHolder.placeName.setText(meal.place?.name ?: "")
+        viewHolder.placeName.setText(meal.getPlace()?.getName() ?: "")
         viewHolder.carbsValue.setText("${meal.getCarbs()}")
         viewHolder.insulinValue.setText("${meal.getInsulin()}")
     }

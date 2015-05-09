@@ -2,11 +2,9 @@ package com.nlefler.glucloser.dataSource
 
 import android.content.Context
 import android.util.Log
-
-import com.nlefler.glucloser.models.BloodSugar
 import com.nlefler.glucloser.models.Meal
 import com.nlefler.glucloser.models.MealParcelable
-import com.nlefler.glucloser.models.Place
+
 import com.parse.FindCallback
 import com.parse.ParseException
 import com.parse.ParseObject
@@ -30,8 +28,8 @@ public class MealFactory {
             return false
         }
 
-        val idOK = meal1.mealId == meal2.mealId
-        val placeOK = PlaceFactory.ArePlacesEqual(meal1.place, meal2.place)
+        val idOK = meal1.getMealId() == meal2.getMealId()
+        val placeOK = PlaceFactory.ArePlacesEqual(meal1.getPlace(), meal2.getPlace())
         val carbsOK = meal1.getCarbs() == meal2.getCarbs()
         val insulinOK = meal1.getInsulin() == meal2.getInsulin()
         val correctionOK = meal1.isCorrection() == meal2.isCorrection()
@@ -88,12 +86,12 @@ public class MealFactory {
 
         public fun ParcelableFromMeal(meal: Meal): MealParcelable {
             val parcelable = MealParcelable()
-            if (meal.place != null) {
-                parcelable.placeParcelable = PlaceFactory.ParcelableFromPlace(meal.place!!)
+            if (meal.getPlace() != null) {
+                parcelable.setPlaceParcelable(PlaceFactory.ParcelableFromPlace(meal.getPlace()!!))
             }
             parcelable.setCarbs(meal.getCarbs())
             parcelable.setInsulin(meal.getInsulin())
-            parcelable.mealId = meal.mealId
+            parcelable.setMealId(meal.getMealId())
             parcelable.setCorrection(meal.isCorrection())
             if (meal.getBeforeSugar() != null) {
                 parcelable.setBeforeSugarParcelable(BloodSugarFactory.ParcelableFromBloodSugar(meal.getBeforeSugar()!!))
@@ -107,11 +105,11 @@ public class MealFactory {
             val realm = Realm.getInstance(ctx)
 
             realm.beginTransaction()
-            val meal = MealForMealId(parcelable.mealId, realm, true)!!
+            val meal = MealForMealId(parcelable.getMealId(), realm, true)!!
             meal.setInsulin(parcelable.getInsulin())
-            meal.mealId = parcelable.mealId
+            meal.setMealId(parcelable.getMealId())
             meal.setCarbs(parcelable.getCarbs())
-            meal.place = PlaceFactory.PlaceFromParcelable(parcelable.placeParcelable!!, ctx)
+            meal.setPlace(PlaceFactory.PlaceFromParcelable(parcelable.getPlaceParcelable()!!, ctx))
             meal.setCorrection(parcelable.isCorrection())
             if (parcelable.getBeforeSugarParcelable() != null) {
                 meal.setBeforeSugar(BloodSugarFactory.BloodSugarFromParcelable(parcelable.getBeforeSugarParcelable()!!, ctx))
@@ -152,8 +150,8 @@ public class MealFactory {
             if (meal.isCorrection() != correction) {
                 meal.setCorrection(correction)
             }
-            if (place != null && !PlaceFactory.ArePlacesEqual(place, meal.place)) {
-                meal.place = place
+            if (place != null && !PlaceFactory.ArePlacesEqual(place, meal.getPlace())) {
+                meal.setPlace(place)
             }
             if (mealDate != null) {
                 meal.setDate(mealDate)
@@ -174,14 +172,14 @@ public class MealFactory {
                 Log.e(LOG_TAG, "Unable to create Parse object from Meal, action null")
                 return
             }
-            if (meal.mealId?.isEmpty() ?: false) {
+            if (meal.getMealId()?.isEmpty() ?: false) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Meal, meal null or no id")
                 action.call(null, false)
                 return
             }
 
             val parseQuery = ParseQuery.getQuery<ParseObject>(Meal.ParseClassName)
-            parseQuery.whereEqualTo(Meal.MealIdFieldName, meal.mealId)
+            parseQuery.whereEqualTo(Meal.MealIdFieldName, meal.getMealId())
 
             parseQuery.findInBackground(object : FindCallback<ParseObject>() {
                 override fun done(parseObjects: List<ParseObject>, e: ParseException) {
@@ -193,7 +191,7 @@ public class MealFactory {
                     } else {
                         parseObject = parseObjects.get(0)
                     }
-                    parseObject.put(Meal.MealIdFieldName, meal.mealId)
+                    parseObject.put(Meal.MealIdFieldName, meal.getMealId())
                     if (placeObject != null) {
                         parseObject.put(Meal.PlaceFieldName, placeObject)
                     }
@@ -212,7 +210,7 @@ public class MealFactory {
         private fun MealForMealId(id: String?, realm: Realm, create: Boolean): Meal? {
             if (create && (id == null || id.isEmpty())) {
                 val meal = realm.createObject<Meal>(javaClass<Meal>())
-                meal.mealId = UUID.randomUUID().toString()
+                meal.setMealId(UUID.randomUUID().toString())
                 return meal
             }
 
@@ -223,7 +221,7 @@ public class MealFactory {
 
             if (result == null && create) {
                 result = realm.createObject<Meal>(javaClass<Meal>())
-                result!!.mealId = id
+                result!!.setMealId(id)
             }
 
             return result

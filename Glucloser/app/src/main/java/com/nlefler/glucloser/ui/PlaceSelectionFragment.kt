@@ -18,7 +18,6 @@ import com.nlefler.glucloser.R
 import com.nlefler.glucloser.actions.LogMealAction
 import com.nlefler.glucloser.dataSource.PlaceSelectionRecyclerAdapter
 import com.nlefler.glucloser.foursquare.FoursquarePlaceHelper
-import com.nlefler.glucloser.models.Place
 import com.nlefler.glucloser.models.PlaceParcelable
 import com.nlefler.glucloser.models.PlaceSelectionDelegate
 import com.nlefler.nlfoursquare.Model.Venue.NLFoursquareVenue

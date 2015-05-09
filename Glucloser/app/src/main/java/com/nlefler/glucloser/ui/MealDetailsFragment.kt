@@ -13,9 +13,8 @@ import android.widget.TextView
 
 import com.nlefler.glucloser.R
 import com.nlefler.glucloser.models.BloodSugarParcelable
+import com.nlefler.glucloser.models.BolusEventDetailDelegate
 import com.nlefler.glucloser.models.BolusEventParcelable
-import com.nlefler.glucloser.models.MealDetailDelegate
-import com.nlefler.glucloser.models.MealParcelable
 
 import java.util.Date
 
@@ -59,7 +58,7 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
 
     /** OnClickListener  */
     override fun onClick(view: View) {
-        if (getActivity() !is MealDetailDelegate || this.bolusEventParcelable == null) {
+        if (getActivity() !is BolusEventDetailDelegate || this.bolusEventParcelable == null) {
             return
         }
 
@@ -68,8 +67,8 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
         val beforeSugarString = this.beforeSugarValueField!!.getText().toString()
         if (!beforeSugarString.isEmpty()) {
             val beforeSugarParcelable = BloodSugarParcelable()
-            beforeSugarParcelable.date = this.bolusEventParcelable!!.getDate()
-            beforeSugarParcelable.value = Integer.valueOf(beforeSugarString)
+            beforeSugarParcelable.setDate(this.bolusEventParcelable!!.getDate())
+            beforeSugarParcelable.setValue(Integer.valueOf(beforeSugarString))
             this.bolusEventParcelable!!.setBeforeSugarParcelable(beforeSugarParcelable)
         }
 
@@ -81,7 +80,7 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
         }
         this.bolusEventParcelable!!.setCorrection(this.correctionValueBox!!.isSelected())
 
-        (getActivity() as MealDetailDelegate).bolusEventParcelableUpdated(this.bolusEventParcelable!!)
+        (getActivity() as BolusEventDetailDelegate).bolusEventDetailUpdated(this.bolusEventParcelable!!)
     }
 
     private fun getPlaceNameFromBundle(savedInstanceState: Bundle?, args: Bundle?, extras: Bundle?): String {

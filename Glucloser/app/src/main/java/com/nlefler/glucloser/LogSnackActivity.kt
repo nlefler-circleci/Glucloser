@@ -6,13 +6,13 @@ import android.view.Menu
 import android.view.MenuItem
 
 import com.nlefler.glucloser.actions.LogSnackAction
+import com.nlefler.glucloser.models.BolusEventDetailDelegate
 import com.nlefler.glucloser.models.BolusEventParcelable
-import com.nlefler.glucloser.models.MealDetailDelegate
 import com.nlefler.glucloser.models.SnackParcelable
 import com.nlefler.glucloser.ui.MealDetailsFragment
 
 
-public class LogSnackActivity : ActionBarActivity(), MealDetailDelegate {
+public class LogSnackActivity : ActionBarActivity(), BolusEventDetailDelegate {
 
     private var logSnackAction: LogSnackAction? = null
 
@@ -53,7 +53,7 @@ public class LogSnackActivity : ActionBarActivity(), MealDetailDelegate {
     }
 
     /** MealDetailDelegate  */
-    override fun bolusEventParcelableUpdated(bolusEventParcelable: BolusEventParcelable) {
+    override fun bolusEventDetailUpdated(bolusEventParcelable: BolusEventParcelable) {
         this.logSnackAction!!.snackParcelable = bolusEventParcelable as SnackParcelable
         this.logSnackAction!!.log()
         finish()

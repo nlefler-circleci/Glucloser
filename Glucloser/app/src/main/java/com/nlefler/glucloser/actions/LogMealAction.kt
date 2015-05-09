@@ -12,9 +12,7 @@ import com.nlefler.glucloser.dataSource.MealFactory
 import com.nlefler.glucloser.dataSource.ParseUploader
 import com.nlefler.glucloser.dataSource.PlaceFactory
 import com.nlefler.glucloser.models.BloodSugar
-import com.nlefler.glucloser.models.Meal
 import com.nlefler.glucloser.models.MealParcelable
-import com.nlefler.glucloser.models.Place
 import com.nlefler.glucloser.models.PlaceParcelable
 
 import java.util.Date
@@ -46,7 +44,7 @@ public class LogMealAction : Parcelable {
             return
         }
 
-        Log.d(LOG_TAG, "Logging meal at " + this.placeParcelable!!.name)
+        Log.d(LOG_TAG, "Logging meal at " + this.placeParcelable!!.getName())
 
         val sharedContext = GlucloserApplication.SharedApplication().getApplicationContext()
         val realm = Realm.getInstance(sharedContext)
@@ -63,7 +61,7 @@ public class LogMealAction : Parcelable {
         if (beforeSugar != null) {
             meal.setBeforeSugar(beforeSugar!!)
         }
-        meal.place = place
+        meal.setPlace(place)
         realm.commitTransaction()
 
         ParseUploader.SharedInstance().uploadPlace(place)
