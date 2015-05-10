@@ -10,7 +10,7 @@
     <string name="nav_drawer_open">Open</string>
     <string name="nav_drawer_closed">Closed</string>
 
-    <string name="title_activity_log_meal">Log Meal</string>
+    <string name="title_activity_log_meal">Log A Meal</string>
     <string name="carbs_noun">Carbs</string>
     <string name="insulin_noun">Insulin</string>
     <string name="blood_sugar_before_phrase">Blood Sugar Before</string>
@@ -21,5 +21,9 @@
 
     <string name="place_name_placeholder">Venue Name</string>
     <string name="numerical_placeholder">0</string>
+
+    <string name="title_activity_log_snack">Log A Snack</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

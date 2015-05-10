@@ -3,22 +3,18 @@ package com.nlefler.glucloser.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.nlefler.glucloser.GlucloserApplication;
-import com.nlefler.glucloser.dataSource.BloodSugarFactory;
-import com.nlefler.glucloser.dataSource.PlaceFactory;
-
 import java.util.Date;
 
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
-public class MealParcelable implements Parcelable {
+public class MealParcelable implements Parcelable, BolusEventParcelable {
     private String mealId;
-    private Date mealDate;
-    private Place place;
+    private Date date;
+    private PlaceParcelable placeParcelable;
     private int carbs;
     private float insulin;
-    private BloodSugar beforeSugar;
+    private BloodSugarParcelable beforeSugarParcelable;
     private boolean correction;
 
     public MealParcelable() {
@@ -33,20 +29,20 @@ public class MealParcelable implements Parcelable {
         this.mealId = mealId;
     }
 
-    public Date getMealDate() {
-        return mealDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setMealDate(Date mealDate) {
-        this.mealDate = mealDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public Place getPlace() {
-        return place;
+    public PlaceParcelable getPlaceParcelable() {
+        return placeParcelable;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setPlaceParcelable(PlaceParcelable place) {
+        this.placeParcelable = place;
     }
 
     public int getCarbs() {
@@ -65,7 +61,7 @@ public class MealParcelable implements Parcelable {
         this.insulin = insulin;
     }
 
-    public boolean getCorrection() {
+    public boolean isCorrection() {
         return this.correction;
     }
 
@@ -73,26 +69,23 @@ public class MealParcelable implements Parcelable {
         this.correction = correction;
     }
 
-    public BloodSugar getBeforeSugar() {
-        return beforeSugar;
+    public BloodSugarParcelable getBeforeSugarParcelable() {
+        return beforeSugarParcelable;
     }
 
-    public void setBeforeSugar(BloodSugar beforeSugar) {
-        this.beforeSugar = beforeSugar;
+    public void setBeforeSugarParcelable(BloodSugarParcelable beforeSugar) {
+        this.beforeSugarParcelable = beforeSugar;
     }
 
     /** Parcelable */
     protected MealParcelable(Parcel in) {
         mealId = in.readString();
-        place = PlaceFactory.PlaceFromParcelable((PlaceParcelable) in.readValue(PlaceParcelable.class.getClassLoader()),
-                GlucloserApplication.SharedApplication().getApplicationContext());
+        placeParcelable = (PlaceParcelable) in.readValue(PlaceParcelable.class.getClassLoader());
         carbs = in.readInt();
         insulin = in.readFloat();
         correction = in.readInt() != 0;
-        beforeSugar = BloodSugarFactory.BloodSugarFromParcelable(
-                (BloodSugarParcelable)in.readParcelable(BloodSugar.class.getClassLoader()),
-                GlucloserApplication.SharedApplication().getApplicationContext());
-        mealDate = new Date(in.readLong());
+        beforeSugarParcelable = (BloodSugarParcelable)in.readParcelable(BloodSugar.class.getClassLoader());
+        date = new Date(in.readLong());
     }
 
     @Override
@@ -103,12 +96,12 @@ public class MealParcelable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mealId);
-        dest.writeParcelable(PlaceFactory.ParcelableFromPlace(place), flags);
+        dest.writeParcelable(placeParcelable, flags);
         dest.writeInt(carbs);
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
-        dest.writeParcelable(BloodSugarFactory.ParcelableFromBloodSugar(beforeSugar), flags);
-        dest.writeLong(mealDate.getTime());
+        dest.writeParcelable(beforeSugarParcelable, flags);
+        dest.writeLong(date.getTime());
     }
 
     @SuppressWarnings("unused")

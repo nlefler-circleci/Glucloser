@@ -8,7 +8,7 @@ import io.realm.annotations.Ignore;
 /**
  * Created by Nathan Lefler on 12/11/14.
  */
-public class Meal extends RealmObject {
+public class Meal extends RealmObject implements BolusEvent {
     @Ignore
     public static final String ParseClassName = "Meal";
 
@@ -17,8 +17,8 @@ public class Meal extends RealmObject {
     private String mealId;
 
     @Ignore
-    public static final String MealDateFieldName = "mealDate";
-    private Date mealDate;
+    public static final String MealDateFieldName = "date";
+    private Date date;
 
     @Ignore
     public static final String PlaceFieldName = "place";
@@ -48,12 +48,12 @@ public class Meal extends RealmObject {
         this.mealId = mealId;
     }
 
-    public Date getMealDate() {
-        return mealDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setMealDate(Date mealDate) {
-        this.mealDate = mealDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
     public Place getPlace() {
         return place;
@@ -87,7 +87,7 @@ public class Meal extends RealmObject {
         this.beforeSugar = beforeSugar;
     }
 
-    public boolean getCorrection() {
+    public boolean isCorrection() {
         return this.correction;
     }
 
