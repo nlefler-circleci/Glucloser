@@ -150,7 +150,7 @@ public class ParseUploader private() {
                                 subscriber.onError(IllegalArgumentException("Invalid specific arguments for Meal"))
                                 return
                             }
-                            MealFactory.ParseObjectFromMeal(toUpload : Meal, args[0] as ParseObject, args[1] as ParseObject, createParseObjectReadyAction(subscriber))
+                            MealFactory.ParseObjectFromMeal(toUpload : Meal, args[0] as ParseObject?, args[1] as ParseObject?, createParseObjectReadyAction(subscriber))
                         }
                         is BloodSugar -> {
                             BloodSugarFactory.ParseObjectFromBloodSugar(toUpload : BloodSugar, createParseObjectReadyAction(subscriber))
@@ -160,7 +160,7 @@ public class ParseUploader private() {
                                 subscriber.onError(IllegalArgumentException("Invalid specific arguments for Snack"))
                                 return
                             }
-                            SnackFactory.ParseObjectFromSnack(toUpload : Snack, args[0] as ParseObject, createParseObjectReadyAction(subscriber))
+                            SnackFactory.ParseObjectFromSnack(toUpload : Snack, args[0] as ParseObject?, createParseObjectReadyAction(subscriber))
                         }
                         else -> {
                             subscriber.onError(IllegalArgumentException("Invalid type for upload object"))

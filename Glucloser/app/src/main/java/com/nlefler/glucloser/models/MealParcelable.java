@@ -102,7 +102,7 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
         dest.writeInt(correction ? 1 : 0);
         dest.writeParcelable(beforeSugarParcelable, flags);
         dest.writeLong(date.getTime());
-    }
+   }
 
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<MealParcelable> CREATOR = new Parcelable.Creator<MealParcelable>() {
