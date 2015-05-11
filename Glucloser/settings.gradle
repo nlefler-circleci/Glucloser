@@ -1,2 +1,3 @@
-include ':app', ':nlfoursquare', ':android-reactive-location'
+include ':app', ':android-reactive-location', ':libNLFoursquare'
 include ':foursquareoauthlibrary'
+project(':libNLFoursquare').projectDir = new File('nlfoursquare/libNLFoursquare')
