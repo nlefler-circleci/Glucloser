@@ -72,14 +72,12 @@ public class SnackFactory {
 
             val parseQuery = ParseQuery.getQuery<ParseObject>(Snack.ParseClassName)
             parseQuery.whereEqualTo(Snack.SnackIdFieldName, id)
-            parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-                override fun done(parseObjects: List<ParseObject>, e: ParseException) {
-                    if (!parseObjects.isEmpty()) {
-                        val snackFromParse = SnackFromParseObject(parseObjects.get(0), realm)
-                        action.call(snackFromParse)
-                    } else {
-                        action.call(null)
-                    }
+            parseQuery.findInBackground({parseObjects: List<ParseObject>, e: ParseException? ->
+                if (!parseObjects.isEmpty()) {
+                    val snackFromParse = SnackFromParseObject(parseObjects.get(0), realm)
+                    action.call(snackFromParse)
+                } else {
+                    action.call(null)
                 }
             })
         }
@@ -177,26 +175,24 @@ public class SnackFactory {
             val parseQuery = ParseQuery.getQuery<ParseObject>(Snack.ParseClassName)
             parseQuery.whereEqualTo(Snack.SnackIdFieldName, snack!!.getSnackId())
 
-            parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-                override fun done(parseObjects: List<ParseObject>, e: ParseException?) {
-                    val parseObject: ParseObject
-                    var created = false
-                    if (parseObjects.isEmpty()) {
-                        parseObject = ParseObject(Snack.ParseClassName)
-                        created = true
-                    } else {
-                        parseObject = parseObjects.get(0)
-                    }
-                    parseObject.put(Snack.SnackIdFieldName, snack.getSnackId())
-                    if (beforeSugarObject != null) {
-                        parseObject.put(Snack.BeforeSugarFieldName, beforeSugarObject)
-                    }
-                    parseObject.put(Snack.CorrectionFieldName, snack.isCorrection())
-                    parseObject.put(Snack.CarbsFieldName, snack.getCarbs())
-                    parseObject.put(Snack.InsulinFieldName, snack.getInsulin())
-                    parseObject.put(Snack.SnackDateFieldName, snack.getDate())
-                    action.call(parseObject, created)
+            parseQuery.findInBackground({parseObjects: List<ParseObject>, e: ParseException? ->
+                val parseObject: ParseObject
+                var created = false
+                if (parseObjects.isEmpty()) {
+                    parseObject = ParseObject(Snack.ParseClassName)
+                    created = true
+                } else {
+                    parseObject = parseObjects.get(0)
                 }
+                parseObject.put(Snack.SnackIdFieldName, snack.getSnackId())
+                if (beforeSugarObject != null) {
+                    parseObject.put(Snack.BeforeSugarFieldName, beforeSugarObject)
+                }
+                parseObject.put(Snack.CorrectionFieldName, snack.isCorrection())
+                parseObject.put(Snack.CarbsFieldName, snack.getCarbs())
+                parseObject.put(Snack.InsulinFieldName, snack.getInsulin())
+                parseObject.put(Snack.SnackDateFieldName, snack.getDate())
+                action.call(parseObject, created)
             })
         }
 

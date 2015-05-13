@@ -11,15 +11,20 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        multiDexEnabled = true
     }
     buildTypes {
+        debug {
+            minifyEnabled true
+        }
+
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     lintOptions {
-        abortOnError false
+        abortOnError true
     }
     sourceSets {
         main.java.srcDirs += 'src/main'
@@ -28,8 +33,8 @@ android {
 
 dependencies {
     compile 'com.parse.bolts:bolts-android:1.1.2'
-    compile fileTree(dir: 'libs/Parse-1.8.0', include: 'Parse-*.jar')
-    compile fileTree(dir: 'libs/Parse-1.8.0', include: 'ParseCrashReporting-*.jar')
+    compile fileTree(dir: 'libs/Parse-1.9.2', include: 'Parse-*.jar')
+    compile fileTree(dir: 'libs/Parse-1.9.2', include: 'ParseCrashReporting-*.jar')
 
     compile 'io.realm:realm-android:0.80.2'
 
@@ -43,6 +48,7 @@ dependencies {
     // Google
     compile 'com.google.android.gms:play-services:7.3.0'
     compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.google.code.gson:gson:2.3.1'

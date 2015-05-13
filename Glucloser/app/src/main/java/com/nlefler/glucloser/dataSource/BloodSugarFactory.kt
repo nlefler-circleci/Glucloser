@@ -110,21 +110,19 @@ public class BloodSugarFactory {
             val parseQuery = ParseQuery.getQuery<ParseObject>(BloodSugar.ParseClassName)
             parseQuery.whereEqualTo(BloodSugar.IdFieldName, bloodSugar.getId())
 
-            parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-                override fun done(parseObjects: List<ParseObject>, e: ParseException?) {
-                    val parseObject: ParseObject
-                    var created = false
-                    if (parseObjects.isEmpty()) {
-                        parseObject = ParseObject(BloodSugar.ParseClassName)
-                        created = true
-                    } else {
-                        parseObject = parseObjects.get(0)
-                    }
-                    parseObject.put(BloodSugar.IdFieldName, bloodSugar.getId())
-                    parseObject.put(BloodSugar.ValueFieldName, bloodSugar.getValue())
-                    parseObject.put(BloodSugar.DateFieldName, bloodSugar.getDate())
-                    action.call(parseObject, created)
+            parseQuery.findInBackground({parseObjects: List<ParseObject>, e: ParseException? ->
+                val parseObject: ParseObject
+                var created = false
+                if (parseObjects.isEmpty()) {
+                    parseObject = ParseObject(BloodSugar.ParseClassName)
+                    created = true
+                } else {
+                    parseObject = parseObjects.get(0)
                 }
+                parseObject.put(BloodSugar.IdFieldName, bloodSugar.getId())
+                parseObject.put(BloodSugar.ValueFieldName, bloodSugar.getValue())
+                parseObject.put(BloodSugar.DateFieldName, bloodSugar.getDate())
+                action.call(parseObject, created)
             })
         }
 
