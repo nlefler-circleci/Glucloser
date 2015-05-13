@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Base64
+import com.facebook.android.crypto.keychain.SharedPrefsBackedKeyChain
 
 import com.facebook.crypto.Crypto
 import com.facebook.crypto.Entity
 import com.facebook.crypto.exception.CryptoInitializationException
 import com.facebook.crypto.exception.KeyChainException
-import com.facebook.crypto.keychain.SharedPrefsBackedKeyChain
 import com.facebook.crypto.util.SystemNativeCryptoLibrary
 import com.foursquare.android.nativeoauth.FoursquareOAuth
 import com.foursquare.android.nativeoauth.model.AccessTokenResponse
