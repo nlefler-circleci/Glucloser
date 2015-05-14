@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Base64
+import com.facebook.android.crypto.keychain.SharedPrefsBackedKeyChain
 
 import com.facebook.crypto.Crypto
 import com.facebook.crypto.Entity
 import com.facebook.crypto.exception.CryptoInitializationException
 import com.facebook.crypto.exception.KeyChainException
-import com.facebook.crypto.keychain.SharedPrefsBackedKeyChain
 import com.facebook.crypto.util.SystemNativeCryptoLibrary
 import com.foursquare.android.nativeoauth.FoursquareOAuth
 import com.foursquare.android.nativeoauth.model.AccessTokenResponse
@@ -79,7 +79,7 @@ public class FoursquareAuthManager private() {
         }
         val entity = Entity(CONCEAL_ENTITY_NAME)
         try {
-            val encryptedToken = this.crypto.encrypt(token.getBytes(), entity)
+            val encryptedToken = this.crypto.encrypt(token.toByteArray(), entity)
             val encryptedBase64Token = Base64.encodeToString(encryptedToken, Base64.DEFAULT)
             val sharedPreferences = ctx.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()

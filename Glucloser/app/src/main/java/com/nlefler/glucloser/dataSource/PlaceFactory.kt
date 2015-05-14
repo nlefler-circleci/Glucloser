@@ -48,15 +48,12 @@ public class PlaceFactory {
 
             val parseQuery = ParseQuery.getQuery<ParseObject>(Place.ParseClassName)
             parseQuery.whereEqualTo(Place.FoursquareIdFieldName, id)
-            parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-
-                override fun done(parseObjects: List<ParseObject>, e: ParseException) {
-                    if (!parseObjects.isEmpty()) {
-                        val placeFromParse = PlaceFromParseObject(parseObjects.get(0), realm)
-                        action.call(placeFromParse)
-                    } else {
-                        action.call(null)
-                    }
+            parseQuery.findInBackground({parseObjects: List<ParseObject>, e: ParseException? ->
+                if (!parseObjects.isEmpty()) {
+                    val placeFromParse = PlaceFromParseObject(parseObjects.get(0), realm)
+                    action.call(placeFromParse)
+                } else {
+                    action.call(null)
                 }
             })
         }
@@ -185,22 +182,20 @@ public class PlaceFactory {
             val parseQuery = ParseQuery.getQuery<ParseObject>(Place.ParseClassName)
             parseQuery.whereEqualTo(Place.FoursquareIdFieldName, place.getFoursquareId())
 
-            parseQuery.findInBackground(object : FindCallback<ParseObject>() {
-                override fun done(parseObjects: List<ParseObject>, e: ParseException?) {
-                    val parseObject: ParseObject
-                    var created = false
-                    if (parseObjects.isEmpty()) {
-                        parseObject = ParseObject(Place.ParseClassName)
-                        created = true
-                    } else {
-                        parseObject = parseObjects.get(0)
-                    }
-                    parseObject.put(Place.FoursquareIdFieldName, place.getFoursquareId())
-                    parseObject.put(Place.NameFieldName, place.getName())
-                    parseObject.put(Place.LatitudeFieldName, place.getLatitude())
-                    parseObject.put(Place.LongitudeFieldName, place.getLongitude())
-                    action.call(parseObject, created)
+            parseQuery.findInBackground({parseObjects: List<ParseObject>, e: ParseException? ->
+                val parseObject: ParseObject
+                var created = false
+                if (parseObjects.isEmpty()) {
+                    parseObject = ParseObject(Place.ParseClassName)
+                    created = true
+                } else {
+                    parseObject = parseObjects.get(0)
                 }
+                parseObject.put(Place.FoursquareIdFieldName, place.getFoursquareId())
+                parseObject.put(Place.NameFieldName, place.getName())
+                parseObject.put(Place.LatitudeFieldName, place.getLatitude())
+                parseObject.put(Place.LongitudeFieldName, place.getLongitude())
+                action.call(parseObject, created)
             })
         }
 

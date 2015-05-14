@@ -182,14 +182,12 @@ public class ParseUploader private() {
                 }
 
                 if (created!!) {
-                    parseObject.saveInBackground(object : SaveCallback() {
-                        override fun done(e: ParseException?) {
-                            if (e == null) {
-                                subscriber.onNext(parseObject)
-                                subscriber.onCompleted()
-                            } else {
-                                subscriber.onError(e)
-                            }
+                    parseObject.saveInBackground({e: ParseException? ->
+                        if (e == null) {
+                            subscriber.onNext(parseObject)
+                            subscriber.onCompleted()
+                        } else {
+                            subscriber.onError(e)
                         }
                     })
                 } else {

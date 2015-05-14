@@ -2,47 +2,50 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "com.nlefler.glucloser"
         minSdkVersion 21
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        multiDexEnabled = true
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     lintOptions {
-        abortOnError false
+        abortOnError true
     }
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += 'src/main'
     }
 }
 
 dependencies {
     compile 'com.parse.bolts:bolts-android:1.1.2'
-    compile fileTree(dir: 'libs/Parse-1.8.0', include: 'Parse-*.jar')
-    compile fileTree(dir: 'libs/Parse-1.8.0', include: 'ParseCrashReporting-*.jar')
+    compile fileTree(dir: 'libs/Parse-1.9.2', include: 'Parse-*.jar')
+    compile fileTree(dir: 'libs/Parse-1.9.2', include: 'ParseCrashReporting-*.jar')
 
     compile 'io.realm:realm-android:0.80.2'
 
     compile 'io.reactivex:rxandroid:0.23.0'
 
-    compile 'com.facebook.conceal:conceal:1.0.0@aar'
+    compile 'com.facebook.conceal:conceal:1.0.1@aar'
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
+//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
 
     // Google
-    compile 'com.google.android.gms:play-services:7.0.0'
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.google.android.gms:play-services-gcm:7.3.0'
+    compile 'com.google.android.gms:play-services-maps:7.3.0'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.google.code.gson:gson:2.3.1'
@@ -55,15 +58,17 @@ dependencies {
 
     // UI
     compile 'com.getbase:floatingactionbutton:1.9.0'
-    compile 'com.github.navasmdc:MaterialDesign:1.0@aar'
+//    compile 'com.github.navasmdc:MaterialDesign:1.0@aar'
 
-    // Project
-    compile project(':nlfoursquare')
-    compile project(':android-reactive-location')
-    compile project(':foursquareoauthlibrary')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+    // Project
+    compile project(':libNLFoursquare')
+    compile project(':android-reactive-location')
+    compile project(':foursquareoauthlibrary')
 }
+
 buildscript {
     ext.kotlin_version = '0.11.91.4'
     repositories {
@@ -73,6 +78,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+
 repositories {
     mavenCentral()
 }
