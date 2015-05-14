@@ -39,4 +39,4 @@ before_script:
       - adb shell input keyevent 82 &
 script:
       - cd Glucloser
-      - ./gradlew clean build connectedCheck --stacktrace --info
+      - ./gradlew clean build connectedCheck --stacktrace 
