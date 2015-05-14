@@ -12,7 +12,7 @@ import com.parse.ParseCrashReporting
 import com.parse.ParseException
 import com.parse.ParsePush
 import com.parse.SaveCallback
-//import com.squareup.leakcanary.LeakCanary
+import com.squareup.leakcanary.LeakCanary
 
 /**
  * Created by Nathan Lefler on 12/12/14.
@@ -28,7 +28,7 @@ public class GlucloserApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-//        LeakCanary.install(this);
+        LeakCanary.install(this);
         _sharedApplication = this
 
         if (!Debug.isDebuggerConnected()) {
