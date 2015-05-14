@@ -21,6 +21,8 @@ android {
     }
     lintOptions {
         abortOnError true
+        // Realm references javax
+        disable 'InvalidPackage'
     }
     sourceSets {
         main.java.srcDirs += 'src/main'
@@ -34,6 +36,7 @@ dependencies {
 
     compile 'io.realm:realm-android:0.80.2'
 
+    compile 'io.reactivex:rxjava:1.0.10'
     compile 'io.reactivex:rxandroid:0.23.0'
 
     compile 'com.facebook.conceal:conceal:1.0.1@aar'
@@ -72,7 +75,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Location
-    // compile 'pl.charmas.android:android-reactive-location:0.2@aar'
+     compile 'pl.charmas.android:android-reactive-location:0.6@aar'
 
     // UI
     compile 'com.getbase:floatingactionbutton:1.9.0'
@@ -83,7 +86,6 @@ dependencies {
 
     // Project
     compile project(':libNLFoursquare')
-    compile project(':android-reactive-location')
     compile project(':foursquareoauthlibrary')
 }
 
