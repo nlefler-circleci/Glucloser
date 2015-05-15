@@ -15,12 +15,14 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     lintOptions {
         abortOnError true
+        // Realm references javax
+        disable 'InvalidPackage'
     }
     sourceSets {
         main.java.srcDirs += 'src/main'
@@ -34,6 +36,7 @@ dependencies {
 
     compile 'io.realm:realm-android:0.80.2'
 
+    compile 'io.reactivex:rxjava:1.0.10'
     compile 'io.reactivex:rxandroid:0.23.0'
 
     compile 'com.facebook.conceal:conceal:1.0.1@aar'
@@ -43,8 +46,25 @@ dependencies {
 
     // Google
 //    compile 'com.google.android.gms:play-services:7.3.0'
+    compile 'com.google.android.gms:play-services-plus:7.3.0'
+    compile 'com.google.android.gms:play-services-identity:7.3.0'
+    compile 'com.google.android.gms:play-services-base:7.3.0'
+    compile 'com.google.android.gms:play-services-appindexing:7.3.0'
+    compile 'com.google.android.gms:play-services-analytics:7.3.0'
+    compile 'com.google.android.gms:play-services-cast:7.3.0'
     compile 'com.google.android.gms:play-services-gcm:7.3.0'
+    compile 'com.google.android.gms:play-services-drive:7.3.0'
+    compile 'com.google.android.gms:play-services-fitness:7.3.0'
+    compile 'com.google.android.gms:play-services-location:7.3.0'
     compile 'com.google.android.gms:play-services-maps:7.3.0'
+    compile 'com.google.android.gms:play-services-ads:7.3.0'
+    compile 'com.google.android.gms:play-services-nearby:7.3.0'
+    compile 'com.google.android.gms:play-services-panorama:7.3.0'
+    compile 'com.google.android.gms:play-services-games:7.3.0'
+    compile 'com.google.android.gms:play-services-safetynet:7.3.0'
+    compile 'com.google.android.gms:play-services-wallet:7.3.0'
+    compile 'com.google.android.gms:play-services-wearable:7.3.0'
+
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:cardview-v7:21.0.0'
@@ -55,7 +75,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Location
-    // compile 'pl.charmas.android:android-reactive-location:0.2@aar'
+     compile 'pl.charmas.android:android-reactive-location:0.6@aar'
 
     // UI
     compile 'com.getbase:floatingactionbutton:1.9.0'
@@ -66,7 +86,6 @@ dependencies {
 
     // Project
     compile project(':libNLFoursquare')
-    compile project(':android-reactive-location')
     compile project(':foursquareoauthlibrary')
 }
 
