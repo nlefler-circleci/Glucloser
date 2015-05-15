@@ -29,7 +29,9 @@ import com.getbase.floatingactionbutton.FloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter
 import com.nlefler.glucloser.foursquare.FoursquareAuthManager
+import com.nlefler.glucloser.models.BolusEvent
 import com.nlefler.glucloser.models.Meal
+import com.nlefler.glucloser.models.Snack
 import com.nlefler.glucloser.ui.DividerItemDecoration
 import com.parse.ParseAnalytics
 
@@ -38,6 +40,9 @@ import java.util.ArrayList
 import io.realm.Realm
 import io.realm.RealmQuery
 import io.realm.RealmResults
+import java.util.Collections
+import java.util.Comparator
+import java.util.TreeSet
 
 
 public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener {
@@ -171,8 +176,24 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
 
         private fun updateMealHistory() {
             val realm = Realm.getInstance(getActivity())
-            val results = realm.allObjectsSorted(javaClass<Meal>(), Meal.MealDateFieldName, false)
-            this.mealHistoryAdapter!!.setMeals(results)
+            val mealResults = realm.allObjectsSorted(javaClass<Meal>(), Meal.MealDateFieldName, false)
+            val snackResults = realm.allObjectsSorted(javaClass<Snack>(), Snack.SnackDateFieldName, false)
+
+            val comparator = object: Comparator<BolusEvent> {
+                override fun compare(a: BolusEvent, b: BolusEvent): Int {
+                    return -1 * a.getDate().compareTo(b.getDate())
+                }
+
+                override fun equals(other: Any?): Boolean {
+                    return other == this
+                }
+            }
+            val sortedResults = ArrayList<BolusEvent>()
+            sortedResults.addAll(mealResults)
+            sortedResults.addAll(snackResults)
+            Collections.sort(sortedResults, comparator)
+
+            this.mealHistoryAdapter!!.setEvents(sortedResults)
         }
 
         companion object {

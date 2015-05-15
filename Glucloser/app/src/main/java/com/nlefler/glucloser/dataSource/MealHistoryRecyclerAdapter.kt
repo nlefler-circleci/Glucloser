@@ -5,17 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.nlefler.glucloser.GlucloserApplication
 
 import com.nlefler.glucloser.R
+import com.nlefler.glucloser.models.BolusEvent
 import com.nlefler.glucloser.models.Meal
 
 /**
  * Created by Nathan Lefler on 12/25/14.
  */
-public class MealHistoryRecyclerAdapter(private var meals: List<Meal>?) : RecyclerView.Adapter<MealHistoryRecyclerAdapter.ViewHolder>() {
+public class MealHistoryRecyclerAdapter(private var bolusEvents: List<BolusEvent>?) : RecyclerView.Adapter<MealHistoryRecyclerAdapter.ViewHolder>() {
 
     public class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        internal var meal: Meal? = null
+        internal var bolusEvent: BolusEvent? = null
         internal var placeName: TextView
         internal var carbsValue: TextView
         internal var insulinValue: TextView
@@ -34,8 +36,8 @@ public class MealHistoryRecyclerAdapter(private var meals: List<Meal>?) : Recycl
         }
     }
 
-    public fun setMeals(meals: List<Meal>) {
-        this.meals = meals
+    public fun setEvents(events: List<BolusEvent>) {
+        this.bolusEvents = events
         notifyDataSetChanged()
     }
 
@@ -50,18 +52,23 @@ public class MealHistoryRecyclerAdapter(private var meals: List<Meal>?) : Recycl
 
     // Replaces the contents of a view (invoked by the view holder)
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        if (i >= this.meals!!.size()) {
+        if (i >= this.bolusEvents!!.size()) {
             return
         }
 
-        val meal = this.meals!!.get(i)
-        viewHolder.meal = meal
-        viewHolder.placeName.setText(meal.getPlace()?.getName() ?: "")
-        viewHolder.carbsValue.setText("${meal.getCarbs()}")
-        viewHolder.insulinValue.setText("${meal.getInsulin()}")
+        val bolusEvent = this.bolusEvents!!.get(i)
+        viewHolder.bolusEvent = bolusEvent
+        if (bolusEvent is Meal) {
+            viewHolder.placeName.setText(bolusEvent.getPlace()?.getName() ?: "")
+        }
+        else {
+            viewHolder.placeName.setText(GlucloserApplication.SharedApplication().getString(R.string.snack))
+        }
+        viewHolder.carbsValue.setText("${bolusEvent.getCarbs()}")
+        viewHolder.insulinValue.setText("${bolusEvent.getInsulin()}")
     }
 
     override fun getItemCount(): Int {
-        return this.meals!!.size()
+        return this.bolusEvents!!.size()
     }
 }
