@@ -56,7 +56,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
         super<ActionBarActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, HistoryListFragment()).commit()
+            getSupportFragmentManager().beginTransaction().add(R.id.container, HistoryListFragment(), HistoryFragmentId).commit()
         }
 
         this.navBarItems = array(getString(R.string.nav_drawer_item_home), getString(R.string.nav_drawer_item_foursquare_login))
@@ -127,6 +127,9 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             FoursquareAuthManager.FOURSQUARE_TOKEN_EXCHG_INTENT_CODE -> {
                 FoursquareAuthManager.SharedManager().gotTokenExchangeResponse(this, resultCode, data ?: Intent())
             }
+            LogMealActivityIntentCode, LogSnackActivityIntentCode -> {
+                (getSupportFragmentManager().findFragmentByTag(HistoryFragmentId) as HistoryListFragment).updateMealHistory()
+            }
         }
     }
 
@@ -151,12 +154,14 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             this.mealHistoryListView!!.setAdapter(this.mealHistoryAdapter)
             this.mealHistoryListView!!.addItemDecoration(DividerItemDecoration(getActivity()))
 
+            val activity = getActivity();
+
             val floatingActionsMenu = rootView.findViewById(R.id.main_floating_action_menu) as FloatingActionsMenu
             val logMealButton = rootView.findViewById(R.id.fab_log_meal_item) as FloatingActionButton
             logMealButton.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View) {
                     val intent = Intent(view.getContext(), javaClass<LogMealActivity>())
-                    view.getContext().startActivity(intent)
+                    activity.startActivityForResult(intent, LogMealActivityIntentCode)
                     floatingActionsMenu.collapse()
                 }
             })
@@ -164,7 +169,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             logSnackButton.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View) {
                     val intent = Intent(view.getContext(), javaClass<LogSnackActivity>())
-                    view.getContext().startActivity(intent)
+                    activity.startActivityForResult(intent, LogSnackActivityIntentCode)
                     floatingActionsMenu.collapse()
                 }
             })
@@ -174,7 +179,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             return rootView
         }
 
-        private fun updateMealHistory() {
+        internal fun updateMealHistory() {
             val realm = Realm.getInstance(getActivity())
             val mealResults = realm.allObjectsSorted(javaClass<Meal>(), Meal.MealDateFieldName, false)
             val snackResults = realm.allObjectsSorted(javaClass<Snack>(), Snack.SnackDateFieldName, false)
@@ -203,5 +208,8 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
 
     companion object {
         private val LOG_TAG = "MainActivity"
+        protected val LogMealActivityIntentCode: Int = 4136;
+        protected val LogSnackActivityIntentCode: Int = 2416;
+        protected val HistoryFragmentId: String = "HistoryFragmentId"
     }
 }
