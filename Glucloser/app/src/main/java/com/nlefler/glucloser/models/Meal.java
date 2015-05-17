@@ -8,7 +8,7 @@ import io.realm.annotations.Ignore;
 /**
  * Created by Nathan Lefler on 12/11/14.
  */
-public class Meal extends RealmObject implements BolusEvent {
+public class Meal extends RealmObject implements BolusEvent, HasPlace {
     @Ignore
     public static final String ParseClassName = "Meal";
 

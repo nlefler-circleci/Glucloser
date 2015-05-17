@@ -13,8 +13,9 @@
     <string name="title_activity_log_meal">Log A Meal</string>
     <string name="carbs_noun">Carbs</string>
     <string name="insulin_noun">Insulin</string>
-    <string name="blood_sugar_before_phrase">Blood Sugar Before</string>
+    <string name="blood_sugar_before_phrase">Blood Sugar</string>
     <string name="correction_noun">Correction</string>
+    <string name="add_food_verb">Add Food</string>
     <string name="save_meal_verb">Save</string>
 
     <string name="insulin_unit_abrev_units">u</string>
@@ -25,4 +26,7 @@
     <string name="title_activity_log_snack">Log A Snack</string>
 
     <string name="snack">Snack</string>
+
+    <string name="food_list_item_name_placeholder">Food Name</string>
+    <string name="food_list_item_carbs_placeholder">Carbs</string>
 </resources>

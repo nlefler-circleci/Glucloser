@@ -12,7 +12,7 @@ import com.nlefler.glucloser.actions.LogMealAction
 import com.nlefler.glucloser.dataSource.MealFactory
 import com.nlefler.glucloser.dataSource.PlaceFactory
 import com.nlefler.glucloser.models.*
-import com.nlefler.glucloser.ui.MealDetailsFragment
+import com.nlefler.glucloser.ui.BolusEventDetailsFragment
 import com.nlefler.glucloser.ui.PlaceSelectionFragment
 
 
@@ -74,11 +74,11 @@ public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, Bolu
 
     /** Helpers  */
     private fun switchToMealEditFragment(placeParcelable: PlaceParcelable) {
-        val fragment = MealDetailsFragment()
+        val fragment = BolusEventDetailsFragment()
 
         val args = Bundle()
-        args.putString(MealDetailsFragment.MealDetailPlaceNameBundleKey, placeParcelable.getName())
-        args.putParcelable(MealDetailsFragment.MealDetailBolusEventParcelableBundleKey, MealParcelable())
+        args.putString(BolusEventDetailsFragment.BolusEventDetailPlaceNameBundleKey, placeParcelable.getName())
+        args.putParcelable(BolusEventDetailsFragment.BolusEventDetailBolusEventParcelableBundleKey, MealParcelable())
         fragment.setArguments(args)
 
         getSupportFragmentManager().beginTransaction().replace(R.id.log_meal_activity_container, fragment).addToBackStack(null).commit()

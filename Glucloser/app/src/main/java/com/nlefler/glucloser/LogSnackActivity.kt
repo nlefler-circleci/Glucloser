@@ -9,7 +9,7 @@ import com.nlefler.glucloser.actions.LogSnackAction
 import com.nlefler.glucloser.models.BolusEventDetailDelegate
 import com.nlefler.glucloser.models.BolusEventParcelable
 import com.nlefler.glucloser.models.SnackParcelable
-import com.nlefler.glucloser.ui.MealDetailsFragment
+import com.nlefler.glucloser.ui.BolusEventDetailsFragment
 
 
 public class LogSnackActivity : ActionBarActivity(), BolusEventDetailDelegate {
@@ -20,9 +20,9 @@ public class LogSnackActivity : ActionBarActivity(), BolusEventDetailDelegate {
         super<ActionBarActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_snack)
 
-        val fragment = MealDetailsFragment()
+        val fragment = BolusEventDetailsFragment()
         val args = Bundle()
-        args.putParcelable(MealDetailsFragment.MealDetailBolusEventParcelableBundleKey, SnackParcelable())
+        args.putParcelable(BolusEventDetailsFragment.BolusEventDetailBolusEventParcelableBundleKey, SnackParcelable())
         fragment.setArguments(args)
 
         this.logSnackAction = LogSnackAction()

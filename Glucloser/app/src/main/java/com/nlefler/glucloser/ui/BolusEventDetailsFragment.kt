@@ -3,6 +3,8 @@ package com.nlefler.glucloser.ui
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +14,16 @@ import android.widget.EditText
 import android.widget.TextView
 
 import com.nlefler.glucloser.R
-import com.nlefler.glucloser.models.BloodSugarParcelable
-import com.nlefler.glucloser.models.BolusEventDetailDelegate
-import com.nlefler.glucloser.models.BolusEventParcelable
+import com.nlefler.glucloser.dataSource.FoodListRecyclerAdapter
+import com.nlefler.glucloser.models.*
+import java.util.ArrayList
 
 import java.util.Date
 
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
-public class MealDetailsFragment : Fragment(), View.OnClickListener {
+public class BolusEventDetailsFragment : Fragment(), View.OnClickListener {
 
     private var placeName: String? = null
     private var bolusEventParcelable: BolusEventParcelable? = null
@@ -31,6 +33,10 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
     private var beforeSugarValueField: EditText? = null
     private var correctionValueBox: CheckBox? = null
 
+    private var foodListView: RecyclerView? = null
+    private var foodListLayoutManager: RecyclerView.LayoutManager? = null
+    private var foodListAdapter: FoodListRecyclerAdapter? = null
+
     override fun onCreate(bundle: Bundle?) {
         super<Fragment>.onCreate(bundle)
 
@@ -39,11 +45,11 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val rootView = inflater!!.inflate(R.layout.fragment_meal_edit_details, container, false)
+        val rootView = inflater!!.inflate(R.layout.fragment_bolus_event_edit_details, container, false)
 
         val placeNameField = rootView.findViewById(R.id.meal_edit_detail_place_name) as TextView
-        this.carbValueField = rootView.findViewById(R.id.meal_edit_detail_carb_value) as EditText
-        this.insulinValueField = rootView.findViewById(R.id.meal_edit_detail_insulin_value) as EditText
+        this.carbValueField = rootView.findViewById(R.id.meal_edit_detail_total_carb_value) as EditText
+        this.insulinValueField = rootView.findViewById(R.id.meal_edit_detail_total_insulin_value) as EditText
         this.beforeSugarValueField = rootView.findViewById(R.id.meal_edit_detail_blood_sugar_before_value) as EditText
         this.correctionValueBox = rootView.findViewById(R.id.meal_edit_detail_correction_value) as CheckBox
         val saveButton = rootView.findViewById(R.id.meal_edit_detail_save_button) as Button
@@ -52,6 +58,15 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
         if (this.placeName != null) {
             placeNameField.setText(this.placeName)
         }
+
+        this.foodListView = rootView.findViewById(R.id.bolus_event_detail_food_list) as RecyclerView
+
+        this.foodListLayoutManager = LinearLayoutManager(getActivity())
+        this.foodListView!!.setLayoutManager(this.foodListLayoutManager)
+
+        this.foodListAdapter = FoodListRecyclerAdapter(ArrayList<Food>())
+        this.foodListView!!.setAdapter(this.foodListAdapter)
+        this.foodListView!!.addItemDecoration(DividerItemDecoration(getActivity()))
 
         return rootView
     }
@@ -85,8 +100,8 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
 
     private fun getPlaceNameFromBundle(savedInstanceState: Bundle?, args: Bundle?, extras: Bundle?): String {
         for (bundle in array<Bundle?>(savedInstanceState, args, extras)) {
-            if (bundle?.getParcelable<Parcelable>(MealDetailPlaceNameBundleKey) ?: null!= null) {
-                return bundle?.getString(MealDetailPlaceNameBundleKey) ?: ""
+            if (bundle?.getParcelable<Parcelable>(BolusEventDetailPlaceNameBundleKey) ?: null!= null) {
+                return bundle?.getString(BolusEventDetailPlaceNameBundleKey) ?: ""
             }
         }
 
@@ -95,17 +110,17 @@ public class MealDetailsFragment : Fragment(), View.OnClickListener {
 
     private fun getBolusEventParcelableFromBundle(savedInstanceState: Bundle?, args: Bundle?, extras: Bundle?): BolusEventParcelable? {
         for (bundle in array<Bundle?>(savedInstanceState, args, extras)) {
-            if (bundle?.containsKey(MealDetailBolusEventParcelableBundleKey) ?: null != null) {
-                return bundle!!.getParcelable<Parcelable>(MealDetailBolusEventParcelableBundleKey) as BolusEventParcelable?
+            if (bundle?.containsKey(BolusEventDetailBolusEventParcelableBundleKey) ?: null != null) {
+                return bundle!!.getParcelable<Parcelable>(BolusEventDetailBolusEventParcelableBundleKey) as BolusEventParcelable?
             }
         }
         return null
     }
 
     companion object {
-        private val LOG_TAG = "MealDetailsFragment"
+        private val LOG_TAG = "BolusEventDetailsFragment"
 
-        public val MealDetailPlaceNameBundleKey: String = "MealDetailPlaceNameBundleKey"
-        public val MealDetailBolusEventParcelableBundleKey: String = "MealDetailBolusEventParcelableBundleKey"
+        public val BolusEventDetailPlaceNameBundleKey: String = "MealDetailPlaceNameBundleKey"
+        public val BolusEventDetailBolusEventParcelableBundleKey: String = "MealDetailBolusEventParcelableBundleKey"
     }
 }
