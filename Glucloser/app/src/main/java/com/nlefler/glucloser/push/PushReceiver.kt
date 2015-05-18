@@ -8,7 +8,7 @@ import android.os.Build
 import android.support.v4.app.TaskStackBuilder
 import android.util.Log
 
-import com.nlefler.glucloser.MainActivity
+import com.nlefler.glucloser.activities.MainActivity
 import com.parse.ParseAnalytics
 import com.parse.ParsePushBroadcastReceiver
 

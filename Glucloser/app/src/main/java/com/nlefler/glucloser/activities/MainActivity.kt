@@ -1,32 +1,21 @@
-package com.nlefler.glucloser
+package com.nlefler.glucloser.activities
 
-import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Outline
-import android.os.Build
+import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarActivity
-import android.support.v4.app.Fragment
-import android.os.Bundle
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewOutlineProvider
-import android.widget.Adapter
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
-
 import com.getbase.floatingactionbutton.FloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
+import com.nlefler.glucloser.R
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter
 import com.nlefler.glucloser.foursquare.FoursquareAuthManager
 import com.nlefler.glucloser.models.BolusEvent
@@ -34,16 +23,10 @@ import com.nlefler.glucloser.models.Meal
 import com.nlefler.glucloser.models.Snack
 import com.nlefler.glucloser.ui.DividerItemDecoration
 import com.parse.ParseAnalytics
-
-import java.util.ArrayList
-
 import io.realm.Realm
-import io.realm.RealmQuery
-import io.realm.RealmResults
+import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
-import java.util.TreeSet
-
 
 public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener {
 

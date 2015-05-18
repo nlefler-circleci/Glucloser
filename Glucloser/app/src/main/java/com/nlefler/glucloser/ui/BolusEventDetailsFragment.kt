@@ -1,5 +1,6 @@
 package com.nlefler.glucloser.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
@@ -14,16 +15,17 @@ import android.widget.EditText
 import android.widget.TextView
 
 import com.nlefler.glucloser.R
+import com.nlefler.glucloser.activities.LogFoodActivity
 import com.nlefler.glucloser.dataSource.FoodListRecyclerAdapter
 import com.nlefler.glucloser.models.*
-import java.util.ArrayList
 
+import java.util.ArrayList
 import java.util.Date
 
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
-public class BolusEventDetailsFragment : Fragment(), View.OnClickListener {
+public class BolusEventDetailsFragment : Fragment() {
 
     private var placeName: String? = null
     private var bolusEventParcelable: BolusEventParcelable? = null
@@ -52,8 +54,12 @@ public class BolusEventDetailsFragment : Fragment(), View.OnClickListener {
         this.insulinValueField = rootView.findViewById(R.id.meal_edit_detail_total_insulin_value) as EditText
         this.beforeSugarValueField = rootView.findViewById(R.id.meal_edit_detail_blood_sugar_before_value) as EditText
         this.correctionValueBox = rootView.findViewById(R.id.meal_edit_detail_correction_value) as CheckBox
+
+        val addFoodButton = rootView.findViewById(R.id.meal_edit_detail_add_food_button) as Button
+        addFoodButton.setOnClickListener {v: View -> addFoodClicked(v) }
+
         val saveButton = rootView.findViewById(R.id.meal_edit_detail_save_button) as Button
-        saveButton.setOnClickListener(this)
+        saveButton.setOnClickListener {v: View -> saveEventClicked(v) }
 
         if (this.placeName != null) {
             placeNameField.setText(this.placeName)
@@ -71,8 +77,23 @@ public class BolusEventDetailsFragment : Fragment(), View.OnClickListener {
         return rootView
     }
 
-    /** OnClickListener  */
-    override fun onClick(view: View) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            AddFoodActivityResultKey -> {
+                val foodParcelable: FoodParcelable? = data?.getParcelableExtra(LogFoodActivity.AddFoodActivityResultFoodParcelableKey)
+                if (foodParcelable != null && (getActivity() is FoodDetailDelegate)) {
+                    (getActivity() as FoodDetailDelegate).foodDetailUpdated(foodParcelable)
+                }
+            }
+        }
+    }
+
+    internal fun addFoodClicked(view: View) {
+        val intent = Intent(view.getContext(), javaClass<LogFoodActivity>())
+        getActivity().startActivityForResult(intent, AddFoodActivityResultKey)
+    }
+
+    internal fun saveEventClicked(view: View) {
         if (getActivity() !is BolusEventDetailDelegate || this.bolusEventParcelable == null) {
             return
         }
@@ -122,5 +143,7 @@ public class BolusEventDetailsFragment : Fragment(), View.OnClickListener {
 
         public val BolusEventDetailPlaceNameBundleKey: String = "MealDetailPlaceNameBundleKey"
         public val BolusEventDetailBolusEventParcelableBundleKey: String = "MealDetailBolusEventParcelableBundleKey"
+
+        private val AddFoodActivityResultKey: Int = 3994
     }
 }

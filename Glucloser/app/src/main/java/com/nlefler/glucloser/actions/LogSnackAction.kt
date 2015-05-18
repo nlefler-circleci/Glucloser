@@ -9,19 +9,30 @@ import com.nlefler.glucloser.GlucloserApplication
 import com.nlefler.glucloser.dataSource.BloodSugarFactory
 import com.nlefler.glucloser.dataSource.ParseUploader
 import com.nlefler.glucloser.dataSource.SnackFactory
+import com.nlefler.glucloser.models.FoodParcelable
 import com.nlefler.glucloser.models.SnackParcelable
 import com.parse.Parse
 
 import io.realm.Realm
+import java.util.ArrayList
 
 /**
  * Created by Nathan Lefler on 4/24/15.
  */
 public class LogSnackAction {
 
-    public var snackParcelable: SnackParcelable? = null
+    private var snackParcelable: SnackParcelable? = null
+    private val foodParcelableList: MutableList<FoodParcelable> = ArrayList<FoodParcelable>()
 
     public constructor() {
+    }
+
+    public fun setSnackParcelable(snackParcelable: SnackParcelable) {
+        this.snackParcelable = snackParcelable
+    }
+
+    public fun addFoodParcelable(foodParcelable: FoodParcelable) {
+        this.foodParcelableList.add(foodParcelable)
     }
 
     public fun log() {

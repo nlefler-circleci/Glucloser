@@ -1,32 +1,27 @@
-package com.nlefler.glucloser
+package com.nlefler.glucloser.activities
 
-import android.app.Activity
-import android.content.Intent
-import android.support.v7.app.ActionBarActivity
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import com.nlefler.glucloser.R
 import com.nlefler.glucloser.actions.LogMealAction
-import com.nlefler.glucloser.dataSource.MealFactory
 import com.nlefler.glucloser.dataSource.PlaceFactory
 import com.nlefler.glucloser.models.*
 import com.nlefler.glucloser.ui.BolusEventDetailsFragment
 import com.nlefler.glucloser.ui.PlaceSelectionFragment
 
+public class LogMealActivity : AppCompatActivity(), PlaceSelectionDelegate, BolusEventDetailDelegate, FoodDetailDelegate {
 
-public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, BolusEventDetailDelegate {
-
-    private var logMealAction: LogMealAction? = null
+    private var logMealAction: LogMealAction = LogMealAction()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<ActionBarActivity>.onCreate(savedInstanceState)
+        super<AppCompatActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_meal)
         val fragment = PlaceSelectionFragment()
 
         if (savedInstanceState == null) {
-            this.logMealAction = LogMealAction()
             getSupportFragmentManager().beginTransaction().add(R.id.log_meal_activity_container, fragment).commit()
         }
 
@@ -57,19 +52,24 @@ public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, Bolu
             return true
         }
 
-        return super<ActionBarActivity>.onOptionsItemSelected(item)
+        return super<AppCompatActivity>.onOptionsItemSelected(item)
     }
 
     /** PlaceSelectionDelegate  */
     override fun placeSelected(placeParcelable: PlaceParcelable) {
-        this.logMealAction!!.setPlaceParcelable(placeParcelable)
+        this.logMealAction.setPlaceParcelable(placeParcelable)
         switchToMealEditFragment(placeParcelable)
     }
 
     /** MealDetailDelegate  */
     override fun bolusEventDetailUpdated(bolusEventParcelable: BolusEventParcelable) {
-        this.logMealAction!!.setMealParcelable(bolusEventParcelable as MealParcelable)
+        this.logMealAction.setMealParcelable(bolusEventParcelable as MealParcelable)
         finishLoggingMeal()
+    }
+
+    /** FoodDetailDelegate */
+    override fun foodDetailUpdated(foodParcelable: FoodParcelable) {
+        this.logMealAction.addFoodParcelable(foodParcelable)
     }
 
     /** Helpers  */
@@ -85,7 +85,7 @@ public class LogMealActivity : ActionBarActivity(), PlaceSelectionDelegate, Bolu
     }
 
     private fun finishLoggingMeal() {
-        this.logMealAction!!.log()
+        this.logMealAction.log()
         finish()
     }
 

@@ -10,6 +10,7 @@ import android.os.Parcelable;
 public class FoodParcelable implements Parcelable {
     private String foodId;
     private int carbs;
+    private String foodName;
 
     public FoodParcelable() {
 
@@ -31,10 +32,19 @@ public class FoodParcelable implements Parcelable {
         this.carbs = carbs;
     }
 
+    public String getFoodName() {
+        return foodName;
+    }
+
+    public void setFoodName(String foodName) {
+        this.foodName = foodName;
+    }
+
     /** Parcelable */
     protected FoodParcelable(Parcel in) {
         foodId = in.readString();
         carbs = in.readInt();
+        foodName = in.readString();
     }
 
     @Override
@@ -46,6 +56,7 @@ public class FoodParcelable implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(foodId);
         dest.writeInt(carbs);
+        dest.writeString(foodName);
     }
 
     @SuppressWarnings("unused")

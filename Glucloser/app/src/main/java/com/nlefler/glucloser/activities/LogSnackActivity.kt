@@ -1,23 +1,21 @@
-package com.nlefler.glucloser
+package com.nlefler.glucloser.activities
 
-import android.support.v7.app.ActionBarActivity
 import android.os.Bundle
+import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import com.nlefler.glucloser.R
 import com.nlefler.glucloser.actions.LogSnackAction
-import com.nlefler.glucloser.models.BolusEventDetailDelegate
-import com.nlefler.glucloser.models.BolusEventParcelable
-import com.nlefler.glucloser.models.SnackParcelable
+import com.nlefler.glucloser.models.*
 import com.nlefler.glucloser.ui.BolusEventDetailsFragment
 
+public class LogSnackActivity : AppCompatActivity(), BolusEventDetailDelegate, FoodDetailDelegate {
 
-public class LogSnackActivity : ActionBarActivity(), BolusEventDetailDelegate {
-
-    private var logSnackAction: LogSnackAction? = null
+    private var logSnackAction: LogSnackAction = LogSnackAction()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<ActionBarActivity>.onCreate(savedInstanceState)
+        super<AppCompatActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_snack)
 
         val fragment = BolusEventDetailsFragment()
@@ -25,7 +23,6 @@ public class LogSnackActivity : ActionBarActivity(), BolusEventDetailDelegate {
         args.putParcelable(BolusEventDetailsFragment.BolusEventDetailBolusEventParcelableBundleKey, SnackParcelable())
         fragment.setArguments(args)
 
-        this.logSnackAction = LogSnackAction()
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.log_snack_activity_container, fragment).commit()
         }
@@ -49,14 +46,19 @@ public class LogSnackActivity : ActionBarActivity(), BolusEventDetailDelegate {
             return true
         }
 
-        return super<ActionBarActivity>.onOptionsItemSelected(item)
+        return super<AppCompatActivity>.onOptionsItemSelected(item)
     }
 
     /** MealDetailDelegate  */
     override fun bolusEventDetailUpdated(bolusEventParcelable: BolusEventParcelable) {
-        this.logSnackAction!!.snackParcelable = bolusEventParcelable as SnackParcelable
-        this.logSnackAction!!.log()
+        this.logSnackAction.setSnackParcelable(bolusEventParcelable as SnackParcelable)
+        this.logSnackAction.log()
         finish()
+    }
+
+    /** FoodDetailDelegate */
+    override fun foodDetailUpdated(foodParcelable: FoodParcelable) {
+        this.logSnackAction.addFoodParcelable(foodParcelable)
     }
 
     companion object {

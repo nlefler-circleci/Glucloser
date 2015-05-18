@@ -12,12 +12,14 @@ import com.nlefler.glucloser.dataSource.MealFactory
 import com.nlefler.glucloser.dataSource.ParseUploader
 import com.nlefler.glucloser.dataSource.PlaceFactory
 import com.nlefler.glucloser.models.BloodSugar
+import com.nlefler.glucloser.models.FoodParcelable
 import com.nlefler.glucloser.models.MealParcelable
 import com.nlefler.glucloser.models.PlaceParcelable
 
 import java.util.Date
 
 import io.realm.Realm
+import java.util.ArrayList
 
 /**
  * Created by Nathan Lefler on 12/24/14.
@@ -26,6 +28,7 @@ public class LogMealAction : Parcelable {
 
     private var placeParcelable: PlaceParcelable? = null
     private var mealParcelable: MealParcelable? = null
+    private val foodParcelableList: MutableList<FoodParcelable> = ArrayList<FoodParcelable>()
 
     public constructor() {
     }
@@ -36,6 +39,10 @@ public class LogMealAction : Parcelable {
 
     public fun setMealParcelable(mealParcelable: MealParcelable) {
         this.mealParcelable = mealParcelable
+    }
+
+    public fun addFoodParcelable(foodParcelable: FoodParcelable) {
+        this.foodParcelableList.add(foodParcelable)
     }
 
     public fun log() {
