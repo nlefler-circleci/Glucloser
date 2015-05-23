@@ -45,7 +45,10 @@ public class BloodSugarParcelable implements Parcelable {
     protected BloodSugarParcelable(Parcel in) {
         id = in.readString();
         value = in.readInt();
-        date = new Date(in.readLong());
+        long time = in.readLong();
+        if (time > 0) {
+            date = new Date(time);
+        }
     }
 
     @Override
@@ -57,7 +60,9 @@ public class BloodSugarParcelable implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeInt(value);
-        dest.writeLong(date.getTime());
+        if (date != null) {
+            dest.writeLong(date.getTime());
+        }
     }
 
     @SuppressWarnings("unused")

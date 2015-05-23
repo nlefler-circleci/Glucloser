@@ -15,7 +15,9 @@ import android.widget.EditText
 import android.widget.TextView
 
 import com.nlefler.glucloser.R
+import com.nlefler.glucloser.activities.LogBolusEventActivity
 import com.nlefler.glucloser.activities.LogFoodActivity
+import com.nlefler.glucloser.dataSource.FoodFactory
 import com.nlefler.glucloser.dataSource.FoodListRecyclerAdapter
 import com.nlefler.glucloser.models.*
 
@@ -25,7 +27,7 @@ import java.util.Date
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
-public class BolusEventDetailsFragment : Fragment() {
+public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
 
     private var placeName: String? = null
     private var bolusEventParcelable: BolusEventParcelable? = null
@@ -38,6 +40,7 @@ public class BolusEventDetailsFragment : Fragment() {
     private var foodListView: RecyclerView? = null
     private var foodListLayoutManager: RecyclerView.LayoutManager? = null
     private var foodListAdapter: FoodListRecyclerAdapter? = null
+    private var foods: MutableList<Food> = ArrayList<Food>()
 
     override fun onCreate(bundle: Bundle?) {
         super<Fragment>.onCreate(bundle)
@@ -70,27 +73,23 @@ public class BolusEventDetailsFragment : Fragment() {
         this.foodListLayoutManager = LinearLayoutManager(getActivity())
         this.foodListView!!.setLayoutManager(this.foodListLayoutManager)
 
-        this.foodListAdapter = FoodListRecyclerAdapter(ArrayList<Food>())
+        this.foodListAdapter = FoodListRecyclerAdapter(this.foods)
         this.foodListView!!.setAdapter(this.foodListAdapter)
         this.foodListView!!.addItemDecoration(DividerItemDecoration(getActivity()))
 
         return rootView
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            AddFoodActivityResultKey -> {
-                val foodParcelable: FoodParcelable? = data?.getParcelableExtra(LogFoodActivity.AddFoodActivityResultFoodParcelableKey)
-                if (foodParcelable != null && (getActivity() is FoodDetailDelegate)) {
-                    (getActivity() as FoodDetailDelegate).foodDetailUpdated(foodParcelable)
-                }
-            }
-        }
+    override fun foodDetailUpdated(foodParcelable: FoodParcelable) {
+        this.foods.add(FoodFactory.FoodFromParcelable(foodParcelable, getActivity()))
+        this.foodListAdapter?.setFoods(this.foods)
     }
 
     internal fun addFoodClicked(view: View) {
-        val intent = Intent(view.getContext(), javaClass<LogFoodActivity>())
-        getActivity().startActivityForResult(intent, AddFoodActivityResultKey)
+        val activity = getActivity()
+        if (activity is LogBolusEventActivity) {
+            activity.launchLogFoodActivity()
+        }
     }
 
     internal fun saveEventClicked(view: View) {
@@ -143,7 +142,5 @@ public class BolusEventDetailsFragment : Fragment() {
 
         public val BolusEventDetailPlaceNameBundleKey: String = "MealDetailPlaceNameBundleKey"
         public val BolusEventDetailBolusEventParcelableBundleKey: String = "MealDetailBolusEventParcelableBundleKey"
-
-        private val AddFoodActivityResultKey: Int = 3994
     }
 }

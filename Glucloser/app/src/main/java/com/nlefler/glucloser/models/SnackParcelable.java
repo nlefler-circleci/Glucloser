@@ -88,7 +88,10 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
         insulin = in.readFloat();
         correction = in.readInt() != 0;
         beforeSugarParcelable = (BloodSugarParcelable)in.readParcelable(BloodSugar.class.getClassLoader());
-        date = new Date(in.readLong());
+        long time = in.readLong();
+        if (time > 0) {
+            date = new Date();
+        }
     }
 
     @Override
@@ -103,7 +106,9 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
         dest.writeParcelable(beforeSugarParcelable, flags);
-        dest.writeLong(date.getTime());
+        if (date != null) {
+            dest.writeLong(date.getTime());
+        }
     }
 
     @SuppressWarnings("unused")

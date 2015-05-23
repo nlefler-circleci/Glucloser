@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/log_meal_activity_container"
+    android:id="@+id/log_bolus_event_activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nlefler.glucloser.activities.LogMealActivity"
+    tools:context="com.nlefler.glucloser.activities.LogBolusEventActivity"
     tools:ignore="MergeRootFrame" >
 </FrameLayout>

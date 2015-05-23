@@ -19,6 +19,7 @@ import com.nlefler.glucloser.R
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter
 import com.nlefler.glucloser.foursquare.FoursquareAuthManager
 import com.nlefler.glucloser.models.BolusEvent
+import com.nlefler.glucloser.models.BolusEventType
 import com.nlefler.glucloser.models.Meal
 import com.nlefler.glucloser.models.Snack
 import com.nlefler.glucloser.ui.DividerItemDecoration
@@ -110,7 +111,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             FoursquareAuthManager.FOURSQUARE_TOKEN_EXCHG_INTENT_CODE -> {
                 FoursquareAuthManager.SharedManager().gotTokenExchangeResponse(this, resultCode, data ?: Intent())
             }
-            LogMealActivityIntentCode, LogSnackActivityIntentCode -> {
+            LogBolusEventActivityIntentCode -> {
                 (getSupportFragmentManager().findFragmentByTag(HistoryFragmentId) as HistoryListFragment).updateMealHistory()
             }
         }
@@ -143,16 +144,20 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             val logMealButton = rootView.findViewById(R.id.fab_log_meal_item) as FloatingActionButton
             logMealButton.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View) {
-                    val intent = Intent(view.getContext(), javaClass<LogMealActivity>())
-                    activity.startActivityForResult(intent, LogMealActivityIntentCode)
+                    val intent = Intent(view.getContext(), javaClass<LogBolusEventActivity>())
+                    intent.putExtra(LogBolusEventActivity.BolusEventTypeKey, BolusEventType.BolusEventTypeMeal.name())
+
+                    activity.startActivityForResult(intent, LogBolusEventActivityIntentCode)
                     floatingActionsMenu.collapse()
                 }
             })
             val logSnackButton = rootView.findViewById(R.id.fab_log_snack_item) as FloatingActionButton
             logSnackButton.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View) {
-                    val intent = Intent(view.getContext(), javaClass<LogSnackActivity>())
-                    activity.startActivityForResult(intent, LogSnackActivityIntentCode)
+                    val intent = Intent(view.getContext(), javaClass<LogBolusEventActivity>())
+                    intent.putExtra(LogBolusEventActivity.BolusEventTypeKey, BolusEventType.BolusEventTypeSnack.name())
+
+                    activity.startActivityForResult(intent, LogBolusEventActivityIntentCode)
                     floatingActionsMenu.collapse()
                 }
             })
@@ -191,8 +196,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
 
     companion object {
         private val LOG_TAG = "MainActivity"
-        protected val LogMealActivityIntentCode: Int = 4136;
-        protected val LogSnackActivityIntentCode: Int = 2416;
+        protected val LogBolusEventActivityIntentCode: Int = 4136;
         protected val HistoryFragmentId: String = "HistoryFragmentId"
     }
 }

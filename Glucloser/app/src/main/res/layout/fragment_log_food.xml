@@ -25,7 +25,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
+                android:inputType="textAutoCorrect|textCapSentences"
                 android:ems="10"
                 android:id="@+id/log_food_food_name_value"
                 android:layout_weight="0.80" />
