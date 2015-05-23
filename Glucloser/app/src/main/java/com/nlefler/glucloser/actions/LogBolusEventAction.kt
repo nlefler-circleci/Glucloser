@@ -54,6 +54,11 @@ public class LogBolusEventAction : Parcelable {
             ParseUploader.SharedInstance().uploadBloodSugar(beforeSugar!!)
         }
 
+        for (foodParcelable in this.foodParcelableList) {
+            val food = FoodFactory.FoodFromParcelable(foodParcelable, sharedContext)
+            ParseUploader.SharedInstance().uploadFood(food!!)
+        }
+
         when (this.bolusEventParcelable) {
             is MealParcelable -> {
                 val meal = MealFactory.MealFromParcelable(this.bolusEventParcelable as MealParcelable, sharedContext)

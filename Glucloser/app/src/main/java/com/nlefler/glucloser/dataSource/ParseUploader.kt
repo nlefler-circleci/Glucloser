@@ -1,10 +1,7 @@
 package com.nlefler.glucloser.dataSource
 
 import android.util.Log
-import com.nlefler.glucloser.models.BloodSugar
-import com.nlefler.glucloser.models.Meal
-import com.nlefler.glucloser.models.Place
-import com.nlefler.glucloser.models.Snack
+import com.nlefler.glucloser.models.*
 
 import com.parse.ParseException
 import com.parse.ParseObject
@@ -32,11 +29,9 @@ public class ParseUploader private() {
 
     public fun uploadPlace(place: Place) {
         val placeId = place.getFoursquareId()!!
-        this.getUploadedObjectObservable(placeId, place).subscribe(object : Action1<ParseObject> {
-            override fun call(parseObject: ParseObject) {
-                parseObject.saveInBackground()
-                inProgressUploads.remove(placeId)
-            }
+        this.getUploadedObjectObservable(placeId, place).subscribe({ parseObject: ParseObject ->
+            parseObject.saveInBackground()
+            inProgressUploads.remove(placeId)
         })
     }
 
@@ -99,11 +94,9 @@ public class ParseUploader private() {
 
             override fun onCompleted() {
                 val mealId = meal.getMealId()!!
-                getUploadedObjectObservable(mealId, meal, placeParseObject, beforeSugarParseObject).subscribe(object : Action1<ParseObject> {
-                    override fun call(mealObject: ParseObject) {
-                        mealObject.saveInBackground()
-                        inProgressUploads.remove(mealId)
-                    }
+                getUploadedObjectObservable(mealId, meal, placeParseObject, beforeSugarParseObject).subscribe({ mealObject: ParseObject ->
+                    mealObject.saveInBackground()
+                    inProgressUploads.remove(mealId)
                 })
             }
 
@@ -126,11 +119,17 @@ public class ParseUploader private() {
 
     public fun uploadBloodSugar(sugar: BloodSugar) {
         val sugarId = sugar.getId()!!
-        this.getUploadedObjectObservable(sugarId, sugar).subscribe(object : Action1<ParseObject> {
-            override fun call(parseObject: ParseObject) {
-                parseObject.saveInBackground()
-                inProgressUploads.remove(sugarId)
-            }
+        this.getUploadedObjectObservable(sugarId, sugar).subscribe({ parseObject: ParseObject ->
+            parseObject.saveInBackground()
+            inProgressUploads.remove(sugarId)
+        })
+    }
+
+    public fun uploadFood(food: Food) {
+        val foodId = food.getFoodId()
+        this.getUploadedObjectObservable(foodId, food).subscribe({ parseObject: ParseObject ->
+            parseObject.saveInBackground()
+            inProgressUploads.remove(foodId)
         })
     }
 

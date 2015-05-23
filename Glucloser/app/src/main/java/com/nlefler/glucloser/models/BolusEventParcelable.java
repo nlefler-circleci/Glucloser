@@ -1,6 +1,7 @@
 package com.nlefler.glucloser.models;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Nathan Lefler on 5/8/15.
@@ -20,4 +21,7 @@ public interface BolusEventParcelable {
 
     public boolean isCorrection();
     public void setCorrection(boolean isCorrection);
+
+    public List<FoodParcelable> getFoodParcelables();
+    public void setFoodParcelables(List<FoodParcelable> foodParcelables);
 }
