@@ -13,6 +13,7 @@ import com.nlefler.glucloser.models.*
 import java.util.Date
 
 import io.realm.Realm
+import io.realm.RealmList
 import java.util.ArrayList
 
 /**
@@ -54,9 +55,11 @@ public class LogBolusEventAction : Parcelable {
             ParseUploader.SharedInstance().uploadBloodSugar(beforeSugar!!)
         }
 
+        val foodList = RealmList<Food>()
         for (foodParcelable in this.foodParcelableList) {
             val food = FoodFactory.FoodFromParcelable(foodParcelable, sharedContext)
-            ParseUploader.SharedInstance().uploadFood(food!!)
+            foodList.add(food)
+            ParseUploader.SharedInstance().uploadFood(food)
         }
 
         when (this.bolusEventParcelable) {
@@ -64,6 +67,7 @@ public class LogBolusEventAction : Parcelable {
                 val meal = MealFactory.MealFromParcelable(this.bolusEventParcelable as MealParcelable, sharedContext)
                 realm.beginTransaction()
 
+                meal.setFoods(foodList)
                 if (this.placeParcelable != null) {
                     val place = PlaceFactory.PlaceFromParcelable(this.placeParcelable!!, sharedContext)
                     ParseUploader.SharedInstance().uploadPlace(place)
@@ -73,15 +77,19 @@ public class LogBolusEventAction : Parcelable {
                 if (beforeSugar != null) {
                     meal.setBeforeSugar(beforeSugar!!)
                 }
+
                 realm.commitTransaction()
                 ParseUploader.SharedInstance().uploadMeal(meal)
             }
             is SnackParcelable -> {
                 val snack = SnackFactory.SnackFromParcelable(this.bolusEventParcelable as SnackParcelable, sharedContext)
                 realm.beginTransaction()
+
+                snack.setFoods(foodList)
                 if (beforeSugar != null) {
                     snack.setBeforeSugar(beforeSugar)
                 }
+
                 realm.commitTransaction()
                 ParseUploader.SharedInstance().uploadSnack(snack)
             }

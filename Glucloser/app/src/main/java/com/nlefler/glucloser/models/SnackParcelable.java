@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Nathan Lefler on 5/8/15.
@@ -18,6 +20,7 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
     private float insulin;
     private BloodSugarParcelable beforeSugarParcelable;
     private boolean correction;
+    private List<FoodParcelable> foodParcelables;
 
     public SnackParcelable() {
 
@@ -81,7 +84,18 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
     public void setCorrection(boolean correction) {
         this.correction = correction;
     }
-      /** Parcelable */
+
+    @Override
+    public List<FoodParcelable> getFoodParcelables() {
+        return foodParcelables;
+    }
+
+    @Override
+    public void setFoodParcelables(List<FoodParcelable> foodParcelables) {
+        this.foodParcelables = foodParcelables;
+    }
+
+    /** Parcelable */
     protected SnackParcelable(Parcel in) {
         snackId = in.readString();
         carbs = in.readInt();
@@ -92,6 +106,8 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
         if (time > 0) {
             date = new Date();
         }
+        this.foodParcelables = new ArrayList<FoodParcelable>();
+        in.readList(this.foodParcelables, FoodParcelable.class.getClassLoader());
     }
 
     @Override
@@ -109,6 +125,7 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
         if (date != null) {
             dest.writeLong(date.getTime());
         }
+        dest.writeTypedList(this.foodParcelables);
     }
 
     @SuppressWarnings("unused")

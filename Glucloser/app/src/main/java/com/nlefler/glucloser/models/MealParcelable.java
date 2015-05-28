@@ -3,7 +3,9 @@ package com.nlefler.glucloser.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Nathan Lefler on 12/24/14.
@@ -16,6 +18,7 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
     private float insulin;
     private BloodSugarParcelable beforeSugarParcelable;
     private boolean correction;
+    private List<FoodParcelable> foodParcelables;
 
     public MealParcelable() {
 
@@ -77,6 +80,16 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
         this.beforeSugarParcelable = beforeSugar;
     }
 
+    @Override
+    public List<FoodParcelable> getFoodParcelables() {
+        return foodParcelables;
+    }
+
+    @Override
+    public void setFoodParcelables(List<FoodParcelable> foodParcelables) {
+        this.foodParcelables = foodParcelables;
+    }
+
     /** Parcelable */
     protected MealParcelable(Parcel in) {
         mealId = in.readString();
@@ -89,6 +102,8 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
         if (time > 0) {
             date = new Date(time);
         }
+        this.foodParcelables = new ArrayList<FoodParcelable>();
+        in.readList(this.foodParcelables, FoodParcelable.class.getClassLoader());
     }
 
     @Override
@@ -107,6 +122,7 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
         if (date != null) {
             dest.writeLong(date.getTime());
         }
+        dest.writeTypedList(this.foodParcelables);
    }
 
     @SuppressWarnings("unused")

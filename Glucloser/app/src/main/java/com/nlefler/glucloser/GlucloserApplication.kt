@@ -5,6 +5,9 @@ import android.content.Context
 import android.os.Debug
 import android.support.multidex.MultiDex
 import android.util.Log
+import com.nlefler.glucloser.models.Food
+import com.nlefler.glucloser.models.Meal
+import com.nlefler.glucloser.models.Snack
 
 import com.parse.Parse
 import com.parse.ParseAnalytics
@@ -13,6 +16,11 @@ import com.parse.ParseException
 import com.parse.ParsePush
 import com.parse.SaveCallback
 import com.squareup.leakcanary.LeakCanary
+import io.realm.Realm
+import io.realm.RealmMigration
+import io.realm.internal.ColumnType
+import io.realm.internal.Table
+import java.io.File
 
 /**
  * Created by Nathan Lefler on 12/12/14.
@@ -36,6 +44,23 @@ public class GlucloserApplication : Application() {
         }
 
         Parse.initialize(this, this.getString(R.string.parse_app_id), this.getString(R.string.parse_client_key))
+
+        val realmPath = File(getFilesDir(), "default.realm").getPath()
+        Realm.migrateRealmAtPath(realmPath, {realm: Realm, version: Long ->
+            var newVersion = version
+            if (version == 0L) {
+                val foodTable: Table = realm.getTable(javaClass<Food>())
+
+                val mealTable: Table = realm.getTable(javaClass<Meal>())
+                mealTable.addColumnLink(ColumnType.LINK_LIST, Meal.FoodListFieldName, foodTable)
+
+                val snackTable: Table = realm.getTable(javaClass<Snack>())
+                snackTable.addColumnLink(ColumnType.LINK_LIST, Snack.FoodListFieldName, foodTable)
+
+                newVersion++
+            }
+            newVersion
+        });
 
         this.subscribeToPush()
     }
