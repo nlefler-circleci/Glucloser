@@ -45,23 +45,6 @@ public class GlucloserApplication : Application() {
 
         Parse.initialize(this, this.getString(R.string.parse_app_id), this.getString(R.string.parse_client_key))
 
-        val realmPath = File(getFilesDir(), "default.realm").getPath()
-        Realm.migrateRealmAtPath(realmPath, {realm: Realm, version: Long ->
-            var newVersion = version
-            if (version == 0L) {
-                val foodTable: Table = realm.getTable(javaClass<Food>())
-
-                val mealTable: Table = realm.getTable(javaClass<Meal>())
-                mealTable.addColumnLink(ColumnType.LINK_LIST, Meal.FoodListFieldName, foodTable)
-
-                val snackTable: Table = realm.getTable(javaClass<Snack>())
-                snackTable.addColumnLink(ColumnType.LINK_LIST, Snack.FoodListFieldName, foodTable)
-
-                newVersion++
-            }
-            newVersion
-        });
-
         this.subscribeToPush()
     }
 
