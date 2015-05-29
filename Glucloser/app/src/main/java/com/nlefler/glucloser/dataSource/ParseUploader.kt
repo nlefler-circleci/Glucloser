@@ -161,6 +161,9 @@ public class ParseUploader private() {
                             }
                             SnackFactory.ParseObjectFromSnack(toUpload : Snack, args[0] as ParseObject?, createParseObjectReadyAction(subscriber))
                         }
+                        is Food -> {
+                            FoodFactory.ParseObjectFromFood(toUpload : Food, createParseObjectReadyAction(subscriber))
+                        }
                         else -> {
                             subscriber.onError(IllegalArgumentException("Invalid type for upload object"))
                         }
