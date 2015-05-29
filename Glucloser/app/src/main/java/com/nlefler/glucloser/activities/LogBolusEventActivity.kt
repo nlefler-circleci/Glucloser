@@ -103,7 +103,7 @@ public class LogBolusEventActivity : AppCompatActivity(), PlaceSelectionDelegate
 
     /** MealDetailDelegate  */
     override fun bolusEventDetailUpdated(bolusEventParcelable: BolusEventParcelable) {
-        this.logBolusEventAction.setBolusEventParcelable(bolusEventParcelable as MealParcelable)
+        this.logBolusEventAction.setBolusEventParcelable(bolusEventParcelable)
         finishLoggingBolusEvent()
     }
 
