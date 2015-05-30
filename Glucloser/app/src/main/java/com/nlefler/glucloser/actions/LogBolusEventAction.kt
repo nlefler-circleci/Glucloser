@@ -52,14 +52,12 @@ public class LogBolusEventAction : Parcelable {
         var beforeSugar: BloodSugar? = null
         if (bolusEventParcelable!!.getBeforeSugarParcelable() != null) {
             beforeSugar = BloodSugarFactory.BloodSugarFromParcelable(bolusEventParcelable!!.getBeforeSugarParcelable()!!, sharedContext)
-            ParseUploader.SharedInstance().uploadBloodSugar(beforeSugar!!)
         }
 
         val foodList = RealmList<Food>()
         for (foodParcelable in this.foodParcelableList) {
             val food = FoodFactory.FoodFromParcelable(foodParcelable, sharedContext)
             foodList.add(food)
-            ParseUploader.SharedInstance().uploadFood(food)
         }
 
         when (this.bolusEventParcelable) {
@@ -70,16 +68,15 @@ public class LogBolusEventAction : Parcelable {
                 meal.setFoods(foodList)
                 if (this.placeParcelable != null) {
                     val place = PlaceFactory.PlaceFromParcelable(this.placeParcelable!!, sharedContext)
-                    ParseUploader.SharedInstance().uploadPlace(place)
                     meal.setPlace(place)
                 }
 
                 if (beforeSugar != null) {
-                    meal.setBeforeSugar(beforeSugar!!)
+                    meal.setBeforeSugar(beforeSugar)
                 }
 
                 realm.commitTransaction()
-                ParseUploader.SharedInstance().uploadMeal(meal)
+                ParseUploader.SharedInstance().uploadBolusEvent(meal)
             }
             is SnackParcelable -> {
                 val snack = SnackFactory.SnackFromParcelable(this.bolusEventParcelable as SnackParcelable, sharedContext)
@@ -91,7 +88,7 @@ public class LogBolusEventAction : Parcelable {
                 }
 
                 realm.commitTransaction()
-                ParseUploader.SharedInstance().uploadSnack(snack)
+                ParseUploader.SharedInstance().uploadBolusEvent(snack)
             }
         }
     }

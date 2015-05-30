@@ -32,7 +32,7 @@ public class PlaceSelectionRecyclerAdapter(private val delegate: PlaceSelectionD
                 override fun onClick(v: View) {
                     var placeParcelable = getPlaceParcelable()
                     if (placeParcelable != null) {
-                        delegate?.placeSelected(placeParcelable!!)
+                        delegate?.placeSelected(placeParcelable)
                     }
                 }
             }

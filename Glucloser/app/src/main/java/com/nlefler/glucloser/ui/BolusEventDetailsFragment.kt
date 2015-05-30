@@ -119,7 +119,7 @@ public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
     }
 
     private fun getPlaceNameFromBundle(savedInstanceState: Bundle?, args: Bundle?, extras: Bundle?): String {
-        for (bundle in array<Bundle?>(savedInstanceState, args, extras)) {
+        for (bundle in arrayOf<Bundle?>(savedInstanceState, args, extras)) {
             if (bundle?.getParcelable<Parcelable>(BolusEventDetailPlaceNameBundleKey) ?: null!= null) {
                 return bundle?.getString(BolusEventDetailPlaceNameBundleKey) ?: ""
             }
@@ -129,7 +129,7 @@ public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
     }
 
     private fun getBolusEventParcelableFromBundle(savedInstanceState: Bundle?, args: Bundle?, extras: Bundle?): BolusEventParcelable? {
-        for (bundle in array<Bundle?>(savedInstanceState, args, extras)) {
+        for (bundle in arrayOf<Bundle?>(savedInstanceState, args, extras)) {
             if (bundle?.containsKey(BolusEventDetailBolusEventParcelableBundleKey) ?: null != null) {
                 return bundle!!.getParcelable<Parcelable>(BolusEventDetailBolusEventParcelableBundleKey) as BolusEventParcelable?
             }

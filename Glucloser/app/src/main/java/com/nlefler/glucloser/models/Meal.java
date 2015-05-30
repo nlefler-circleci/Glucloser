@@ -15,7 +15,7 @@ public class Meal extends RealmObject implements BolusEvent, HasPlace {
 
     @Ignore
     public static final String MealIdFieldName = "mealId";
-    private String mealId;
+    private String id;
 
     @Ignore
     public static final String MealDateFieldName = "date";
@@ -45,12 +45,12 @@ public class Meal extends RealmObject implements BolusEvent, HasPlace {
     public static final String FoodListFieldName = "foods";
     private RealmList<Food> foods;
 
-    public String getMealId() {
-        return mealId;
+    public String getId() {
+        return id;
     }
 
-    public void setMealId(String mealId) {
-        this.mealId = mealId;
+    public void setId(String id){
+        this.id = id;
     }
 
     public Date getDate() {

@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Nathan Lefler on 12/24/14.
  */
 public class MealParcelable implements Parcelable, BolusEventParcelable {
-    private String mealId;
+    private String id;
     private Date date;
     private PlaceParcelable placeParcelable;
     private int carbs;
@@ -24,12 +24,12 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
 
     }
 
-    public String getMealId() {
-        return mealId;
+    public String getId() {
+        return id;
     }
 
-    public void setMealId(String mealId) {
-        this.mealId = mealId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Date getDate() {
@@ -92,7 +92,7 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
 
     /** Parcelable */
     protected MealParcelable(Parcel in) {
-        mealId = in.readString();
+        id = in.readString();
         placeParcelable = (PlaceParcelable) in.readValue(PlaceParcelable.class.getClassLoader());
         carbs = in.readInt();
         insulin = in.readFloat();
@@ -113,7 +113,7 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mealId);
+        dest.writeString(id);
         dest.writeParcelable(placeParcelable, flags);
         dest.writeInt(carbs);
         dest.writeFloat(insulin);

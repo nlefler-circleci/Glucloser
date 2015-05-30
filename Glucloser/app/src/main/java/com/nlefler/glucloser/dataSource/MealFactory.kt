@@ -30,7 +30,7 @@ public class MealFactory {
             return false
         }
 
-        val idOK = meal1.getMealId() == meal2.getMealId()
+        val idOK = meal1.getId() == meal2.getId()
         val placeOK = PlaceFactory.ArePlacesEqual(meal1.getPlace(), meal2.getPlace())
         val carbsOK = meal1.getCarbs() == meal2.getCarbs()
         val insulinOK = meal1.getInsulin() == meal2.getInsulin()
@@ -59,7 +59,7 @@ public class MealFactory {
                 Log.e(LOG_TAG, "Unable to fetch Meal, action is null")
                 return
             }
-            if (id == null || id.isEmpty() || ctx == null) {
+            if (id?.length() == 0|| ctx == null) {
                 Log.e(LOG_TAG, "Unable to fetch Meal, invalid args")
                 action.call(null)
                 return
@@ -91,7 +91,7 @@ public class MealFactory {
             }
             parcelable.setCarbs(meal.getCarbs())
             parcelable.setInsulin(meal.getInsulin())
-            parcelable.setMealId(meal.getMealId())
+            parcelable.setId(meal.getId())
             parcelable.setCorrection(meal.isCorrection())
             if (meal.getBeforeSugar() != null) {
                 parcelable.setBeforeSugarParcelable(BloodSugarFactory.ParcelableFromBloodSugar(meal.getBeforeSugar()!!))
@@ -115,7 +115,7 @@ public class MealFactory {
             }
 
             realm.beginTransaction()
-            val meal = MealForMealId(parcelable.getMealId(), realm, true)!!
+            val meal = MealForMealId(parcelable.getId(), realm, true)!!
             meal.setInsulin(parcelable.getInsulin())
             meal.setCarbs(parcelable.getCarbs())
             meal.setPlace(place);
@@ -133,7 +133,7 @@ public class MealFactory {
                 return null
             }
             val mealId = parseObject.getString(Meal.MealIdFieldName)
-            if (mealId == null || mealId.isEmpty()) {
+            if (mealId?.length() == 0) {
                 Log.e(LOG_TAG, "Can't create Meal from Parse object, no id")
             }
             val carbs = parseObject.getInt(Meal.CarbsFieldName)
@@ -174,21 +174,23 @@ public class MealFactory {
          * *
          * @param action Returns the ParseObject, and true if the object was created and should be saved.
          */
-        internal fun ParseObjectFromMeal(meal: Meal, placeObject: ParseObject?,
+        internal fun ParseObjectFromMeal(meal: Meal,
+                                         placeObject: ParseObject?,
                                          beforeSugarObject: ParseObject?,
+                                         foodObjects: List<ParseObject>,
                                          action: Action2<ParseObject?, Boolean>?) {
             if (action == null) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Meal, action null")
                 return
             }
-            if (meal.getMealId()?.isEmpty() ?: false) {
+            if (meal.getId()?.length() ?: 0 == 0) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Meal, meal null or no id")
                 action.call(null, false)
                 return
             }
 
             val parseQuery = ParseQuery.getQuery<ParseObject>(Meal.ParseClassName)
-            parseQuery.whereEqualTo(Meal.MealIdFieldName, meal.getMealId())
+            parseQuery.whereEqualTo(Meal.MealIdFieldName, meal.getId())
 
             parseQuery.findInBackground({parseObjects: List<ParseObject>, e: ParseException? ->
                 val parseObject: ParseObject
@@ -199,7 +201,7 @@ public class MealFactory {
                 } else {
                     parseObject = parseObjects.get(0)
                 }
-                parseObject.put(Meal.MealIdFieldName, meal.getMealId())
+                parseObject.put(Meal.MealIdFieldName, meal.getId())
                 if (placeObject != null) {
                     parseObject.put(Meal.PlaceFieldName, placeObject)
                 }
@@ -210,14 +212,15 @@ public class MealFactory {
                 parseObject.put(Meal.CarbsFieldName, meal.getCarbs())
                 parseObject.put(Meal.InsulinFieldName, meal.getInsulin())
                 parseObject.put(Meal.MealDateFieldName, meal.getDate())
+                parseObject.put(Meal.FoodListFieldName, foodObjects)
                 action.call(parseObject, created)
             })
         }
 
         private fun MealForMealId(id: String?, realm: Realm, create: Boolean): Meal? {
-            if (create && (id == null || id.isEmpty())) {
+            if (create && (id == null || id.length() == 0)) {
                 val meal = realm.createObject<Meal>(javaClass<Meal>())
-                meal.setMealId(UUID.randomUUID().toString())
+                meal.setId(UUID.randomUUID().toString())
                 return meal
             }
 
@@ -228,7 +231,7 @@ public class MealFactory {
 
             if (result == null && create) {
                 result = realm.createObject<Meal>(javaClass<Meal>())
-                result!!.setMealId(id)
+                result!!.setId(id)
             }
 
             return result

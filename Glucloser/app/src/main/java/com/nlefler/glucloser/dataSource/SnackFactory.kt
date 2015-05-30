@@ -29,7 +29,7 @@ public class SnackFactory {
             return false
         }
 
-        val idOK = Snack1.getSnackId() == Snack2.getSnackId()
+        val idOK = Snack1.getId() == Snack2.getId()
         val carbsOK = Snack1.getCarbs() == Snack2.getCarbs()
         val insulinOK = Snack1.getInsulin() == Snack2.getInsulin()
         val correctionOK = Snack1.isCorrection() == Snack2.isCorrection()
@@ -86,7 +86,7 @@ public class SnackFactory {
             val parcelable = SnackParcelable()
             parcelable.setCarbs(snack.getCarbs())
             parcelable.setInsulin(snack.getInsulin())
-            parcelable.setSnackId(snack.getSnackId())
+            parcelable.setId(snack.getId())
             parcelable.setCorrection(snack.isCorrection())
             if (snack.getBeforeSugar() != null) {
                 parcelable.setBeforeSugarParcelable(BloodSugarFactory.ParcelableFromBloodSugar(snack.getBeforeSugar()!!))
@@ -105,12 +105,12 @@ public class SnackFactory {
             }
 
             realm.beginTransaction()
-            val snack = SnackForSnackId(parcelable.getSnackId(), realm, true)!!
+            val snack = SnackForSnackId(parcelable.getId(), realm, true)!!
             snack.setInsulin(parcelable.getInsulin())
             snack.setCarbs(parcelable.getCarbs())
             snack.setCorrection(parcelable.isCorrection())
             if (beforeSugar != null) {
-                snack.setBeforeSugar(beforeSugar!!)
+                snack.setBeforeSugar(beforeSugar)
             }
             snack.setDate(parcelable.getDate())
             realm.commitTransaction()
@@ -123,8 +123,8 @@ public class SnackFactory {
                 Log.e(LOG_TAG, "Can't create Snack from Parse object, null")
                 return null
             }
-            val SnackId = parseObject.getString(Snack.SnackIdFieldName)
-            if (SnackId == null || SnackId.isEmpty()) {
+            val snackId = parseObject.getString(Snack.SnackIdFieldName)
+            if (snackId == null || snackId.isEmpty()) {
                 Log.e(LOG_TAG, "Can't create Snack from Parse object, no id")
             }
             val carbs = parseObject.getInt(Snack.CarbsFieldName)
@@ -134,7 +134,7 @@ public class SnackFactory {
             val beforeSugar = BloodSugarFactory.BloodSugarFromParseObject(parseObject.getParseObject(Snack.BeforeSugarFieldName), realm)
 
             realm.beginTransaction()
-            val snack = SnackForSnackId(SnackId, realm, true)!!
+            val snack = SnackForSnackId(snackId, realm, true)!!
             if (carbs >= 0 && carbs != snack.getCarbs()) {
                 snack.setCarbs(carbs)
             }
@@ -161,19 +161,22 @@ public class SnackFactory {
          * *
          * @param action Returns the ParseObject, and true if the object was created and should be saved.
          */
-        internal fun ParseObjectFromSnack(snack: Snack?, beforeSugarObject: ParseObject?, action: Action2<ParseObject?, Boolean>?) {
+        internal fun ParseObjectFromSnack(snack: Snack?,
+                                          beforeSugarObject: ParseObject?,
+                                          foodObjects: List<ParseObject>,
+                                          action: Action2<ParseObject?, Boolean>?) {
             if (action == null) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Snack, action null")
                 return
             }
-            if (snack?.getSnackId()?.isEmpty() ?: true) {
+            if (snack?.getId()?.isEmpty() ?: true) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Snack, Snack null or no id")
                 action.call(null, false)
                 return
             }
 
             val parseQuery = ParseQuery.getQuery<ParseObject>(Snack.ParseClassName)
-            parseQuery.whereEqualTo(Snack.SnackIdFieldName, snack!!.getSnackId())
+            parseQuery.whereEqualTo(Snack.SnackIdFieldName, snack!!.getId())
 
             parseQuery.findInBackground({parseObjects: List<ParseObject>, e: ParseException? ->
                 val parseObject: ParseObject
@@ -184,7 +187,7 @@ public class SnackFactory {
                 } else {
                     parseObject = parseObjects.get(0)
                 }
-                parseObject.put(Snack.SnackIdFieldName, snack.getSnackId())
+                parseObject.put(Snack.SnackIdFieldName, snack.getId())
                 if (beforeSugarObject != null) {
                     parseObject.put(Snack.BeforeSugarFieldName, beforeSugarObject)
                 }
@@ -192,6 +195,7 @@ public class SnackFactory {
                 parseObject.put(Snack.CarbsFieldName, snack.getCarbs())
                 parseObject.put(Snack.InsulinFieldName, snack.getInsulin())
                 parseObject.put(Snack.SnackDateFieldName, snack.getDate())
+                parseObject.put(Snack.FoodListFieldName, foodObjects)
                 action.call(parseObject, created)
             })
         }
@@ -199,7 +203,7 @@ public class SnackFactory {
         private fun SnackForSnackId(id: String?, realm: Realm, create: Boolean): Snack? {
             if (create && (id == null || id.isEmpty())) {
                 val Snack = realm.createObject<Snack>(javaClass<Snack>())
-                Snack.setSnackId(UUID.randomUUID().toString())
+                Snack.setId(UUID.randomUUID().toString())
                 return Snack
             }
 
@@ -210,7 +214,7 @@ public class SnackFactory {
 
             if (result == null && create) {
                 result = realm.createObject<Snack>(javaClass<Snack>())
-                result!!.setSnackId(id)
+                result!!.setId(id)
             }
 
             return result

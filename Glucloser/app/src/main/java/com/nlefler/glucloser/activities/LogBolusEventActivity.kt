@@ -3,7 +3,6 @@ package com.nlefler.glucloser.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.app.ActionBarActivity
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -132,7 +131,7 @@ public class LogBolusEventActivity : AppCompatActivity(), PlaceSelectionDelegate
     }
 
     private fun getBolusEventTypeFromBundle(savedInstanceState: Bundle?, extras: Bundle?): BolusEventType? {
-        for (bundle in array<Bundle?>(savedInstanceState, extras)) {
+        for (bundle in arrayOf<Bundle?>(savedInstanceState, extras)) {
             if (bundle?.containsKey(BolusEventTypeKey) ?: null != null) {
                 val eventName = bundle!!.getString(BolusEventTypeKey)
                 return try { BolusEventType.valueOf(eventName) } catch (e: Exception ) { null }

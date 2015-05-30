@@ -27,7 +27,7 @@ public class Snack extends RealmObject implements BolusEvent {
     @Ignore
     public static String FoodListFieldName = "foods";
 
-    private String snackId;
+    private String id;
     private Date date;
     private int carbs;
     private float insulin;
@@ -35,12 +35,12 @@ public class Snack extends RealmObject implements BolusEvent {
     private boolean correction;
     private RealmList<Food> foods;
 
-    public String getSnackId() {
-        return snackId;
+    public String getId() {
+        return id;
     }
 
-    public void setSnackId(String snackId) {
-        this.snackId = snackId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Date getDate() {

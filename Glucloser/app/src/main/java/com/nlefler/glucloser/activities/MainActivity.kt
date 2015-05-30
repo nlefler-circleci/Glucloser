@@ -5,8 +5,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarActivity
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
@@ -29,7 +29,7 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
 
-public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener {
+public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
     private var navBarItems: Array<String>? = null
     private var navDrawerLayout: DrawerLayout? = null
@@ -37,13 +37,13 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
     private var navDrawerToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<ActionBarActivity>.onCreate(savedInstanceState)
+        super<AppCompatActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, HistoryListFragment(), HistoryFragmentId).commit()
         }
 
-        this.navBarItems = array(getString(R.string.nav_drawer_item_home), getString(R.string.nav_drawer_item_foursquare_login))
+        this.navBarItems = arrayOf(getString(R.string.nav_drawer_item_home), getString(R.string.nav_drawer_item_foursquare_login))
         this.navDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
         this.navDrawerListView = findViewById(R.id.left_drawer) as ListView
         this.navDrawerListView!!.setAdapter(ArrayAdapter(this, R.layout.drawer_list_item, this.navBarItems))
@@ -59,13 +59,13 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
-        super<ActionBarActivity>.onPostCreate(savedInstanceState)
+        super<AppCompatActivity>.onPostCreate(savedInstanceState)
         // Sync the toggle state after onRestoreInstanceState has occurred.
         this.navDrawerToggle!!.syncState()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
-        super<ActionBarActivity>.onConfigurationChanged(newConfig)
+        super<AppCompatActivity>.onConfigurationChanged(newConfig)
         this.navDrawerToggle!!.onConfigurationChanged(newConfig)
     }
 
@@ -92,7 +92,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
         }
         // Handle your other action bar items...
 
-        return super<ActionBarActivity>.onOptionsItemSelected(item)
+        return super<AppCompatActivity>.onOptionsItemSelected(item)
     }
 
     /** OnClickListener  */

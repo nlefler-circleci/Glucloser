@@ -9,6 +9,9 @@ import io.realm.RealmList;
  * Created by Nathan Lefler on 5/8/15.
  */
 public interface BolusEvent {
+    public String getId();
+    public void setId(String id);
+
     public Date getDate();
     public void setDate(Date date);
 

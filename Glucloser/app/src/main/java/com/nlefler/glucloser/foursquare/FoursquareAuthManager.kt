@@ -24,7 +24,7 @@ import java.io.IOException
 /**
  * Created by Nathan Lefler on 12/28/14.
  */
-public class FoursquareAuthManager private() {
+public class FoursquareAuthManager private constructor() {
 
     private val crypto: Crypto
     private var _userAccessToken = ""

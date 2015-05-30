@@ -56,7 +56,7 @@ public class LogFoodFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getFoodParcelableFromBundle(savedInstanceState: Bundle?, args: Bundle?, extras: Bundle?): FoodParcelable {
-        for (bundle in array<Bundle?>(savedInstanceState, args, extras)) {
+        for (bundle in arrayOf<Bundle?>(savedInstanceState, args, extras)) {
             if (bundle?.containsKey(FoodParcelableBundleKey) ?: null != null) {
                 return bundle!!.getParcelable<Parcelable>(FoodParcelableBundleKey) as FoodParcelable
             }
