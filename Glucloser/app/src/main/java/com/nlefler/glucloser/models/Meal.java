@@ -2,19 +2,20 @@ package com.nlefler.glucloser.models;
 
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 
 /**
  * Created by Nathan Lefler on 12/11/14.
  */
-public class Meal extends RealmObject implements BolusEvent {
+public class Meal extends RealmObject implements BolusEvent, HasPlace {
     @Ignore
     public static final String ParseClassName = "Meal";
 
     @Ignore
     public static final String MealIdFieldName = "mealId";
-    private String mealId;
+    private String id;
 
     @Ignore
     public static final String MealDateFieldName = "date";
@@ -40,12 +41,16 @@ public class Meal extends RealmObject implements BolusEvent {
     public static final String CorrectionFieldName = "correction";
     private boolean correction;
 
-    public String getMealId() {
-        return mealId;
+    @Ignore
+    public static final String FoodListFieldName = "foods";
+    private RealmList<Food> foods;
+
+    public String getId() {
+        return id;
     }
 
-    public void setMealId(String mealId) {
-        this.mealId = mealId;
+    public void setId(String id){
+        this.id = id;
     }
 
     public Date getDate() {
@@ -93,5 +98,14 @@ public class Meal extends RealmObject implements BolusEvent {
 
     public void setCorrection(boolean correction) {
         this.correction = correction;
+    }
+
+    @Override
+    public RealmList<Food> getFoods() {
+        return foods;
+    }
+
+    public void setFoods(RealmList<Food> foods) {
+        this.foods = foods;
     }
 }

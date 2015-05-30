@@ -5,6 +5,9 @@ import android.content.Context
 import android.os.Debug
 import android.support.multidex.MultiDex
 import android.util.Log
+import com.nlefler.glucloser.models.Food
+import com.nlefler.glucloser.models.Meal
+import com.nlefler.glucloser.models.Snack
 
 import com.parse.Parse
 import com.parse.ParseAnalytics
@@ -13,6 +16,11 @@ import com.parse.ParseException
 import com.parse.ParsePush
 import com.parse.SaveCallback
 import com.squareup.leakcanary.LeakCanary
+import io.realm.Realm
+import io.realm.RealmMigration
+import io.realm.internal.ColumnType
+import io.realm.internal.Table
+import java.io.File
 
 /**
  * Created by Nathan Lefler on 12/12/14.

@@ -3,30 +3,33 @@ package com.nlefler.glucloser.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
 public class MealParcelable implements Parcelable, BolusEventParcelable {
-    private String mealId;
+    private String id;
     private Date date;
     private PlaceParcelable placeParcelable;
     private int carbs;
     private float insulin;
     private BloodSugarParcelable beforeSugarParcelable;
     private boolean correction;
+    private List<FoodParcelable> foodParcelables;
 
     public MealParcelable() {
 
     }
 
-    public String getMealId() {
-        return mealId;
+    public String getId() {
+        return id;
     }
 
-    public void setMealId(String mealId) {
-        this.mealId = mealId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Date getDate() {
@@ -77,15 +80,30 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
         this.beforeSugarParcelable = beforeSugar;
     }
 
+    @Override
+    public List<FoodParcelable> getFoodParcelables() {
+        return foodParcelables;
+    }
+
+    @Override
+    public void setFoodParcelables(List<FoodParcelable> foodParcelables) {
+        this.foodParcelables = foodParcelables;
+    }
+
     /** Parcelable */
     protected MealParcelable(Parcel in) {
-        mealId = in.readString();
+        id = in.readString();
         placeParcelable = (PlaceParcelable) in.readValue(PlaceParcelable.class.getClassLoader());
         carbs = in.readInt();
         insulin = in.readFloat();
         correction = in.readInt() != 0;
         beforeSugarParcelable = (BloodSugarParcelable)in.readParcelable(BloodSugar.class.getClassLoader());
-        date = new Date(in.readLong());
+        long time = in.readLong();
+        if (time > 0) {
+            date = new Date(time);
+        }
+        this.foodParcelables = new ArrayList<FoodParcelable>();
+        in.readList(this.foodParcelables, FoodParcelable.class.getClassLoader());
     }
 
     @Override
@@ -95,13 +113,16 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mealId);
+        dest.writeString(id);
         dest.writeParcelable(placeParcelable, flags);
         dest.writeInt(carbs);
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
         dest.writeParcelable(beforeSugarParcelable, flags);
-        dest.writeLong(date.getTime());
+        if (date != null) {
+            dest.writeLong(date.getTime());
+        }
+        dest.writeTypedList(this.foodParcelables);
    }
 
     @SuppressWarnings("unused")

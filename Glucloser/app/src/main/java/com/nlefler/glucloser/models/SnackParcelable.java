@@ -6,29 +6,32 @@ import android.os.Parcelable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Nathan Lefler on 5/8/15.
  */
 public class SnackParcelable implements Parcelable, BolusEventParcelable {
-    private String snackId;
+    private String id;
     private Date date;
     private int carbs;
     private float insulin;
     private BloodSugarParcelable beforeSugarParcelable;
     private boolean correction;
+    private List<FoodParcelable> foodParcelables;
 
     public SnackParcelable() {
 
     }
 
-    public String getSnackId() {
-        return snackId;
+    public String getId() {
+        return id;
     }
 
-    public void setSnackId(String snackId) {
-        this.snackId = snackId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     @NotNull
@@ -81,14 +84,30 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
     public void setCorrection(boolean correction) {
         this.correction = correction;
     }
-      /** Parcelable */
+
+    @Override
+    public List<FoodParcelable> getFoodParcelables() {
+        return foodParcelables;
+    }
+
+    @Override
+    public void setFoodParcelables(List<FoodParcelable> foodParcelables) {
+        this.foodParcelables = foodParcelables;
+    }
+
+    /** Parcelable */
     protected SnackParcelable(Parcel in) {
-        snackId = in.readString();
+        id = in.readString();
         carbs = in.readInt();
         insulin = in.readFloat();
         correction = in.readInt() != 0;
         beforeSugarParcelable = (BloodSugarParcelable)in.readParcelable(BloodSugar.class.getClassLoader());
-        date = new Date(in.readLong());
+        long time = in.readLong();
+        if (time > 0) {
+            date = new Date();
+        }
+        this.foodParcelables = new ArrayList<FoodParcelable>();
+        in.readList(this.foodParcelables, FoodParcelable.class.getClassLoader());
     }
 
     @Override
@@ -98,12 +117,15 @@ public class SnackParcelable implements Parcelable, BolusEventParcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(snackId);
+        dest.writeString(id);
         dest.writeInt(carbs);
         dest.writeFloat(insulin);
         dest.writeInt(correction ? 1 : 0);
         dest.writeParcelable(beforeSugarParcelable, flags);
-        dest.writeLong(date.getTime());
+        if (date != null) {
+            dest.writeLong(date.getTime());
+        }
+        dest.writeTypedList(this.foodParcelables);
     }
 
     @SuppressWarnings("unused")

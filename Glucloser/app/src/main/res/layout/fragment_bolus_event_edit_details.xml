@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nlefler.glucloser.ui.MealDetailsFragment">
+    tools:context="com.nlefler.glucloser.ui.BolusEventDetailsFragment">
 
     <LinearLayout
     android:orientation="vertical"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/meal_edit_detail_carb_value"
+                android:id="@+id/meal_edit_detail_total_carb_value"
                 android:layout_weight="0.80" />
 
         </LinearLayout>
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:ems="10"
-                android:id="@+id/meal_edit_detail_insulin_value"
+                android:id="@+id/meal_edit_detail_total_insulin_value"
                 android:layout_weight="0.80" />
 
         </LinearLayout>
@@ -106,13 +106,35 @@
 
         </LinearLayout>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/bolus_event_detail_food_list"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save_meal_verb"
-        android:id="@+id/meal_edit_detail_save_button"
-        android:layout_alignParentBottom="true" />
+        android:weightSum="1"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_food_verb"
+            android:id="@+id/meal_edit_detail_add_food_button"
+            android:layout_weight="0.5"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_meal_verb"
+            android:id="@+id/meal_edit_detail_save_button"
+            android:layout_weight="0.5"
+            />
+
+    </LinearLayout>
 </RelativeLayout>

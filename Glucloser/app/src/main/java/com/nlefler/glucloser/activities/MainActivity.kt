@@ -1,51 +1,35 @@
-package com.nlefler.glucloser
+package com.nlefler.glucloser.activities
 
-import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Outline
-import android.os.Build
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarActivity
-import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewOutlineProvider
-import android.widget.Adapter
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
-
 import com.getbase.floatingactionbutton.FloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
+import com.nlefler.glucloser.R
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter
 import com.nlefler.glucloser.foursquare.FoursquareAuthManager
 import com.nlefler.glucloser.models.BolusEvent
+import com.nlefler.glucloser.models.BolusEventType
 import com.nlefler.glucloser.models.Meal
 import com.nlefler.glucloser.models.Snack
 import com.nlefler.glucloser.ui.DividerItemDecoration
 import com.parse.ParseAnalytics
-
-import java.util.ArrayList
-
 import io.realm.Realm
-import io.realm.RealmQuery
-import io.realm.RealmResults
+import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
-import java.util.TreeSet
 
-
-public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener {
+public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
     private var navBarItems: Array<String>? = null
     private var navDrawerLayout: DrawerLayout? = null
@@ -53,13 +37,13 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
     private var navDrawerToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<ActionBarActivity>.onCreate(savedInstanceState)
+        super<AppCompatActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, HistoryListFragment(), HistoryFragmentId).commit()
         }
 
-        this.navBarItems = array(getString(R.string.nav_drawer_item_home), getString(R.string.nav_drawer_item_foursquare_login))
+        this.navBarItems = arrayOf(getString(R.string.nav_drawer_item_home), getString(R.string.nav_drawer_item_foursquare_login))
         this.navDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
         this.navDrawerListView = findViewById(R.id.left_drawer) as ListView
         this.navDrawerListView!!.setAdapter(ArrayAdapter(this, R.layout.drawer_list_item, this.navBarItems))
@@ -75,13 +59,13 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
-        super<ActionBarActivity>.onPostCreate(savedInstanceState)
+        super<AppCompatActivity>.onPostCreate(savedInstanceState)
         // Sync the toggle state after onRestoreInstanceState has occurred.
         this.navDrawerToggle!!.syncState()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
-        super<ActionBarActivity>.onConfigurationChanged(newConfig)
+        super<AppCompatActivity>.onConfigurationChanged(newConfig)
         this.navDrawerToggle!!.onConfigurationChanged(newConfig)
     }
 
@@ -108,7 +92,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
         }
         // Handle your other action bar items...
 
-        return super<ActionBarActivity>.onOptionsItemSelected(item)
+        return super<AppCompatActivity>.onOptionsItemSelected(item)
     }
 
     /** OnClickListener  */
@@ -127,7 +111,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             FoursquareAuthManager.FOURSQUARE_TOKEN_EXCHG_INTENT_CODE -> {
                 FoursquareAuthManager.SharedManager().gotTokenExchangeResponse(this, resultCode, data ?: Intent())
             }
-            LogMealActivityIntentCode, LogSnackActivityIntentCode -> {
+            LogBolusEventActivityIntentCode -> {
                 (getSupportFragmentManager().findFragmentByTag(HistoryFragmentId) as HistoryListFragment).updateMealHistory()
             }
         }
@@ -160,16 +144,20 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
             val logMealButton = rootView.findViewById(R.id.fab_log_meal_item) as FloatingActionButton
             logMealButton.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View) {
-                    val intent = Intent(view.getContext(), javaClass<LogMealActivity>())
-                    activity.startActivityForResult(intent, LogMealActivityIntentCode)
+                    val intent = Intent(view.getContext(), javaClass<LogBolusEventActivity>())
+                    intent.putExtra(LogBolusEventActivity.BolusEventTypeKey, BolusEventType.BolusEventTypeMeal.name())
+
+                    activity.startActivityForResult(intent, LogBolusEventActivityIntentCode)
                     floatingActionsMenu.collapse()
                 }
             })
             val logSnackButton = rootView.findViewById(R.id.fab_log_snack_item) as FloatingActionButton
             logSnackButton.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View) {
-                    val intent = Intent(view.getContext(), javaClass<LogSnackActivity>())
-                    activity.startActivityForResult(intent, LogSnackActivityIntentCode)
+                    val intent = Intent(view.getContext(), javaClass<LogBolusEventActivity>())
+                    intent.putExtra(LogBolusEventActivity.BolusEventTypeKey, BolusEventType.BolusEventTypeSnack.name())
+
+                    activity.startActivityForResult(intent, LogBolusEventActivityIntentCode)
                     floatingActionsMenu.collapse()
                 }
             })
@@ -208,8 +196,7 @@ public class MainActivity : ActionBarActivity(), AdapterView.OnItemClickListener
 
     companion object {
         private val LOG_TAG = "MainActivity"
-        protected val LogMealActivityIntentCode: Int = 4136;
-        protected val LogSnackActivityIntentCode: Int = 2416;
+        protected val LogBolusEventActivityIntentCode: Int = 4136;
         protected val HistoryFragmentId: String = "HistoryFragmentId"
     }
 }

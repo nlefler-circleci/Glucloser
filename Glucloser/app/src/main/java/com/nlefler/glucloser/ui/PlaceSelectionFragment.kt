@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.nlefler.glucloser.R
-import com.nlefler.glucloser.actions.LogMealAction
+import com.nlefler.glucloser.actions.LogBolusEventAction
 import com.nlefler.glucloser.dataSource.PlaceSelectionRecyclerAdapter
 import com.nlefler.glucloser.foursquare.FoursquarePlaceHelper
 import com.nlefler.glucloser.models.PlaceParcelable
@@ -39,7 +39,7 @@ public class PlaceSelectionFragment : Fragment(), Observer<List<NLFoursquareVenu
     private var foursquareHelper: FoursquarePlaceHelper? = null
     private var closestPlacesSubscription: Subscription? = null
     private var subscriptionScheduler: Scheduler? = null
-    private val logMealAction: LogMealAction? = null
+    private val logMealAction: LogBolusEventAction? = null
 
     private var placeSelectionList: RecyclerView? = null
     private var placeSelectionAdapter: PlaceSelectionRecyclerAdapter? = null

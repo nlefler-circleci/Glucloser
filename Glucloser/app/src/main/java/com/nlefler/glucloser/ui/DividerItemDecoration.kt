@@ -17,7 +17,7 @@ public class DividerItemDecoration : RecyclerView.ItemDecoration {
     private var mShowLastDivider = false
 
     public constructor(context: Context) {
-        val a = context.obtainStyledAttributes(intArray(android.R.attr.listDivider))
+        val a = context.obtainStyledAttributes(intArrayOf(android.R.attr.listDivider))
         mDivider = a.getDrawable(0)
         a.recycle()
     }
@@ -27,7 +27,7 @@ public class DividerItemDecoration : RecyclerView.ItemDecoration {
         if (mDivider == null) {
             return
         }
-        if (parent.getChildPosition(view) < 1) {
+        if (parent.getChildLayoutPosition(view) < 1) {
             return
         }
 

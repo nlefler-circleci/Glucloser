@@ -1,17 +1,11 @@
 package com.nlefler.glucloser.dataSource
 
 import android.util.Log
-import com.nlefler.glucloser.models.BloodSugar
-import com.nlefler.glucloser.models.Meal
-import com.nlefler.glucloser.models.Place
-import com.nlefler.glucloser.models.Snack
+import com.nlefler.glucloser.models.*
 
 import com.parse.ParseException
 import com.parse.ParseObject
 import com.parse.SaveCallback
-
-import java.util.HashMap
-import java.util.HashSet
 
 import rx.Observable
 import rx.Observer
@@ -19,11 +13,12 @@ import rx.Subscriber
 import rx.functions.Action1
 import rx.functions.Action2
 import rx.schedulers.Schedulers
+import java.util.*
 
 /**
  * Created by Nathan Lefler on 12/30/14.
  */
-public class ParseUploader private() {
+public class ParseUploader private constructor() {
     private val inProgressUploads: MutableMap<String, Observable<ParseObject>>
 
     init {
@@ -32,93 +27,78 @@ public class ParseUploader private() {
 
     public fun uploadPlace(place: Place) {
         val placeId = place.getFoursquareId()!!
-        this.getUploadedObjectObservable(placeId, place).subscribe(object : Action1<ParseObject> {
-            override fun call(parseObject: ParseObject) {
-                parseObject.saveInBackground()
-                inProgressUploads.remove(placeId)
-            }
+        this.getUploadedObjectObservable(placeId, place).subscribe({ parseObject: ParseObject ->
+            parseObject.saveInBackground()
+            inProgressUploads.remove(placeId)
         })
     }
 
-    public fun uploadSnack(snack: Snack) {
-        val beforeSugar = snack.getBeforeSugar()
+    public fun uploadBolusEvent(bolusEvent: BolusEvent) {
+
+        var finalObservable: Observable<ParseObject>? = null
+        var placeId: String = ""
+        if (bolusEvent is HasPlace) {
+            val place = bolusEvent.getPlace()
+            placeId = place.getFoursquareId()!!
+            finalObservable = getUploadedObjectObservable(placeId, place)
+        }
+
+        val beforeSugar = bolusEvent.getBeforeSugar()
         val beforeSugarId = beforeSugar?.getId() ?: null
-
-        var beforeSugarObservable: Observable<ParseObject>?
         if (beforeSugarId != null) {
-            beforeSugarObservable = getUploadedObjectObservable(beforeSugarId, beforeSugar!!)
-            beforeSugarObservable!!.subscribeOn(Schedulers.io())
-            beforeSugarObservable!!.subscribe(object : Observer<ParseObject> {
-                private var beforeSugarParseObject: ParseObject? = null
-
-                override fun onCompleted() {
-                    val snackId = snack.getSnackId()!!
-                    getUploadedObjectObservable(snackId, snack, beforeSugarParseObject).subscribe(object : Action1<ParseObject> {
-                        override fun call(snackObject: ParseObject) {
-                            snackObject.saveInBackground()
-                            inProgressUploads.remove(snackId)
-                        }
-                    })
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.e(LOG_TAG, "Unable to save Snack to Parse: " + e.getMessage())
-                }
-
-                override fun onNext(parseObject: ParseObject) {
-                    beforeSugarParseObject = parseObject
-                    inProgressUploads.remove(beforeSugarId)
-                }
-            })
-        }
-    }
-
-    public fun uploadMeal(meal: Meal) {
-        val place = meal.getPlace()!!
-        val placeId = place.getFoursquareId()!!
-
-        val beforeSugar = meal.getBeforeSugar()
-        val beforeSugarId = beforeSugar?.getId() ?: null
-
-        val placeFetchObservable = getUploadedObjectObservable(placeId, place)
-        var beforeSugarObservable: Observable<ParseObject>? = null
-        if (beforeSugarId != null) {
-            beforeSugarObservable = getUploadedObjectObservable(beforeSugarId, beforeSugar!!)
+//            finalObservable.subscribeOn(Schedulers.io())
+            val bolusObservable = getUploadedObjectObservable(beforeSugarId, beforeSugar!!)
+            if (finalObservable != null) {
+                finalObservable = Observable.merge<ParseObject>(finalObservable, bolusObservable)
+            }
+            else {
+                finalObservable = bolusObservable
+            }
         }
 
-        var finalObservable: Observable<ParseObject>?
-        if (beforeSugarObservable != null) {
-            placeFetchObservable.subscribeOn(Schedulers.io())
-            finalObservable = Observable.merge<ParseObject>(placeFetchObservable, beforeSugarObservable)
-        } else {
-            finalObservable = placeFetchObservable
+        val foodIds = ArrayList<String>()
+        for (food in bolusEvent.getFoods()) {
+            val foodId = food.getFoodId()
+            foodIds.add(foodId)
+            finalObservable = Observable.merge<ParseObject>(finalObservable, getUploadedObjectObservable(foodId, food))
         }
-        finalObservable!!.subscribe(object : Observer<ParseObject> {
-            private var placeParseObject: ParseObject? = null
-            private var beforeSugarParseObject: ParseObject? = null
+
+        if (finalObservable == null) {
+            Log.e(LOG_TAG, "Can't upload bolus event, final observable is null")
+            return
+        }
+
+        finalObservable.subscribe(object : Observer<ParseObject> {
+            var placeParseObject: ParseObject? = null
+            var beforeSugarParseObject: ParseObject? = null
+            val foodParseObjects = ArrayList<ParseObject>()
 
             override fun onCompleted() {
-                val mealId = meal.getMealId()!!
-                getUploadedObjectObservable(mealId, meal, placeParseObject, beforeSugarParseObject).subscribe(object : Action1<ParseObject> {
-                    override fun call(mealObject: ParseObject) {
-                        mealObject.saveInBackground()
-                        inProgressUploads.remove(mealId)
-                    }
+                val bolusEventId = bolusEvent.getId();
+                getUploadedObjectObservable(bolusEventId, bolusEvent, beforeSugarParseObject, foodParseObjects, placeParseObject).subscribe({ mealObject: ParseObject ->
+                    mealObject.saveInBackground()
+                    inProgressUploads.remove(bolusEventId)
                 })
             }
 
             override fun onError(e: Throwable) {
-                Log.e(LOG_TAG, "Unable to save Meal to Parse: " + e.getMessage())
+                Log.e(LOG_TAG, "Unable to save bolus event to Parse: " + e.getMessage())
             }
 
             override fun onNext(parseObject: ParseObject) {
-                val className = parseObject.getClassName()
-                if (className == Place.ParseClassName) {
-                    placeParseObject = parseObject
-                    inProgressUploads.remove(placeId)
-                } else if (className == BloodSugar.ParseClassName) {
-                    beforeSugarParseObject = parseObject
-                    inProgressUploads.remove(beforeSugarId)
+                when (parseObject.getClassName()) {
+                    Place.ParseClassName -> {
+                        placeParseObject = parseObject
+                        inProgressUploads.remove(placeId)
+                    }
+                    BloodSugar.ParseClassName -> {
+                        beforeSugarParseObject = parseObject
+                        inProgressUploads.remove(beforeSugarId)
+                    }
+                    Food.ParseClassName -> {
+                        foodParseObjects.add(parseObject)
+                        foodIds.remove(parseObject.get(Food.FoodIdFieldName))
+                    }
                 }
             }
         })
@@ -126,11 +106,17 @@ public class ParseUploader private() {
 
     public fun uploadBloodSugar(sugar: BloodSugar) {
         val sugarId = sugar.getId()!!
-        this.getUploadedObjectObservable(sugarId, sugar).subscribe(object : Action1<ParseObject> {
-            override fun call(parseObject: ParseObject) {
-                parseObject.saveInBackground()
-                inProgressUploads.remove(sugarId)
-            }
+        this.getUploadedObjectObservable(sugarId, sugar).subscribe({ parseObject: ParseObject ->
+            parseObject.saveInBackground()
+            inProgressUploads.remove(sugarId)
+        })
+    }
+
+    public fun uploadFood(food: Food) {
+        val foodId = food.getFoodId()
+        this.getUploadedObjectObservable(foodId, food).subscribe({ parseObject: ParseObject ->
+            parseObject.saveInBackground()
+            inProgressUploads.remove(foodId)
         })
     }
 
@@ -143,24 +129,36 @@ public class ParseUploader private() {
                 override fun call(subscriber: Subscriber<in ParseObject>) {
                     when (toUpload) {
                         is Place -> {
-                            PlaceFactory.ParseObjectFromPlace(toUpload : Place, createParseObjectReadyAction(subscriber))
+                            PlaceFactory.ParseObjectFromPlace(toUpload, createParseObjectReadyAction(subscriber))
                         }
                         is Meal -> {
-                            if (args.size() < 2 || args[0] !is ParseObject) {
+                            if (args.size() < 3 || !(args[0] is ParseObject && args[1] is ParseObject && args[2] != null)) {
                                 subscriber.onError(IllegalArgumentException("Invalid specific arguments for Meal"))
                                 return
                             }
-                            MealFactory.ParseObjectFromMeal(toUpload : Meal, args[0] as ParseObject?, args[1] as ParseObject?, createParseObjectReadyAction(subscriber))
+                            @suppress("UNCHECKED_CAST")
+                            MealFactory.ParseObjectFromMeal(toUpload,
+                                    args[0] as ParseObject?,
+                                    args[2] as ParseObject?,
+                                    args[1] as List<ParseObject>,
+                                    createParseObjectReadyAction(subscriber))
                         }
                         is BloodSugar -> {
-                            BloodSugarFactory.ParseObjectFromBloodSugar(toUpload : BloodSugar, createParseObjectReadyAction(subscriber))
+                            BloodSugarFactory.ParseObjectFromBloodSugar(toUpload, createParseObjectReadyAction(subscriber))
                         }
                         is Snack -> {
-                            if (args.size() != 1) {
+                            if (args.size() < 2) {
                                 subscriber.onError(IllegalArgumentException("Invalid specific arguments for Snack"))
                                 return
                             }
-                            SnackFactory.ParseObjectFromSnack(toUpload : Snack, args[0] as ParseObject?, createParseObjectReadyAction(subscriber))
+                            @suppress("UNCHECKED_CAST")
+                            SnackFactory.ParseObjectFromSnack(toUpload,
+                                    args[0] as ParseObject?,
+                                    args[1] as List<ParseObject>,
+                                    createParseObjectReadyAction(subscriber))
+                        }
+                        is Food -> {
+                            FoodFactory.ParseObjectFromFood(toUpload, createParseObjectReadyAction(subscriber))
                         }
                         else -> {
                             subscriber.onError(IllegalArgumentException("Invalid type for upload object"))
