@@ -132,15 +132,15 @@ public class ParseUploader private constructor() {
                             PlaceFactory.ParseObjectFromPlace(toUpload, createParseObjectReadyAction(subscriber))
                         }
                         is Meal -> {
-                            if (args.size() < 3 || !(args[0] is ParseObject && args[1] is ParseObject && args[2] != null)) {
+                            if (args.size() < 3) {
                                 subscriber.onError(IllegalArgumentException("Invalid specific arguments for Meal"))
                                 return
                             }
                             @suppress("UNCHECKED_CAST")
                             MealFactory.ParseObjectFromMeal(toUpload,
                                     args[0] as ParseObject?,
-                                    args[2] as ParseObject?,
                                     args[1] as List<ParseObject>,
+                                    args[2] as ParseObject?,
                                     createParseObjectReadyAction(subscriber))
                         }
                         is BloodSugar -> {
