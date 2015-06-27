@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import com.nlefler.glucloser.R
@@ -32,10 +33,19 @@ public class LogFoodFragment : Fragment(), View.OnClickListener {
         val rootView = inflater!!.inflate(R.layout.fragment_log_food, container, false)
 
         this.foodNameField = rootView.findViewById(R.id.log_food_food_name_value) as EditText?
+        this.foodNameField?.requestFocus()
         this.carbValueField = rootView.findViewById(R.id.log_food_total_carb_value) as EditText?
 
         val saveButton = rootView.findViewById(R.id.log_food_save_button) as Button
         saveButton.setOnClickListener(this)
+
+        this.carbValueField?.setOnEditorActionListener { textView, actionId, keyEvent ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                saveButton.callOnClick()
+                true;
+            }
+            false;
+        }
 
         return rootView
     }

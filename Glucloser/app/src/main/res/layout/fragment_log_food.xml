@@ -50,6 +50,7 @@
                 android:inputType="number"
                 android:ems="10"
                 android:id="@+id/log_food_total_carb_value"
+                android:imeOptions="actionDone"
                 android:layout_weight="0.80" />
 
         </LinearLayout>
