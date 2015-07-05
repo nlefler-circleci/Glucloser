@@ -134,7 +134,7 @@ public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener
             this.mealHistoryLayoutManager = LinearLayoutManager(getActivity())
             this.mealHistoryListView!!.setLayoutManager(this.mealHistoryLayoutManager)
 
-            this.mealHistoryAdapter = MealHistoryRecyclerAdapter(ArrayList<Meal>())
+            this.mealHistoryAdapter = MealHistoryRecyclerAdapter(getActivity(), ArrayList<Meal>())
             this.mealHistoryListView!!.setAdapter(this.mealHistoryAdapter)
             this.mealHistoryListView!!.addItemDecoration(DividerItemDecoration(getActivity()))
 

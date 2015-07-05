@@ -89,11 +89,20 @@
 
         <activity
             android:name=".activities.LogFoodActivity"
-            android:label="@string/title_activity_log_food">
-            <!--android:parentActivityName=".activities.MainActivity">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".activities.MainActivity" />-->
+            android:label="@string/title_activity_log_food" >
+
+            <!-- android:parentActivityName=".activities.MainActivity"> -->
+            <!-- <meta-data -->
+            <!-- android:name="android.support.PARENT_ACTIVITY" -->
+            <!-- android:value=".activities.MainActivity" /> -->
+        </activity>
+        <activity
+            android:name=".BolusDetailActivity"
+            android:label="@string/title_activity_bolus_detail"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nlefler.glucloser.activities.MainActivity" />
         </activity>
     </application>
 
