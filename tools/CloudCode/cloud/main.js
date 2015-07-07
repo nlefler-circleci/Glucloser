@@ -1,81 +1,77 @@
-var express = require('express');
-var app = express();
+var foursquare = require('cloud/foursquare.js');
+var cgm = require('cloud/cgm.js');
+var bolus = require('cloud/bolus.js');
+var _ = require('underscore');
 
-function getFoursquareCheckInData(body) {
-	return JSON.parse(body.checkin);
-}
+foursquare.foursquarePushHandler.listen();
 
-function getFoursquareUserId(checkinData) {
-	return checkinData.user.id || false;
-}
- 
-function getFoursquareVenueName(checkinData) {
-	return checkinData.venue.name || false;
-}
+Parse.Cloud.afterSave('Meal', function(request) {
 
-function getAppData(checkinData) {
-	return {
-		venueName: getFoursquareVenueName(checkinData) || "",
-		venueId: checkinData.venue.id || "",
-		venueLat: checkinData.venue.location.lat || "",
-		venueLon: checkinData.venue.location.lng || ""
-	};
-}
+});
 
-// Global app configuration section
-app.use(express.bodyParser());  // Populate req.body
- 
-app.post('/foursquareCheckin',
-         function(req, res) {
-  console.log(req.body);
+Parse.Cloud.afterSave('Snack', function(request) {
 
-  var checkinData = getFoursquareCheckInData(req.body);
-  if (!checkinData) {
-  	console.log("No checkin data");
-  	res.send(400);
-  	return;
-  }
+});
 
-  var foursquareUserId = getFoursquareUserId(checkinData);
-  if (!foursquareUserId) {
-  	console.log("Cant get foursquare user id");
-  	res.send(400);
-  	return;
-  } else {
-  	console.log("Foursquare user id " + foursquareUserId)
-  }
+Parse.Cloud.job('postBolusAverages', function(request, status) {
+	// Get the last time this ran
+	var lastProcessedTime = null;
 
-  var notifTitle = "You checked in";
-  var venueName = getFoursquareVenueName(checkinData);
-  if (venueName) {
-  	notifTitle += " at " + venueName;
-  }
-  notifTitle += ". Log a meal?";
+	var query = new Parse.Query('CGMGraphProcessLog');
+	query.descending('createdAt');
+	query.first({
+		success: function (object) {
+			if (!!object) {
+				// Last time
+				lastProcessedTime = object.get('createdAt');
+			}
+			else {
+				lastProcessedTime = new Date(0);
+			}
 
-  var appData = getAppData(checkinData) || {};
+			var bolusPromise = bolus.BolusesAfterDate(lastProcessedTime, 10);
+			bolusPromise.then(function(bolusResults) {
+				console.log("Num boluses " + bolusResults.length);
 
-  var query = new Parse.Query(Parse.Installation);
-  query.equalTo('channels', 'foursquareCheckin');
-  query.equalTo('foursquareUserId', foursquareUserId);
+				var resolveCount = bolusResults.length;
+				_.each(bolusResults, function(bolusResult) {
+					console.log("Bolus result " + bolusResult.id + " " + bolusResult.createdAt);
 
-  Parse.Push.send({
-  		where: query,
-		data: {
-			alert: notifTitle,
-			uri: "com.nlefler.glucloser://logMeal",
-			checkInData: appData
-		}
-	}, {
-		success: function() {
-			console.log("Pushed");
+					var cgmPromise = cgm.ReducedCGMReadingsForTimeRange(bolusResult.createdAt, 120, 10);
+					cgmPromise.then(function(results) {
+						console.log("Num CGM results " + results.length);
+						console.log("CGM results " + results.join(", "));
+
+						if (bolusResult.updatedAt.getTime() > lastProcessedTime) {
+							lastProcessedTime = bolusResult.updatedAt.getTime();
+						}
+						if (--resolveCount == 0) {
+							var logItem = new Parse.Object("CGMGraphProcessLog");
+							logItem.set("lastProcessedDate", new Date(lastProcessedTime));
+							logItem.save(null, {
+								success: function() {
+									status.success("Test success");
+								},
+								error: function(saveError) {
+									status.error("Save error " + saveError.errors + " "+ saveError.code + " " + saveError.message);
+								}
+							});
+						}
+					}, function(error) {
+						console.log("CGM Error " + error);
+						if (--resolveCount == 0) {
+							status.error("Test error");
+						}
+					});
+				});
+			}, function(error) {
+				console.log("Bolus Error " + error);
+				status.error(error);
+			});
 		},
-		error: function(error) {
-			console.log("Push failed");
-			console.log(JSON.stringify(error));
+		error: function (error) {
+			console.log("No last run time");
+			status.success("Test error");
 		}
 	});
-
-	res.send(200);
 });
- 
-app.listen();
