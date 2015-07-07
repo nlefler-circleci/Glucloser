@@ -1,10 +1,12 @@
+var _ = require('underscore');
+
 // Returns a promise list of objects representing CGM readings in the time interval
 var CGMReadingsForTimeRange = function (date, minutesPast) {
   var query = new Parse.Query('MedtronicMinimedParadigmRevel755PumpData');
   query.greaterThan('Timestamp', date);
   query.lessThan('Timestamp', new Date(date.getTime() + minutesPast * 60 * 1000));
   query.ascending('Timestamp');
-  query.select('Sensor_Glucose__mg_dL_');
+  query.select('Sensor_Glucose__mg_dL_', 'Timestamp');
   return query.find();
 };
 
@@ -17,7 +19,7 @@ var ReducedCGMReadingsForTimeRange = function(date, minutesPast, reductionInterv
   var count = 0;
   var averages = [];
   CGMReadingsForTimeRange(date, minutesPast).then(function (results) {
-      results.each(function(reading) {
+      _.each(results, function(reading) {
         var readingTime = reading.get('Timestamp').getTime();
 
         if (currentTime === 0) {
@@ -26,17 +28,25 @@ var ReducedCGMReadingsForTimeRange = function(date, minutesPast, reductionInterv
 
         if (readingTime > currentTime + reductionInterval) {
           // Average
+          if (sum === 0 || count === 0) {
+            return;
+          }
           averages.push(sum / count);
           sum = 0;
           count = 0;
           currentTime = readingTime;
         }
 
-        sum += reading.get('Sensor_Glucose__mg_dL_');
+        var gluclose = reading.get('Sensor_Glucose__mg_dL_');
+        if (!isNaN(gluclose)) {
+          sum += gluclose;
+        }
         count++;
       });
     promise.resolve(averages);
   });
+
+  return promise;
 };
 
 exports.CGMReadingsForTimeRange = CGMReadingsForTimeRange;
