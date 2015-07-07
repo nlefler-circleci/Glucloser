@@ -37,15 +37,22 @@ Parse.Cloud.job('postBolusAverages', function(request, status) {
 				_.each(bolusResults, function(bolusResult) {
 					console.log("Bolus result " + bolusResult.id + " " + bolusResult.createdAt);
 
-					var cgmPromise = cgm.ReducedCGMReadingsForTimeRange(bolusResult.createdAt, 120, 10);
+					var minutesCovered = 120;
+					var cgmPromise = cgm.ReducedCGMReadingsForTimeRange(bolusResult.createdAt, minutesCovered, 10);
 					cgmPromise.then(function(results) {
 						console.log("Num CGM results " + results.length);
 						console.log("CGM results " + results.join(", "));
 
+						var averagesRecord = new Parse.Object("PostBolusCGMAverages");
+						averagesRecord.set(bolusResult.className.toLowerCase(), bolusResult);
+						averagesRecord.set("minutesCovered", minutesCovered);
+						averagesRecord.set("averages", results);
+						averagesRecord.save();
+
 						if (bolusResult.updatedAt.getTime() > lastProcessedTime) {
 							lastProcessedTime = bolusResult.updatedAt.getTime();
 						}
-						if (--resolveCount == 0) {
+						if (--resolveCount === 0) {
 							var logItem = new Parse.Object("CGMGraphProcessLog");
 							logItem.set("lastProcessedDate", new Date(lastProcessedTime));
 							logItem.save(null, {
@@ -59,7 +66,7 @@ Parse.Cloud.job('postBolusAverages', function(request, status) {
 						}
 					}, function(error) {
 						console.log("CGM Error " + error);
-						if (--resolveCount == 0) {
+						if (--resolveCount === 0) {
 							status.error("Test error");
 						}
 					});
