@@ -23,34 +23,29 @@ Parse.Cloud.job('postBolusAverages', function(request, status) {
 		success: function (object) {
 			if (!!object) {
 				// Last time
-				lastProcessedTime = object.get('createdAt');
+				console.log("Last log " + object.id);
+				lastProcessedTime = object.get('lastProcessedDate');
 			}
 			else {
 				lastProcessedTime = new Date(0);
 			}
 
+			console.log("Last processed time " + lastProcessedTime);
 			var bolusPromise = bolus.BolusesAfterDate(lastProcessedTime, 10);
 			bolusPromise.then(function(bolusResults) {
-				console.log("Num boluses " + bolusResults.length);
-
 				var resolveCount = bolusResults.length;
 				_.each(bolusResults, function(bolusResult) {
-					console.log("Bolus result " + bolusResult.id + " " + bolusResult.createdAt);
-
 					var minutesCovered = 120;
 					var cgmPromise = cgm.ReducedCGMReadingsForTimeRange(bolusResult.createdAt, minutesCovered, 10);
 					cgmPromise.then(function(results) {
-						console.log("Num CGM results " + results.length);
-						console.log("CGM results " + results.join(", "));
-
 						var averagesRecord = new Parse.Object("PostBolusCGMAverages");
 						averagesRecord.set(bolusResult.className.toLowerCase(), bolusResult);
 						averagesRecord.set("minutesCovered", minutesCovered);
 						averagesRecord.set("averages", results);
 						averagesRecord.save();
 
-						if (bolusResult.updatedAt.getTime() > lastProcessedTime) {
-							lastProcessedTime = bolusResult.updatedAt.getTime();
+						if (bolusResult.updatedAt.getTime() > lastProcessedTime.getTime()) {
+							lastProcessedTime = bolusResult.updatedAt;
 						}
 						if (--resolveCount === 0) {
 							var logItem = new Parse.Object("CGMGraphProcessLog");
@@ -65,20 +60,17 @@ Parse.Cloud.job('postBolusAverages', function(request, status) {
 							});
 						}
 					}, function(error) {
-						console.log("CGM Error " + error);
 						if (--resolveCount === 0) {
-							status.error("Test error");
+							status.error("CGM error " + error.message);
 						}
 					});
 				});
 			}, function(error) {
-				console.log("Bolus Error " + error);
-				status.error(error);
+				status.error("Bolus error " + error.message);
 			});
 		},
 		error: function (error) {
-			console.log("No last run time");
-			status.success("Test error");
+			status.success("Test error " + error.message);
 		}
 	});
 });

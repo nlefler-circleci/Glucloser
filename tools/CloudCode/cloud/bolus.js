@@ -1,5 +1,6 @@
 var BolusesAfterDateFromTable = function(table, afterDate, limit) {
   var query = new Parse.Query(table);
+  console.log("Looking for boluses after " + afterDate);
   query.greaterThan("updatedAt", afterDate);
   query.limit(limit + 0);
   return query.find();
@@ -22,7 +23,11 @@ exports.BolusesAfterDate = function(afterDate, limit) {
       promise.resolve(meals.concat(snacks).sort(function(a, b) {
         return a.updatedAt.getTime() - a.updatedAt.getTime();
       }));
+    }, function(error) {
+      promise.reject(error);
     });
+  }, function(error) {
+    promise.reject(error);
   });
 
   return promise;
