@@ -1,5 +1,14 @@
 var _ = require('underscore');
 
+var CGMDataAfterDate = function(date, limit) {
+  console.log("date " + date);
+  var query = new Parse.Query('MedtronicMinimedParadigmRevel755PumpData');
+  query.greaterThan('Timestamp', date);
+  query.ascending('Timestamp');
+  query.limit(limit || 250);
+  return query.find();
+};
+
 // Returns a promise list of objects representing CGM readings in the time interval
 var CGMReadingsForTimeRange = function (date, minutesPast) {
   var query = new Parse.Query('MedtronicMinimedParadigmRevel755PumpData');
@@ -49,5 +58,15 @@ var ReducedCGMReadingsForTimeRange = function(date, minutesPast, reductionInterv
   return promise;
 };
 
+var RepeatsOfCGMData = function(cgmData) {
+  var query = new Parse.Query('MedtronicMinimedParadigmRevel755PumpData');
+  query.equalTo('Raw_ID', cgmData.get('Raw_ID'));
+  query.greaterThan('Timestamp', cgmData.get('Timestamp'));
+  query.ascending('Timestamp');
+  return query.find();
+};
+
 exports.CGMReadingsForTimeRange = CGMReadingsForTimeRange;
 exports.ReducedCGMReadingsForTimeRange = ReducedCGMReadingsForTimeRange;
+exports.CGMDataAfterDate = CGMDataAfterDate;
+exports.RepeatsOfCGMData = RepeatsOfCGMData;
