@@ -26,6 +26,10 @@ exports.RegisterPruneCGMJob = function() {
         cgmDataPromise.then(function(cgmDataResults) {
           var resolveCount = cgmDataResults.length;
           console.log(resolveCount + " cgm data results");
+          if (resolveCount === 0) {
+            status.success("No CGM results to process");
+            return;
+          }
 
           var tryResolve = function(cgmData) {
             if (cgmData && (!!!lastProcessedTime || cgmData.updatedAt.getTime() < lastProcessedTime.getTime())) {
