@@ -63,11 +63,15 @@ public class LogBolusEventAction : Parcelable {
         when (this.bolusEventParcelable) {
             is MealParcelable -> {
                 val meal = MealFactory.MealFromParcelable(this.bolusEventParcelable as MealParcelable, sharedContext)
-                realm.beginTransaction()
 
-                meal.setFoods(foodList)
+                var place: Place? = null
                 if (this.placeParcelable != null) {
-                    val place = PlaceFactory.PlaceFromParcelable(this.placeParcelable!!, sharedContext)
+                    place = PlaceFactory.PlaceFromParcelable(this.placeParcelable!!, sharedContext)
+                }
+                realm.beginTransaction()
+                meal.setFoods(foodList)
+
+                if (place != null) {
                     meal.setPlace(place)
                 }
 

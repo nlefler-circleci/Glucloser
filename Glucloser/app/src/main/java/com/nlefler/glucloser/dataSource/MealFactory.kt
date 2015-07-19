@@ -175,9 +175,9 @@ public class MealFactory {
          * @param action Returns the ParseObject, and true if the object was created and should be saved.
          */
         internal fun ParseObjectFromMeal(meal: Meal,
-                                         placeObject: ParseObject?,
                                          beforeSugarObject: ParseObject?,
                                          foodObjects: List<ParseObject>,
+                                         placeObject: ParseObject?,
                                          action: Action2<ParseObject?, Boolean>?) {
             if (action == null) {
                 Log.e(LOG_TAG, "Unable to create Parse object from Meal, action null")

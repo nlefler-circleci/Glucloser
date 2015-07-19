@@ -10,7 +10,6 @@ foursquare.foursquarePushHandler.listen();
 Parse.Cloud.afterSave('Meal', function(request) {
 
 });
-
 Parse.Cloud.afterSave('Snack', function(request) {
 
 });
