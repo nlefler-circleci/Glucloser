@@ -1,81 +1,19 @@
-var express = require('express');
-var app = express();
+var foursquare = require('cloud/foursquare.js');
+var cgm = require('cloud/cgm.js');
+var bolus = require('cloud/bolus.js');
+var _ = require('underscore');
+var averages_job = require('cloud/averages_job.js');
+var prune_cgm_job = require('cloud/prune_cgm_job.js');
 
-function getFoursquareCheckInData(body) {
-	return JSON.parse(body.checkin);
-}
+foursquare.foursquarePushHandler.listen();
 
-function getFoursquareUserId(checkinData) {
-	return checkinData.user.id || false;
-}
- 
-function getFoursquareVenueName(checkinData) {
-	return checkinData.venue.name || false;
-}
+Parse.Cloud.afterSave('Meal', function(request) {
 
-function getAppData(checkinData) {
-	return {
-		venueName: getFoursquareVenueName(checkinData) || "",
-		venueId: checkinData.venue.id || "",
-		venueLat: checkinData.venue.location.lat || "",
-		venueLon: checkinData.venue.location.lng || ""
-	};
-}
-
-// Global app configuration section
-app.use(express.bodyParser());  // Populate req.body
- 
-app.post('/foursquareCheckin',
-         function(req, res) {
-  console.log(req.body);
-
-  var checkinData = getFoursquareCheckInData(req.body);
-  if (!checkinData) {
-  	console.log("No checkin data");
-  	res.send(400);
-  	return;
-  }
-
-  var foursquareUserId = getFoursquareUserId(checkinData);
-  if (!foursquareUserId) {
-  	console.log("Cant get foursquare user id");
-  	res.send(400);
-  	return;
-  } else {
-  	console.log("Foursquare user id " + foursquareUserId)
-  }
-
-  var notifTitle = "You checked in";
-  var venueName = getFoursquareVenueName(checkinData);
-  if (venueName) {
-  	notifTitle += " at " + venueName;
-  }
-  notifTitle += ". Log a meal?";
-
-  var appData = getAppData(checkinData) || {};
-
-  var query = new Parse.Query(Parse.Installation);
-  query.equalTo('channels', 'foursquareCheckin');
-  query.equalTo('foursquareUserId', foursquareUserId);
-
-  Parse.Push.send({
-  		where: query,
-		data: {
-			alert: notifTitle,
-			uri: "com.nlefler.glucloser://logMeal",
-			checkInData: appData
-		}
-	}, {
-		success: function() {
-			console.log("Pushed");
-		},
-		error: function(error) {
-			console.log("Push failed");
-			console.log(JSON.stringify(error));
-		}
-	});
-
-	res.send(200);
 });
- 
-app.listen();
+
+Parse.Cloud.afterSave('Snack', function(request) {
+
+});
+
+averages_job.RegisterPostBolusAveragesJob();
+prune_cgm_job.RegisterPruneCGMJob();
