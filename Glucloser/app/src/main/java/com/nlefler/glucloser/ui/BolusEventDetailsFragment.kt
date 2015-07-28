@@ -58,9 +58,6 @@ public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
         this.beforeSugarValueField = rootView.findViewById(R.id.meal_edit_detail_blood_sugar_before_value) as EditText
         this.correctionValueBox = rootView.findViewById(R.id.meal_edit_detail_correction_value) as CheckBox
 
-        val addFoodButton = rootView.findViewById(R.id.meal_edit_detail_add_food_button) as Button
-        addFoodButton.setOnClickListener {v: View -> addFoodClicked() }
-
         val saveButton = rootView.findViewById(R.id.meal_edit_detail_save_button) as Button
         saveButton.setOnClickListener {v: View -> saveEventClicked() }
 
