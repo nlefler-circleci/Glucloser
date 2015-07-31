@@ -133,7 +133,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center_vertical"
             android:layout_toEndOf="@+id/meal_edit_detail_food_name_edit_label"
-            android:inputType="number"
+            android:inputType="textAutoComplete"
             android:imeOptions="actionNext"
             android:ems="10"
             android:id="@+id/meal_edit_detail_food_name_value"
