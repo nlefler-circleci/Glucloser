@@ -6,9 +6,11 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -16,7 +18,6 @@ import android.widget.TextView
 
 import com.nlefler.glucloser.R
 import com.nlefler.glucloser.activities.LogBolusEventActivity
-import com.nlefler.glucloser.activities.LogFoodActivity
 import com.nlefler.glucloser.dataSource.FoodFactory
 import com.nlefler.glucloser.dataSource.FoodListRecyclerAdapter
 import com.nlefler.glucloser.models.*
@@ -27,7 +28,7 @@ import java.util.Date
 /**
  * Created by Nathan Lefler on 12/24/14.
  */
-public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
+public class BolusEventDetailsFragment : Fragment() {
 
     private var placeName: String? = null
     private var bolusEventParcelable: BolusEventParcelable? = null
@@ -37,6 +38,8 @@ public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
     private var beforeSugarValueField: EditText? = null
     private var correctionValueBox: CheckBox? = null
 
+    private var addFoodNameField: EditText? = null
+    private var addFoodCarbField: EditText? = null
     private var foodListView: RecyclerView? = null
     private var foodListLayoutManager: RecyclerView.LayoutManager? = null
     private var foodListAdapter: FoodListRecyclerAdapter? = null
@@ -65,6 +68,18 @@ public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
             placeNameField.setText(this.placeName)
         }
 
+        this.addFoodNameField = rootView.findViewById(R.id.meal_edit_detail_food_name_value) as EditText
+        this.addFoodCarbField = rootView.findViewById(R.id.meal_edit_detail_food_carb_value) as EditText
+        this.addFoodCarbField?.setOnEditorActionListener { textView, i, keyEvent ->
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                addFoodFromFields()
+                true
+            }
+            else {
+                false
+            }
+        }
+
         this.foodListView = rootView.findViewById(R.id.bolus_event_detail_food_list) as RecyclerView
 
         this.foodListLayoutManager = LinearLayoutManager(getActivity())
@@ -77,16 +92,36 @@ public class BolusEventDetailsFragment : Fragment(), FoodDetailDelegate {
         return rootView
     }
 
-    override fun foodDetailUpdated(foodParcelable: FoodParcelable) {
+    fun addFoodFromFields() {
+        if (getActivity() !is FoodDetailDelegate) {
+            return
+        }
+
+        val foodParcelable = FoodParcelable()
+
+        val foodNameString = this.addFoodNameField!!.getText().toString()
+        if (!foodNameString.isEmpty()) {
+            foodParcelable.setFoodName(foodNameString)
+        }
+        else {
+            return
+        }
+
+        val foodCarbString = this.addFoodCarbField!!.getText().toString()
+        if (!foodCarbString.isEmpty()) {
+            foodParcelable.setCarbs(java.lang.Integer.valueOf(foodCarbString))
+        }
+        else {
+            foodParcelable.setCarbs(0)
+        }
+
         this.foods.add(FoodFactory.FoodFromParcelable(foodParcelable, getActivity()))
         this.foodListAdapter?.setFoods(this.foods)
-    }
+        (getActivity() as FoodDetailDelegate).foodDetailUpdated(foodParcelable)
 
-    internal fun addFoodClicked() {
-        val activity = getActivity()
-        if (activity is LogBolusEventActivity) {
-            activity.launchLogFoodActivity()
-        }
+        this.addFoodNameField!!.setText("")
+        this.addFoodCarbField!!.setText("")
+        this.addFoodNameField!!.requestFocus()
     }
 
     internal fun saveEventClicked() {
