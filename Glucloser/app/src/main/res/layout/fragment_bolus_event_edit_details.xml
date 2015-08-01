@@ -16,96 +16,89 @@
 
 
     <RelativeLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:id="@+id/meal_edit_carbs_insulin_totals_container">
 
         <TextView
+            android:id="@+id/meal_edit_detail_total_carbs_edit_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:layout_alignParentStart="true"
-            android:layout_alignBaseline="@+id/meal_edit_detail_total_carb_value"
+            android:layout_below="@+id/meal_edit_detail_total_carb_value"
+            android:layout_alignStart="@+id/meal_edit_detail_total_carb_value"
+            android:layout_alignEnd="@+id/meal_edit_detail_total_carb_value"
+            android:textAlignment="center"
             android:text="@string/carbs_noun"
-            android:id="@+id/meal_edit_detail_total_carbs_edit_label"
             android:labelFor="@+id/meal_edit_detail_total_carb_value"/>
 
         <EditText
+            android:id="@+id/meal_edit_detail_total_carb_value"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
-            android:layout_toEndOf="@+id/meal_edit_detail_total_carbs_edit_label"
+            android:layout_alignParentStart="true"
             android:inputType="number"
             android:imeOptions="actionNext"
             android:ems="10"
-            android:id="@+id/meal_edit_detail_total_carb_value"
             android:nextFocusForward="@+id/meal_edit_detail_total_insulin_value"/>
 
         <TextView
+            android:id="@+id/meal_edit_detail_total_insulin_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:gravity="center_vertical"
-            android:layout_toEndOf="@+id/meal_edit_detail_total_carb_value"
-            android:layout_alignBaseline="@+id/meal_edit_detail_total_insulin_value"
+            android:layout_marginStart="8dp"
+            android:layout_alignStart="@+id/meal_edit_detail_total_insulin_value"
+            android:layout_alignEnd="@+id/meal_edit_detail_total_insulin_value"
+            android:layout_below="@+id/meal_edit_detail_total_insulin_value"
             android:text="@string/insulin_noun"
-            android:id="@+id/meal_edit_detail_total_insulin_label"
             android:labelFor="@+id/meal_edit_detail_total_insulin_value"/>
 
         <EditText
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/meal_edit_detail_total_insulin_label"
+            android:layout_toEndOf="@+id/meal_edit_detail_total_carb_value"
             android:gravity="center_vertical"
             android:inputType="numberDecimal"
             android:imeOptions="actionNext"
             android:ems="10"
             android:id="@+id/meal_edit_detail_total_insulin_value"
             android:nextFocusForward="@+id/meal_edit_detail_blood_sugar_before_value" />
-    </RelativeLayout>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/meal_edit_blood_sugar_correction_totals_container"
-        tools:context="com.nlefler.glucloser.ui.BolusEventDetailsFragment">
-
 
         <TextView
+            android:id="@+id/meal_edit_detail_blood_sugar_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
-            android:layout_alignParentStart="true"
-            android:layout_alignBaseline="@+id/meal_edit_detail_blood_sugar_before_value"
-            android:text="@string/blood_sugar_before_phrase"
-            android:id="@+id/meal_edit_detail_blood_sugar_label"
+            android:layout_below="@id/meal_edit_detail_blood_sugar_before_value"
+            android:layout_alignStart="@+id/meal_edit_detail_blood_sugar_before_value"
+            android:layout_alignEnd="@+id/meal_edit_detail_blood_sugar_before_value"
+
+            android:text="@string/mgdl"
             android:labelFor="@+id/meal_edit_detail_blood_sugar_before_value"/>
 
         <EditText
+            android:id="@+id/meal_edit_detail_blood_sugar_before_value"
+
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_toEndOf="@id/meal_edit_detail_total_insulin_value"
             android:inputType="number"
             android:imeOptions="actionNext"
             android:ems="10"
-            android:id="@+id/meal_edit_detail_blood_sugar_before_value"
-            android:gravity="center_vertical"
-            android:layout_toEndOf="@+id/meal_edit_detail_blood_sugar_label" />
+            />
 
     <CheckBox
+        android:id="@+id/meal_edit_detail_correction_value"
         android:layout_width="0dp"
         android:layout_height="20dp"
-        android:text="@string/correction_noun"
-        android:id="@+id/meal_edit_detail_correction_value"
         android:layout_toEndOf="@id/meal_edit_detail_blood_sugar_before_value"
-        android:layout_alignBaseline="@+id/meal_edit_detail_blood_sugar_before_value"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/correction_noun"
         android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
