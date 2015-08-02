@@ -119,19 +119,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_weight="0.8"
+            android:layout_weight="0.7"
             android:inputType="text"
             android:imeOptions="actionNext"
             android:ems="10"
             android:hint="@string/food_list_item_name_placeholder"
-            android:nextFocusForward="@+id/meal_edit_detail_food_carb_value"/>
+            android:nextFocusForward="@+id/meal_edit_detail_food_carb_value">
+            <requestFocus />
+        </EditText>
 
         <EditText
             android:id="@+id/meal_edit_detail_food_carb_value"
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="0.3"
             android:layout_marginStart="8dp"
             android:inputType="numberDecimal"
             android:imeOptions="actionDone"

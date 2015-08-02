@@ -45,6 +45,8 @@ public class BolusEventDetailsFragment : Fragment() {
     private var foodListAdapter: FoodListRecyclerAdapter? = null
     private var foods: MutableList<Food> = ArrayList<Food>()
 
+    private var totalCarbs = 0
+
     override fun onCreate(bundle: Bundle?) {
         super<Fragment>.onCreate(bundle)
 
@@ -109,7 +111,9 @@ public class BolusEventDetailsFragment : Fragment() {
 
         val foodCarbString = this.addFoodCarbField!!.getText().toString()
         if (!foodCarbString.isEmpty()) {
-            foodParcelable.setCarbs(java.lang.Integer.valueOf(foodCarbString))
+            val carbValue = java.lang.Integer.valueOf(foodCarbString)
+            foodParcelable.setCarbs(carbValue)
+            addToTotalCarbs(carbValue)
         }
         else {
             foodParcelable.setCarbs(0)
@@ -167,6 +171,11 @@ public class BolusEventDetailsFragment : Fragment() {
             }
         }
         return null
+    }
+
+    private fun addToTotalCarbs(carbValue: Int) {
+        this.totalCarbs += carbValue
+        this.carbValueField!!.setText(java.lang.String.valueOf(this.totalCarbs))
     }
 
     companion object {
