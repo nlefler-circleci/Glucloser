@@ -1,4 +1,4 @@
-package com.nlefler.glucloser
+package com.nlefler.glucloser.ui
 
 import android.support.v4.app.Fragment
 import android.os.Bundle
@@ -10,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import com.nlefler.glucloser.R
 import com.nlefler.glucloser.dataSource.FoodListRecyclerAdapter
 import com.nlefler.glucloser.models.BolusEventParcelable
 import com.nlefler.glucloser.models.Food
 import com.nlefler.glucloser.ui.DividerItemDecoration
+import java.lang
 import java.util.*
 
 /**
@@ -23,6 +25,7 @@ public class HistoricalBolusDetailActivityFragment : Fragment() {
     private var placeName: String? = null
     private var bolusEventParcelable: BolusEventParcelable? = null
 
+    private var placeNameField: TextView? = null
     private var carbValueField: TextView? = null
     private var insulinValueField: TextView? = null
     private var beforeSugarValueField: TextView? = null
@@ -43,15 +46,11 @@ public class HistoricalBolusDetailActivityFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater!!.inflate(R.layout.fragment_historical_bolus_detail, container, false)
 
-        val placeNameField = rootView.findViewById(R.id.historical_bolus_detail_place_name) as TextView
+        this.placeNameField = rootView.findViewById(R.id.historical_bolus_detail_place_name) as TextView
         this.carbValueField = rootView.findViewById(R.id.historical_bolus_detail_total_carb_value) as TextView
         this.insulinValueField = rootView.findViewById(R.id.historical_bolus_detail_total_insulin_value) as TextView
         this.beforeSugarValueField = rootView.findViewById(R.id.historical_bolus_detail_blood_sugar_before_value) as TextView
         this.correctionValueBox = rootView.findViewById(R.id.historical_bolus_detail_correction_value) as CheckBox
-
-        if (this.placeName != null) {
-            placeNameField.setText(this.placeName)
-        }
 
         this.foodListView = rootView.findViewById(R.id.historical_bolus_detail_food_list) as RecyclerView
 
@@ -62,7 +61,18 @@ public class HistoricalBolusDetailActivityFragment : Fragment() {
         this.foodListView!!.setAdapter(this.foodListAdapter)
         this.foodListView!!.addItemDecoration(DividerItemDecoration(getActivity()))
 
+        setupWithBundleAndPlace()
+
         return rootView
+    }
+
+    internal fun setupWithBundleAndPlace() {
+        this.placeNameField?.setText(this.placeName ?: "")
+
+        this.carbValueField?.setText(lang.String.valueOf(this.bolusEventParcelable?.getCarbs() ?: 0))
+        this.insulinValueField?.setText(lang.String.valueOf(this.bolusEventParcelable?.getInsulin() ?: 0))
+        this.beforeSugarValueField?.setText(lang.String.valueOf(this.bolusEventParcelable?.getBeforeSugarParcelable() ?: 0))
+        this.correctionValueBox?.setChecked(this.bolusEventParcelable?.isCorrection() ?: false)
     }
 
     private fun getPlaceNameFromBundle(savedInstanceState: Bundle?, args: Bundle?, extras: Bundle?): String {

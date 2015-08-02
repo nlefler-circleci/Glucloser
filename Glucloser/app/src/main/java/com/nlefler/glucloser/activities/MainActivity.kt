@@ -15,8 +15,11 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.getbase.floatingactionbutton.FloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
+import com.nlefler.glucloser.activities.HistoricalBolusDetailActivity
 import com.nlefler.glucloser.R
+import com.nlefler.glucloser.dataSource.BolusEventFactory
 import com.nlefler.glucloser.dataSource.MealHistoryRecyclerAdapter
+import com.nlefler.glucloser.models.MealHistoryRecyclerAdapterDelegate
 import com.nlefler.glucloser.foursquare.FoursquareAuthManager
 import com.nlefler.glucloser.models.BolusEvent
 import com.nlefler.glucloser.models.BolusEventType
@@ -120,7 +123,7 @@ public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener
     /**
      * A placeholder fragment containing a simple view.
      */
-    public class HistoryListFragment : Fragment() {
+    public class HistoryListFragment : Fragment(), MealHistoryRecyclerAdapterDelegate {
 
         private var mealHistoryListView: RecyclerView? = null
         private var mealHistoryLayoutManager: RecyclerView.LayoutManager? = null
@@ -134,7 +137,7 @@ public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener
             this.mealHistoryLayoutManager = LinearLayoutManager(getActivity())
             this.mealHistoryListView!!.setLayoutManager(this.mealHistoryLayoutManager)
 
-            this.mealHistoryAdapter = MealHistoryRecyclerAdapter(getActivity(), ArrayList<Meal>())
+            this.mealHistoryAdapter = MealHistoryRecyclerAdapter(getActivity(), ArrayList<Meal>(), this)
             this.mealHistoryListView!!.setAdapter(this.mealHistoryAdapter)
             this.mealHistoryListView!!.addItemDecoration(DividerItemDecoration(getActivity()))
 
@@ -189,13 +192,20 @@ public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener
             this.mealHistoryAdapter!!.setEvents(sortedResults)
         }
 
-        companion object {
-            private val LOG_TAG = "PlaceholderFragment"
+        override fun mealHistoryAdapterDidSelectBolusEvent(mealAdapter: MealHistoryRecyclerAdapter, bolusEvent: BolusEvent) {
+            val bolusEventParcelable = BolusEventFactory.ParcelableFromBolusEvent(bolusEvent)
+            if (bolusEventParcelable == null) {
+                return
+            }
+
+            val intent = Intent(getActivity(), javaClass<HistoricalBolusDetailActivity>())
+            intent.putExtra(HistoricalBolusDetailActivity.BolusKey, bolusEventParcelable)
+
+            startActivity(intent)
         }
     }
 
     companion object {
-        private val LOG_TAG = "MainActivity"
         protected val LogBolusEventActivityIntentCode: Int = 4136;
         protected val HistoryFragmentId: String = "HistoryFragmentId"
     }

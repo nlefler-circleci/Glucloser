@@ -99,7 +99,7 @@
             <!-- android:value=".activities.MainActivity" /> -->
         </activity>
         <activity
-            android:name=".HistoricalBolusDetailActivity"
+            android:name=".activities.HistoricalBolusDetailActivity"
             android:label="@string/title_activity_bolus_detail"
             android:parentActivityName=".activities.MainActivity"
             android:windowSoftInputMode="adjustResize">

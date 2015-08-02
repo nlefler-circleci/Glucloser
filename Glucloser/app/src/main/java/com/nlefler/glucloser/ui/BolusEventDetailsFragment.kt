@@ -133,6 +133,9 @@ public class BolusEventDetailsFragment : Fragment() {
             return
         }
 
+        // Catch foods left in fields
+        addFoodFromFields()
+
         this.bolusEventParcelable!!.setDate(Date())
 
         val beforeSugarString = this.beforeSugarValueField!!.getText().toString()

@@ -7,20 +7,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.nlefler.glucloser.HistoricalBolusDetailActivity
+import com.nlefler.glucloser.activities.HistoricalBolusDetailActivity
 import com.nlefler.glucloser.GlucloserApplication
 
 import com.nlefler.glucloser.R
 import com.nlefler.glucloser.models.BolusEvent
 import com.nlefler.glucloser.models.BolusEventParcelable
 import com.nlefler.glucloser.models.Meal
+import com.nlefler.glucloser.models.MealHistoryRecyclerAdapterDelegate
 
 /**
  * Created by Nathan Lefler on 12/25/14.
  */
 public class MealHistoryRecyclerAdapter(private var activity: Activity,
-                                        private var bolusEvents: List<BolusEvent>?) :
+                                        private var bolusEvents: List<BolusEvent>?,
+                                        private var delegate: MealHistoryRecyclerAdapterDelegate?) :
         RecyclerView.Adapter<MealHistoryRecyclerAdapter.ViewHolder>() {
+
+    final val recyclerAdapter = this
 
     public inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var bolusEvent: BolusEvent? = null
@@ -36,18 +40,9 @@ public class MealHistoryRecyclerAdapter(private var activity: Activity,
             this.insulinValue = itemView.findViewById(R.id.meal_detail_card_insulin_value) as TextView
             this.clickListener = object : View.OnClickListener {
                 override fun onClick(view: View) {
-                    if (bolusEvent == null) {
-                        return
+                    if (bolusEvent != null) {
+                        delegate?.mealHistoryAdapterDidSelectBolusEvent(recyclerAdapter, bolusEvent!!)
                     }
-                    val bolusEventParcelable = BolusEventFactory.ParcelableFromBolusEvent(bolusEvent!!)
-                    if (bolusEventParcelable == null) {
-                        return
-                    }
-
-                    val intent = Intent(view.getContext(), javaClass<HistoricalBolusDetailActivity>())
-                    intent.putExtra(HistoricalBolusDetailActivity.BolusKey, bolusEventParcelable)
-
-                    activity.startActivity(intent)
                 }
             }
             itemView.setOnClickListener(this.clickListener)
