@@ -14,6 +14,7 @@
     <string name="carbs_noun">Carbs</string>
     <string name="insulin_noun">Insulin</string>
     <string name="blood_sugar_before_phrase">Blood Sugar</string>
+    <string name="mgdl">mg/dL</string>
     <string name="correction_noun">Correction</string>
     <string name="add_food_verb">Add Food</string>
     <string name="save_meal_verb">Save</string>
@@ -31,6 +32,6 @@
     <string name="food_list_item_name_placeholder">Food Name</string>
     <string name="food_list_item_carbs_placeholder">Carbs</string>
     <string name="name_noun">Name</string>
-    <string name="title_activity_bolus_detail">BolusDetailActivity</string>
+    <string name="title_activity_bolus_detail">Details</string>
     <string name="hello_world">Hello world!</string>
 </resources>

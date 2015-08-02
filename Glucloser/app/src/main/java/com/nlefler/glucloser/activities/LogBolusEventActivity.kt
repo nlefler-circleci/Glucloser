@@ -26,8 +26,6 @@ public class LogBolusEventActivity : AppCompatActivity(), PlaceSelectionDelegate
             return
         }
         setupFragmentForEventType(bolusEventType, savedInstanceState)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -72,26 +70,6 @@ public class LogBolusEventActivity : AppCompatActivity(), PlaceSelectionDelegate
                 switchToBolusEventDetailsFragment(SnackParcelable(), null)
             }
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            LogFoodActivityResultKey -> {
-                val foodParcelable: FoodParcelable? = data?.getParcelableExtra(LogFoodActivity.AddFoodActivityResultFoodParcelableKey)
-                val bolusEventFragment = getSupportFragmentManager().findFragmentByTag(BolusEventFragmentId)
-
-                if (foodParcelable != null && (bolusEventFragment is FoodDetailDelegate)) {
-                    this.logBolusEventAction.addFoodParcelable(foodParcelable)
-
-                    bolusEventFragment.foodDetailUpdated(foodParcelable)
-                }
-            }
-        }
-    }
-
-    public fun launchLogFoodActivity() {
-        val intent = Intent(this, javaClass<LogFoodActivity>())
-        startActivityForResult(intent, LogFoodActivityResultKey)
     }
 
     /** PlaceSelectionDelegate  */

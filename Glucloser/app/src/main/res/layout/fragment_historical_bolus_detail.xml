@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:weightSum="1.0"
+    tools:context="com.nlefler.glucloser.HistoricalBolusDetailActivityFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/historical_bolus_detail_place_name"
+        android:textAppearance="@android:style/TextAppearance.Medium" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/historical_bolus_detail_carbs_insulin_totals_container">
+
+        <TextView
+            android:id="@+id/historical_bolus_detail_total_carbs_edit_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/historical_bolus_detail_total_carb_value"
+            android:layout_alignStart="@+id/historical_bolus_detail_total_carb_value"
+            android:layout_alignEnd="@+id/historical_bolus_detail_total_carb_value"
+            android:textAlignment="center"
+            android:text="@string/carbs_noun"
+            android:labelFor="@+id/historical_bolus_detail_total_carb_value"/>
+
+        <TextView
+            android:id="@+id/historical_bolus_detail_total_carb_value"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_alignParentStart="true"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/historical_bolus_detail_total_insulin_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_alignStart="@+id/historical_bolus_detail_total_insulin_value"
+            android:layout_alignEnd="@+id/historical_bolus_detail_total_insulin_value"
+            android:layout_below="@+id/historical_bolus_detail_total_insulin_value"
+            android:text="@string/insulin_noun"
+            android:labelFor="@+id/historical_bolus_detail_total_insulin_value"/>
+
+        <TextView
+            android:id="@+id/historical_bolus_detail_total_insulin_value"
+
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/historical_bolus_detail_total_carb_value"
+            android:gravity="center_vertical"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/historical_bolus_detail_blood_sugar_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_below="@+id/historical_bolus_detail_blood_sugar_before_value"
+            android:layout_alignStart="@+id/historical_bolus_detail_blood_sugar_before_value"
+            android:layout_alignEnd="@+id/historical_bolus_detail_blood_sugar_before_value"
+
+            android:text="@string/mgdl"
+            android:labelFor="@+id/historical_bolus_detail_blood_sugar_before_value"/>
+
+        <TextView
+            android:id="@+id/historical_bolus_detail_blood_sugar_before_value"
+
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toEndOf="@id/historical_bolus_detail_total_insulin_value"
+            android:ems="10"
+            />
+
+    <CheckBox
+        android:id="@+id/historical_bolus_detail_correction_value"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_toEndOf="@id/historical_bolus_detail_blood_sugar_before_value"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/correction_noun"
+        android:layout_alignParentEnd="true"
+        android:inputType="none"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/historical_bolus_detail_food_list"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
