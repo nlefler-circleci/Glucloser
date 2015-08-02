@@ -24,9 +24,9 @@ public class HistoricalBolusDetailActivityFragment : Fragment() {
     private var placeName: String? = null
     private var bolusEventParcelable: BolusEventParcelable? = null
 
-    private var carbValueField: EditText? = null
-    private var insulinValueField: EditText? = null
-    private var beforeSugarValueField: EditText? = null
+    private var carbValueField: TextView? = null
+    private var insulinValueField: TextView? = null
+    private var beforeSugarValueField: TextView? = null
     private var correctionValueBox: CheckBox? = null
 
     private var foodListView: RecyclerView? = null
