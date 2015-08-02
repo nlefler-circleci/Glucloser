@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 
-public class BolusDetailActivity : AppCompatActivity() {
+public class HistoricalBolusDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bolus_detail)
+        setContentView(R.layout.activity_historical_bolus_detail)
 
     }
 

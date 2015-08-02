@@ -36,7 +36,7 @@ public class GlucloserApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
         _sharedApplication = this
 
         if (!Debug.isDebuggerConnected()) {

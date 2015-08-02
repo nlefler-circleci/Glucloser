@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.nlefler.glucloser.BolusDetailActivity
+import com.nlefler.glucloser.HistoricalBolusDetailActivity
 import com.nlefler.glucloser.GlucloserApplication
 
 import com.nlefler.glucloser.R
@@ -44,8 +44,8 @@ public class MealHistoryRecyclerAdapter(private var activity: Activity,
                         return
                     }
 
-                    val intent = Intent(view.getContext(), javaClass<BolusDetailActivity>())
-                    intent.putExtra(BolusDetailActivity.BolusKey, bolusEventParcelable)
+                    val intent = Intent(view.getContext(), javaClass<HistoricalBolusDetailActivity>())
+                    intent.putExtra(HistoricalBolusDetailActivity.BolusKey, bolusEventParcelable)
 
                     activity.startActivity(intent)
                 }
