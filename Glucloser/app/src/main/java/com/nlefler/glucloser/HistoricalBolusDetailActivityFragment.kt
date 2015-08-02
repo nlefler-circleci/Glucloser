@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.TextView
 import com.nlefler.glucloser.dataSource.FoodListRecyclerAdapter
 import com.nlefler.glucloser.models.BolusEventParcelable
@@ -45,9 +44,9 @@ public class HistoricalBolusDetailActivityFragment : Fragment() {
         val rootView = inflater!!.inflate(R.layout.fragment_historical_bolus_detail, container, false)
 
         val placeNameField = rootView.findViewById(R.id.historical_bolus_detail_place_name) as TextView
-        this.carbValueField = rootView.findViewById(R.id.historical_bolus_detail_total_carb_value) as EditText
-        this.insulinValueField = rootView.findViewById(R.id.historical_bolus_detail_total_insulin_value) as EditText
-        this.beforeSugarValueField = rootView.findViewById(R.id.historical_bolus_detail_blood_sugar_before_value) as EditText
+        this.carbValueField = rootView.findViewById(R.id.historical_bolus_detail_total_carb_value) as TextView
+        this.insulinValueField = rootView.findViewById(R.id.historical_bolus_detail_total_insulin_value) as TextView
+        this.beforeSugarValueField = rootView.findViewById(R.id.historical_bolus_detail_blood_sugar_before_value) as TextView
         this.correctionValueBox = rootView.findViewById(R.id.historical_bolus_detail_correction_value) as CheckBox
 
         if (this.placeName != null) {
