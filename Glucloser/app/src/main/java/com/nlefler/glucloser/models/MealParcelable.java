@@ -24,6 +24,10 @@ public class MealParcelable implements Parcelable, BolusEventParcelable {
 
     }
 
+    public BolusEventType getEventType() {
+        return BolusEventType.BolusEventTypeMeal;
+    }
+
     public String getId() {
         return id;
     }

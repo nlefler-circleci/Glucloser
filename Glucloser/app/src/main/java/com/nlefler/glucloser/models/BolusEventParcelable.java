@@ -1,5 +1,7 @@
 package com.nlefler.glucloser.models;
 
+import android.os.Parcelable;
+
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +9,8 @@ import java.util.List;
  * Created by Nathan Lefler on 5/8/15.
  */
 public interface BolusEventParcelable {
+    public BolusEventType getEventType();
+
     public Date getDate();
     public void setDate(Date date);
 
