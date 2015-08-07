@@ -76,13 +76,27 @@ exports.RegisterAggregateBolusRates = function() {
 
           var rates = [];
           var tryResolve = function(changeEvent) {
-            if (changeEvent && (!!!lastProcessedDate || changeEvent.updatedAt.getTime() < lastProcessedDate.getTime())) {
+            if (changeEvent &&
+              (!!!lastProcessedDate ||
+                changeEvent.updatedAt.getTime() < lastProcessedDate.getTime())) {
               lastProcessedDate = changeEvent.updatedAt;
             }
 
             if (--resolveCount === 0) {
-              // TODO Save the rates
-              
+              var rateResolveCount = rates.length;
+              _.each(rates, function(rate) {
+                // TODO Replace oridnal
+                var rateItem = new Parse.Object('BasalRate');
+                rateItem.put('rate', rate.Rate);
+                rateItem.put('oridnal', rate.ProfileIndex);
+                rateItem.put('startTime', rate.StartTime);
+
+                rateItem.save(null, {
+                  success: funtion() {},
+                  error: function(error) {}
+                });
+              });
+
               var logItem = new Parse.Object(processLogTableName);
               logItem.set("lastProcessedDate", new Date(lastProcessedDate));
               logItem.save(null, {
