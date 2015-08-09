@@ -1,7 +1,6 @@
 var _ = require('underscore');
 var basal = require('cloud/basal.js');
 
-
 exports.RegisterAggregateBolusRates = function() {
   Parse.Cloud.job('aggregateBolusRates', function(request, status) {
     // Get the last time this ran
@@ -22,7 +21,7 @@ exports.RegisterAggregateBolusRates = function() {
         }
 
         console.log("Last processed date" + lastProcessedDate);
-        var changeEventsPromise = BasalChangeEventsAfter(lastProcessedDate, 250);
+        var changeEventsPromise = basal.BasalChangeEventsAfter(lastProcessedDate, 250);
         lastProcessedDate = null;
 
         changeEventsPromise.then(function(changeEvents) {
@@ -44,14 +43,15 @@ exports.RegisterAggregateBolusRates = function() {
             if (--resolveCount === 0) {
               var rateResolveCount = rates.length;
               _.each(rates, function(rate) {
-                // TODO Replace oridnal
+                console.log("Saving rate " + basal.LogFormatBasalChangeEvent(rate));
+
                 var rateItem = new Parse.Object('BasalRate');
-                rateItem.put('rate', rate.Rate);
-                rateItem.put('oridnal', rate.ProfileIndex);
-                rateItem.put('startTime', rate.StartTime);
+                rateItem.set('rate', rate.Rate);
+                rateItem.set('oridnal', rate.ProfileIndex);
+                rateItem.set('startTime', rate.StartTime);
 
                 rateItem.save(null, {
-                  success: funtion() {},
+                  success: function(obj) {},
                   error: function(error) {}
                 });
               });
@@ -70,7 +70,7 @@ exports.RegisterAggregateBolusRates = function() {
           };
 
           _.each(changeEvents, function(changeEvent) {
-            var changeObj = DeserializeBasalChangeEvent(changeEvent.get("Raw-Values"));
+            var changeObj = basal.DeserializeBasalChangeEvent(changeEvent.get("Raw_Values"));
             rates[changeObj.ProfileIndex] = changeObj;
 
             tryResolve(changeEvent);

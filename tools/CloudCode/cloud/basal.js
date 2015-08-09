@@ -2,12 +2,19 @@ var _ = require('underscore');
 
 var BasalChangeEventsAfter = function(afterDate, limit) {
   var query = new Parse.Query('MedtronicMinimedParadigmRevel755PumpData');
-  query.greaterThan('Timestamp', date);
+  query.greaterThan('Timestamp', afterDate);
   query.ascending('Timestamp');
   query.limit(limit || 250);
-  query.equalTo("Raw-Type", "ChangeBasalProfile");
-  query.select("Raw-Type", "Raw-Values", "Timestamp");
+  query.equalTo("Raw_Type", "ChangeBasalProfile");
+  query.select("Raw_Type", "Raw_Values", "Timestamp");
   return query.find();
+};
+
+var LogFormatBasalChangeEvent = function(changeEvent) {
+  return "PatternDatumId: " + changeEvent.PatternDatumId +
+  " ProfileIndex: " + changeEvent.ProfileIndex +
+  " Rate: " + changeEvent.Rate +
+  " StartTime: " + changeEvent.StartTime;
 };
 
 var DeserializeBasalChangeEvent = function(changeEventString) {
@@ -45,3 +52,4 @@ var DeserializeBasalChangeEvent = function(changeEventString) {
 
 exports.BasalChangeEventsAfter = BasalChangeEventsAfter;
 exports.DeserializeBasalChangeEvent = DeserializeBasalChangeEvent;
+exports.LogFormatBasalChangeEvent = LogFormatBasalChangeEvent;
