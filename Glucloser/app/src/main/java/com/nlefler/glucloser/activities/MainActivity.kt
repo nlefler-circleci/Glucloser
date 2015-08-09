@@ -43,7 +43,9 @@ public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener
             getSupportFragmentManager().beginTransaction().add(R.id.container, HistoryListFragment(), HistoryFragmentId).commit()
         }
 
-        this.navBarItems = arrayOf(getString(R.string.nav_drawer_item_home), getString(R.string.nav_drawer_item_foursquare_login))
+        this.navBarItems = arrayOf(getString(R.string.nav_drawer_item_home),
+                getString(R.string.nav_drawer_item_glucloser_login),
+                getString(R.string.nav_drawer_item_foursquare_login))
         this.navDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
         this.navDrawerListView = findViewById(R.id.left_drawer) as ListView
         this.navDrawerListView!!.setAdapter(ArrayAdapter(this, R.layout.drawer_list_item, this.navBarItems))
@@ -97,8 +99,14 @@ public class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener
 
     /** OnClickListener  */
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        if (position == 1) {
-            FoursquareAuthManager.SharedManager().startAuthRequest(this)
+        when (position) {
+            1 -> {
+                val intent = Intent(view.getContext(), javaClass<LoginActivity>())
+                startActivity(intent)
+            }
+            2 -> {
+                FoursquareAuthManager.SharedManager().startAuthRequest(this)
+            }
         }
     }
 

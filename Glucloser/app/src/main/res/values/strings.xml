@@ -6,6 +6,7 @@
     <string name="action_search">Search</string>
 
     <string name="nav_drawer_item_home">Home</string>
+    <string name="nav_drawer_item_glucloser_login">Log In</string>
     <string name="nav_drawer_item_foursquare_login">Foursquare Login</string>
     <string name="nav_drawer_open">Open</string>
     <string name="nav_drawer_closed">Closed</string>
@@ -33,5 +34,9 @@
     <string name="food_list_item_carbs_placeholder">Carbs</string>
     <string name="name_noun">Name</string>
     <string name="title_activity_bolus_detail">Details</string>
-    <string name="hello_world">Hello world!</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="login_username_placeholder">Username</string>
+    <string name="login_password_placeholder">Password</string>
+    <string name="login_signin_button_text">Log In</string>
 </resources>

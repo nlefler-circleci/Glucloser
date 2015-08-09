@@ -24,7 +24,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.nlefler.glucloser.activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +41,7 @@
             android:name=".activities.LogBolusEventActivity"
             android:label="@string/title_activity_log_meal"
             android:parentActivityName=".activities.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -91,7 +91,7 @@
         <activity
             android:name=".activities.LogFoodActivity"
             android:label="@string/title_activity_log_food"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
 
             <!-- android:parentActivityName=".activities.MainActivity"> -->
             <!-- <meta-data -->
@@ -102,10 +102,14 @@
             android:name=".HistoricalBolusDetailActivity"
             android:label="@string/title_activity_bolus_detail"
             android:parentActivityName=".activities.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nlefler.glucloser.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:label="@string/title_activity_login" >
         </activity>
     </application>
 
