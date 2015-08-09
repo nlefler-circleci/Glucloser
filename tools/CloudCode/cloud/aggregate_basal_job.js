@@ -47,7 +47,7 @@ exports.RegisterAggregateBolusRates = function() {
 
                 var rateItem = new Parse.Object('BasalRate');
                 rateItem.set('rate', rate.Rate);
-                rateItem.set('oridnal', rate.ProfileIndex);
+                rateItem.set('ordinal', rate.ProfileIndex);
                 rateItem.set('startTime', rate.StartTime);
 
                 rateItem.save(null, {
