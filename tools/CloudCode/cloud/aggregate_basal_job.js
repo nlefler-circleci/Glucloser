@@ -1,11 +1,11 @@
 var _ = require('underscore');
 var basal = require('cloud/basal.js');
 
-exports.RegisterAggregateBolusRates = function() {
-  Parse.Cloud.job('aggregateBolusRates', function(request, status) {
+exports.RegisterAggregateBasalRates = function() {
+  Parse.Cloud.job('aggregateBasalRates', function(request, status) {
     // Get the last time this ran
     var lastProcessedDate = null;
-    var processLogTableName = 'AggregateBolusRatesProcessLog';
+    var processLogTableName = 'AggregateBasalRatesProcessLog';
 
     var query = new Parse.Query(processLogTableName);
     query.descending('createdAt');
