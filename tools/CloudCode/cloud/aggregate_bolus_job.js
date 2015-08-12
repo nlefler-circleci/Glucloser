@@ -1,11 +1,11 @@
 var _ = require('underscore');
-var basal = require('cloud/basal.js');
+var bolus = require('cloud/bolus.js');
 
-exports.RegisterAggregateBasalRates = function() {
-  Parse.Cloud.job('aggregateBasalRates', function(request, status) {
+exports.RegisterAggregateBolusRates = function() {
+  Parse.Cloud.job('aggregateBolusRates', function(request, status) {
     // Get the last time this ran
     var lastProcessedDate = null;
-    var processLogTableName = 'AggregateBasalRatesProcessLog';
+    var processLogTableName = 'AggregateBolusRatesProcessLog';
 
     var query = new Parse.Query(processLogTableName);
     query.descending('createdAt');
@@ -21,7 +21,7 @@ exports.RegisterAggregateBasalRates = function() {
         }
 
         console.log("Last processed date" + lastProcessedDate);
-        var changeEventsPromise = basal.BasalChangeEventsAfter(lastProcessedDate, 250);
+        var changeEventsPromise = bolus.BolusChangeEventsAfter(lastProcessedDate, 250);
         lastProcessedDate = null;
 
         return changeEventsPromise;
@@ -32,13 +32,12 @@ exports.RegisterAggregateBasalRates = function() {
     ).then(
       function(changeEvents) {
         var resolveCount = changeEvents.length;
-        console.log(resolveCount + " basal change events");
+        console.log(resolveCount + " bolus change events");
         if (resolveCount === 0) {
           return Parse.Promise.as(false);
         }
 
         var rateSavePromises = [];
-
         _.each(changeEvents, function(changeEvent) {
 
           if (changeEvent &&
@@ -47,11 +46,10 @@ exports.RegisterAggregateBasalRates = function() {
             lastProcessedDate = changeEvent.updatedAt;
           }
 
-          var changeObj = basal.DeserializeBasalChangeEvent(changeEvent.get("Raw_Values"));
+          var changeObj = bolus.DeserializeBolusChangeEvent(changeEvent.get("Raw_Values"));
+          console.log("Saving rate " + bolus.LogFormatBolusChangeEvent(changeObj));
 
-          console.log("Saving rate " + basal.LogFormatBasalChangeEvent(changeObj));
-
-          var rateItem = new Parse.Object('BasalRate');
+          var rateItem = new Parse.Object('BolusRate');
           rateItem.set('rate', changeObj.Rate);
           rateItem.set('ordinal', changeObj.ProfileIndex);
           rateItem.set('startTime', changeObj.StartTime);
@@ -59,30 +57,29 @@ exports.RegisterAggregateBasalRates = function() {
           rateSavePromises.push(rateItem.save());
         });
 
-        return Parse.Promise.when(rateSavePromises);
+        Parse.Promise.when(rateSavePromises);
       },
       function(error) {
-        status.error("Basal aggregation error " + error.message);
+        status.error("Bolus aggregation error " + error.message);
       }
     ).then(
       function (shouldSave) {
         if (!!!shouldSave) {
           return Parse.Promise.as(false);
         }
-        console.log("Saving basal aggregation last processed date at " + lastProcessedDate);
         var logItem = new Parse.Object(processLogTableName);
         logItem.set("lastProcessedDate", lastProcessedDate);
         return logItem.save();
       },
-      function(saveError) {
-        status.error("Basal aggregation log save error " + saveError.errors + " "+ saveError.code + " " + saveError.message);
+      function (error) {
+        status.error("Bolus aggregation error " + error.message);
       }
     ).then(
       function() {
-        status.success("Basal aggregation success");
+        status.success("Bolus aggregation success");
       },
       function(saveError) {
-        status.error("Basal aggregation log save error " + saveError.errors + " "+ saveError.code + " " + saveError.message);
+        status.error("Bolus aggregation log save error " + saveError.errors + " "+ saveError.code + " " + saveError.message);
       }
     );
   });
