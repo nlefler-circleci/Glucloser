@@ -34,8 +34,7 @@ exports.RegisterAggregateBolusRates = function() {
         var resolveCount = changeEvents.length;
         console.log(resolveCount + " bolus change events");
         if (resolveCount === 0) {
-          status.success("No bolus changes to process");
-          return;
+          return Parse.Promise.as(false);
         }
 
         var rateSavePromises = [];
@@ -64,7 +63,10 @@ exports.RegisterAggregateBolusRates = function() {
         status.error("Bolus aggregation error " + error.message);
       }
     ).then(
-      function () {
+      function (shouldSave) {
+        if (!!!shouldSave) {
+          return Parse.Promise.as(false);
+        }
         var logItem = new Parse.Object(processLogTableName);
         logItem.set("lastProcessedDate", lastProcessedDate);
         return logItem.save();
