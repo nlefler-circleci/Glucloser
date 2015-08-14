@@ -21,10 +21,7 @@ exports.RegisterAggregateBasalRates = function() {
         }
 
         console.log("Last processed date" + lastProcessedDate);
-        var changeEventsPromise = basal.BasalChangeEventsAfter(lastProcessedDate, 250);
-        lastProcessedDate = null;
-
-        return changeEventsPromise;
+        return basal.BasalChangeEventsAfter(lastProcessedDate, 250);
       },
       function (error) {
         status.success("Basal aggregation error " + error.message);
@@ -62,6 +59,49 @@ exports.RegisterAggregateBasalRates = function() {
         return Parse.Promise.when(rateSavePromises);
       },
       function(error) {
+        status.error("Basal aggregation error " + error.message);
+      }
+    ).then(
+      function() {
+        return basal.BasalPatternChangeEventsAfter(lastProcessedDate);
+      },
+      function (saveError) {
+        status.error("Basal aggregation error " + error.message);
+      }
+    ).then(
+      function (basalPatternChangeEvents) {
+        var resolveCount = basalPatternChangeEvents.length;
+        console.log(resolveCount + " basal pattern change events");
+        if (resolveCount === 0) {
+          return Parse.Promise.as(false);
+        }
+
+        var patternSavePromises = [];
+
+        _.each(basalPatternChangeEvents, function(changeEvent) {
+
+          if (changeEvent &&
+            (!!!lastProcessedDate ||
+              changeEvent.updatedAt.getTime() < lastProcessedDate.getTime())) {
+            lastProcessedDate = changeEvent.updatedAt;
+          }
+
+          var changeObj = basal.DeserializeBasalPatternChangeEvent(changeEvent.get("Raw_Values"));
+
+          console.log("Saving pattern change " + basal.LogFormatBasalPatternChangeEvent(changeObj));
+
+          // var rateItem = new Parse.Object('BasalRate');
+          // rateItem.set('rate', changeObj.Rate);
+          // rateItem.set('ordinal', changeObj.ProfileIndex);
+          // rateItem.set('startTime', changeObj.StartTime);
+          //
+          // patternSavePromises.push(rateItem.save());
+          patternSavePromises.push(Parse.Promise.as(true));
+        });
+
+        return Parse.Promise.when(patternSavePromises);
+      },
+      function (error) {
         status.error("Basal aggregation error " + error.message);
       }
     ).then(
