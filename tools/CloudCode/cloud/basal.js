@@ -10,11 +10,25 @@ var BasalChangeEventsAfter = function(afterDate, limit) {
   return query.find();
 };
 
+var BasalPatternChangeEventsAfter = function (afterDate, limit) {
+  var query = new Parse.Query('MedtronicMinimedParadigmRevel755PumpData');
+  query.greaterThan('Timestamp', afterDate);
+  query.ascending('Timestamp');
+  query.limit(limit || 250);
+  query.equalTo("Raw_Type", "ChangeBasalProfilePatternPre");
+  query.select("Raw_Type", "Raw_Values", "Timestamp");
+  return query.find();
+};
+
 var LogFormatBasalChangeEvent = function(changeEvent) {
   return "PatternDatumId: " + changeEvent.PatternDatumId +
   " ProfileIndex: " + changeEvent.ProfileIndex +
   " Rate: " + changeEvent.Rate +
   " StartTime: " + changeEvent.StartTime;
+};
+
+var LogFormatBasalPatternChangeEvent = function (changeEvent) {
+  return "NumProfiles: " + changeEvent.NumProfiles;
 };
 
 var DeserializeBasalChangeEvent = function(changeEventString) {
@@ -50,6 +64,30 @@ var DeserializeBasalChangeEvent = function(changeEventString) {
   return changeEvent;
 };
 
+var DeserializeBasalPatternChangeEvent = function(changeEventString) {
+  // PATTERN_NAME=standard, NUM_PROFILES=5, ACTION_REQUESTOR=pump
+  var changeEvent = {
+    NumProfiles: null, // The number of basal rates in the day
+  };
+  var elements = changeEventString.split(",");
+
+  _.each(elements, function(element) {
+    var pair = element.split("=");
+    if (pair.length < 2) {
+      return;
+    }
+
+    if (/\s*NUM_PROFILES/.test(pair[0])) {
+      changeEvent.NumProfiles = pair[1];
+    }
+  });
+
+  return changeEvent;
+};
+
 exports.BasalChangeEventsAfter = BasalChangeEventsAfter;
+exports.BasalPatternChangeEventsAfter = BasalPatternChangeEventsAfter;
 exports.DeserializeBasalChangeEvent = DeserializeBasalChangeEvent;
+exports.DeserializeBasalPatternChangeEvent = DeserializeBasalPatternChangeEvent;
 exports.LogFormatBasalChangeEvent = LogFormatBasalChangeEvent;
+exports.LogFormatBasalPatternChangeEvent = LogFormatBasalPatternChangeEvent;
