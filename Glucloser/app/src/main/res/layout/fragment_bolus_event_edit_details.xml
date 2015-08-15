@@ -104,8 +104,6 @@
     </RelativeLayout>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/meal_edit_food_entry_container"
         android:orientation="horizontal"
         android:layout_width="match_parent"
