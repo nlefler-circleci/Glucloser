@@ -1,7 +1,4 @@
 var foursquare = require('cloud/foursquare.js');
-var cgm = require('cloud/cgm.js');
-var bolus = require('cloud/bolus.js');
-var basal = require('cloud/basal.js');
 var _ = require('underscore');
 var averages_job = require('cloud/averages_job.js');
 var prune_cgm_job = require('cloud/prune_cgm_job.js');
