@@ -55,12 +55,12 @@ exports.RegisterPruneCGMJob = function() {
             var cgmRepeatPromise = cgm.RepeatsOfCGMData(cgmData);
             cgmRepeatPromise.then(function(results) {
               var count = results.length;
-              console.log(count + " repeats of " + cgmData.id);
 
               if (count <= 1) {
                 tryResolve(results[0] || cgmData);
                 return;
               }
+              console.log(count + " repeats of " + cgmData.id);
               for (var idx = 1; idx < count; idx++) {
                 results[idx].destroy();
               }
