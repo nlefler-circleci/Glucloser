@@ -1,4 +1,4 @@
-package com.nlefler.glucloser.activities;
+package com.nlefler.glucloser.ui;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,13 +21,13 @@ public class LoginActivityFragment : Fragment() {
     var loginButton: Button? = null
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup,
-                              savedInstanceState: Bundle): View {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
 
-        var rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        usernameField = rootView.findViewById(R.id.login_username_value) as EditText?
-        passwordField = rootView.findViewById(R.id.login_password_value) as EditText?
-        loginButton = rootView.findViewById(R.id.login_sign_in_button) as Button?
+        var rootView = inflater?.inflate(R.layout.fragment_login, container, false);
+        usernameField = rootView?.findViewById(R.id.login_username_value) as EditText?
+        passwordField = rootView?.findViewById(R.id.login_password_value) as EditText?
+        loginButton = rootView?.findViewById(R.id.login_sign_in_button) as Button?
 
         loginButton?.setOnClickListener { v: View ->
             val username = usernameField?.getText().toString()
