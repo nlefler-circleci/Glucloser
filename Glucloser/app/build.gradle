@@ -49,6 +49,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:7.5.0'
     compile 'com.google.android.gms:play-services-location:7.5.0'
     compile 'com.google.android.gms:play-services-maps:7.5.0'
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
+    compile 'com.google.android.gms:play-services-nearby:7.5.0'
+    compile 'com.google.android.gms:play-services-panorama:7.5.0'
+    compile 'com.google.android.gms:play-services-games:7.5.0'
+    compile 'com.google.android.gms:play-services-safetynet:7.5.0'
+    compile 'com.google.android.gms:play-services-wallet:7.5.0'
     compile 'com.google.android.gms:play-services-wearable:7.5.0'
 
     compile 'com.android.support:appcompat-v7:22.2.1'
