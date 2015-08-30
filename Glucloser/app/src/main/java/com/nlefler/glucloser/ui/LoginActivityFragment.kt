@@ -34,11 +34,7 @@ public class LoginActivityFragment : Fragment() {
             val password = passwordField?.getText().toString()
 
             if (username.length() > 0 && password.length() > 0) {
-                val user = ParseUser()
-                user.setUsername(username)
-                user.setPassword(password)
-
-                user.signUpInBackground()
+                ParseUser.logInInBackground(username, password);
             }
         }
 
