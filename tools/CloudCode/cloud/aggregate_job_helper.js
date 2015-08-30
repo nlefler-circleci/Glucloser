@@ -146,9 +146,6 @@ var CreateAggregateRateJob = function(config) {
 
           var rateItem = new Parse.Object(config.ChangeEventTableName);
           config.ChangeEventSaveFun(rateItem, changeObj);
-          rateItem.set('rate', changeObj.Rate);
-          rateItem.set('ordinal', changeObj.ProfileIndex);
-          rateItem.set('startTime', changeObj.StartTime);
 
           rateSavePromises.push(rateItem.save());
         });
@@ -187,18 +184,15 @@ var CreateAggregateRateJob = function(config) {
 
           console.log("Saving pattern change " + config.PatternChangeEventLogFormatFun(changeObj));
 
-          // var rateItem = new Parse.Object('BasalRate');
-          // rateItem.set('rate', changeObj.Rate);
-          // rateItem.set('ordinal', changeObj.ProfileIndex);
-          // rateItem.set('startTime', changeObj.StartTime);
-          //
-          // patternSavePromises.push(rateItem.save());
-          patternSavePromises.push(Parse.Promise.as(true));
+          var parseObj = new Parse.Object(config.PatternChangeEventTableName);
+          config.PatternChangeEventSaveFun(parseObj, changeObj);
+          patternSavePromises.push(parseObj.save());
         });
 
         return Parse.Promise.when(patternSavePromises);
       },
       function (error) {
+        console.log(config.JobName + " aggregation error " + error.message);
         status.error(config.JobName + " aggregation error " + error.message);
       }
     ).then(
@@ -212,14 +206,15 @@ var CreateAggregateRateJob = function(config) {
         return logItem.save();
       },
       function(saveError) {
-        status.error(config.JobName + " aggregation log save error " + saveError.errors + " "+ saveError.code + " " + saveError.message);
+        console.log(config.JobName + " aggregation log save error " + saveError[0].message);
+        status.error(config.JobName + " aggregation log save error " + saveError[0].message);
       }
     ).then(
       function() {
         status.success(config.JobName + " aggregation success");
       },
       function(saveError) {
-        status.error(config.Jobname + " aggregation log save error " + saveError.errors + " "+ saveError.code + " " + saveError.message);
+        status.error(config.Jobname + " aggregation log save error " + saveError.message);
       }
     );
   };

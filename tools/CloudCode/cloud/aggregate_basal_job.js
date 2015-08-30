@@ -13,17 +13,15 @@ exports.RegisterAggregateBasalRates = function() {
   config.ChangeEventDeserializeFun = basal.DeserializeBasalChangeEvent;
   config.ChangeEventLogFormatFun = basal.LogFormatBasalChangeEvent;
   config.ChangeEventSaveFun = function (parseObj, changeObj) {
-    rateItem.set('rate', changeObj.Rate);
-    rateItem.set('ordinal', changeObj.ProfileIndex);
-    rateItem.set('startTime', changeObj.StartTime);
+    parseObj.set('rate', changeObj.Rate);
+    parseObj.set('ordinal', changeObj.ProfileIndex);
+    parseObj.set('startTime', changeObj.StartTime);
   };
   config.PatternChangeEventsAfterFun = basal.BasalPatternChangeEventsAfter;
   config.PatternChangeEventDeserializeFun = basal.DeserializeBasalPatternChangeEvent;
   config.PatternChangeEventLogFormatFun = basal.LogFormatBasalPatternChangeEvent;
   config.PatternChangeEventSaveFun = function (parseObj, changeObj) {
-    // rateItem.set('rate', changeObj.Rate);
-    // rateItem.set('ordinal', changeObj.ProfileIndex);
-    // rateItem.set('startTime', changeObj.StartTime);
+    parseObj.set('rateCount', changeObj.NumProfiles);
   };
 
   Parse.Cloud.job('aggregateBasalRates', aggregateJobHelper.CreateAggregateRateJob(config));

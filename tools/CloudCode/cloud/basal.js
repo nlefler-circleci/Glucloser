@@ -78,7 +78,7 @@ var DeserializeBasalPatternChangeEvent = function(changeEventString) {
     }
 
     if (/\s*NUM_PROFILES/.test(pair[0])) {
-      changeEvent.NumProfiles = pair[1];
+      changeEvent.NumProfiles = parseInt(pair[1], 10);
     }
   });
 
