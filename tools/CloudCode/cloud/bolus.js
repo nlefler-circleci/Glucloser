@@ -18,11 +18,25 @@ var BolusChangeEventsAfter = function(afterDate, limit) {
   return query.find();
 };
 
+var BolusPatternChangeEventsAfter = function (afterDate, limit) {
+  var query = new Parse.Query('MedtronicMinimedParadigmRevel755PumpData');
+  query.greaterThan('Timestamp', afterDate);
+  query.ascending('Timestamp');
+  query.limit(limit || 250);
+  query.equalTo("Raw_Type", "ChangeCarbRatioPattern");
+  query.select("Raw_Type", "Raw_Values", "Timestamp");
+  return query.find();
+};
+
 var LogFormatBolusChangeEvent = function(changeEvent) {
   return "Bolus PatternDatumId: " + changeEvent.PatternDatumId +
   " ProfileIndex: " + changeEvent.ProfileIndex +
   " Rate: " + changeEvent.Rate +
   " StartTime: " + changeEvent.StartTime;
+};
+
+var LogFormatBolusPatternChangeEvent = function (changeEvent) {
+  return "NumRatios: " + changeEvent.NumRatios;
 };
 
 var DeserializeBolusChangeEvent = function(changeEventString) {
@@ -58,9 +72,34 @@ var DeserializeBolusChangeEvent = function(changeEventString) {
   return changeEvent;
 };
 
+var DeserializeBolusPatternChangeEvent = function(changeEventString) {
+  // SIZE=5
+  var changeEvent = {
+    NumRatios: null, // The number of carb ratios in the day
+  };
+  var elements = changeEventString.split(",");
+
+  _.each(elements, function(element) {
+    var pair = element.split("=");
+    if (pair.length < 2) {
+      return;
+    }
+
+    if (/\s*SIZE/.test(pair[0])) {
+      changeEvent.NumRatios = parseInt(pair[1], 10);
+    }
+  });
+
+  return changeEvent;
+};
+
+
 exports.BolusChangeEventsAfter = BolusChangeEventsAfter;
 exports.DeserializeBolusChangeEvent = DeserializeBolusChangeEvent;
 exports.LogFormatBolusChangeEvent = LogFormatBolusChangeEvent;
+exports.BolusPatternChangeEventsAfter = BolusPatternChangeEventsAfter;
+exports.DeserializeBolusPatternChangeEvent = DeserializeBolusPatternChangeEvent;
+exports.LogFormatBolusPatternChangeEvent = LogFormatBolusPatternChangeEvent;
 
 exports.MealsAfterDate = function(afterDate, limit) {
   return BolusesAfterDateFromTable("Meal", afterDate, limit);
