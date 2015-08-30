@@ -127,7 +127,7 @@ var CreateAggregateRateJob = function(config) {
         var resolveCount = changeEvents.length;
         console.log(config.JobName + " " + resolveCount + " change events");
         if (resolveCount === 0) {
-          return Parse.Promise.as(false);
+          return Parse.Promise.as(true);
         }
 
         var rateSavePromises = [];
@@ -136,8 +136,9 @@ var CreateAggregateRateJob = function(config) {
 
           if (changeEvent &&
             (!!!lastProcessedDate ||
-              changeEvent.updatedAt.getTime() < lastProcessedDate.getTime())) {
-            lastProcessedDate = changeEvent.updatedAt;
+              changeEvent.updatedAt.getTime() > lastProcessedDate.getTime())) {
+                lastProcessedDate = changeEvent.updatedAt;
+                console.log(config.JobName + " update lastProcessedDate to " + lastProcessedDate);
           }
 
           var changeObj = config.ChangeEventDeserializeFun(changeEvent.get("Raw_Values"));
@@ -167,7 +168,7 @@ var CreateAggregateRateJob = function(config) {
         var resolveCount = patternChangeEvents.length;
         console.log(config.JobName + " " + resolveCount + " pattern change events");
         if (resolveCount === 0) {
-          return Parse.Promise.as(false);
+          return Parse.Promise.as(true);
         }
 
         var patternSavePromises = [];
@@ -176,8 +177,9 @@ var CreateAggregateRateJob = function(config) {
 
           if (changeEvent &&
             (!!!lastProcessedDate ||
-              changeEvent.updatedAt.getTime() < lastProcessedDate.getTime())) {
-            lastProcessedDate = changeEvent.updatedAt;
+              changeEvent.updatedAt.getTime() > lastProcessedDate.getTime())) {
+                lastProcessedDate = changeEvent.updatedAt;
+                console.log(config.JobName + " update lastProcessedDate to " + lastProcessedDate);
           }
 
           var changeObj = config.PatternChangeEventDeserializeFun(changeEvent.get("Raw_Values"));
@@ -198,7 +200,7 @@ var CreateAggregateRateJob = function(config) {
     ).then(
       function (shouldSave) {
         if (!!!shouldSave) {
-          return Parse.Promise.as(false);
+          return Parse.Promise.as(true);
         }
         console.log(config.JobName + " Saving aggregation last processed date at " + lastProcessedDate);
         var logItem = new Parse.Object(processLogTableName);
