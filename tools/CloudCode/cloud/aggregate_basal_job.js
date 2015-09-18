@@ -22,6 +22,26 @@ exports.RegisterAggregateBasalRates = function() {
   config.PatternChangeEventLogFormatFun = basal.LogFormatBasalPatternChangeEvent;
   config.PatternChangeEventSaveFun = function (parseObj, changeObj) {
     parseObj.set('rateCount', changeObj.NumProfiles);
+
+    var pointerPromises = [];
+    for (var i = 0; i < changeObj.NumRatios; i++) {
+      var promise = new Parse.Promise();
+      pointerPromises.push(promise);
+      var query = new Parse.Query(config.ChangeEventTableName);
+      query.limit(1);
+      query.descending('timestamp');
+      query.lessThan('timestamp', changeObj.Timestamp);
+      query.equalTo('ordinal', i);
+      query.find().then(function(rateObj) {
+        parseObj.add('rate', rateObj);
+        promise.resolve();
+      }, promise.reject);
+    }
+    var donePromise = new Parse.Promise();
+    Parse.Promise.when(pointerPromises).then(function() {
+      parseObj.save().then(donePromise.resolve, donePromise.reject);
+    }, donePromise.reject);
+    return donePromise;
   };
 
   Parse.Cloud.job('aggregateBasalRates', aggregateJobHelper.CreateAggregateRateJob(config));
