@@ -101,8 +101,10 @@ var CreateAggregateRateJob = function(config) {
   return function(request, status) {
     // Get the last time this ran
     var lastProcessedDate = null;
+    var originalLastProcessedDate = null;
     var processLogTableName = config.LogTableName;
 
+    console.log("A");
     var query = new Parse.Query(processLogTableName);
     query.descending('createdAt');
     query.first().then(
@@ -115,15 +117,17 @@ var CreateAggregateRateJob = function(config) {
         else {
           lastProcessedDate = new Date(0);
         }
+        originalLastProcessedDate = lastProcessedDate;
 
-        console.log("Last processed date" + lastProcessedDate);
-        return config.ChangeEventsAfterFun(lastProcessedDate, 250);
+        console.log("Last processed date" + originalLastProcessedDate);
+        return config.ChangeEventsAfterFun(originalLastProcessedDate, 250);
       },
       function (error) {
         status.success(config.JobName + " aggregation error " + error.message);
       }
     ).then(
       function(changeEvents) {
+    console.log("B");
         var resolveCount = changeEvents.length;
         console.log(config.JobName + " " + resolveCount + " change events");
         if (resolveCount === 0) {
@@ -138,12 +142,12 @@ var CreateAggregateRateJob = function(config) {
             (!!!lastProcessedDate ||
               changeEvent.updatedAt.getTime() > lastProcessedDate.getTime())) {
                 lastProcessedDate = changeEvent.updatedAt;
-                console.log(config.JobName + " update lastProcessedDate to " + lastProcessedDate);
+                // console.log(config.JobName + " update lastProcessedDate to " + lastProcessedDate);
           }
 
-          var changeObj = config.ChangeEventDeserializeFun(changeEvent.get("Raw_Values"));
+          var changeObj = config.ChangeEventDeserializeFun(changeEvent);
 
-          console.log("Saving rate " + config.ChangeEventLogFormatFun(changeObj));
+          // console.log("Saving rate " + config.ChangeEventLogFormatFun(changeObj));
 
           var rateItem = new Parse.Object(config.ChangeEventTableName);
           config.ChangeEventSaveFun(rateItem, changeObj);
@@ -158,18 +162,17 @@ var CreateAggregateRateJob = function(config) {
       }
     ).then(
       function() {
-        return config.PatternChangeEventsAfterFun(lastProcessedDate);
+    console.log("C");
+        return config.PatternChangeEventsAfterFun(originalLastProcessedDate);
       },
       function (saveError) {
         status.error(config.JobName + " aggregation error " + error.message);
       }
     ).then(
       function (patternChangeEvents) {
+    console.log("D");
         var resolveCount = patternChangeEvents.length;
         console.log(config.JobName + " " + resolveCount + " pattern change events");
-        if (resolveCount === 0) {
-          return Parse.Promise.as(true);
-        }
 
         var patternSavePromises = [];
 
@@ -179,16 +182,15 @@ var CreateAggregateRateJob = function(config) {
             (!!!lastProcessedDate ||
               changeEvent.updatedAt.getTime() > lastProcessedDate.getTime())) {
                 lastProcessedDate = changeEvent.updatedAt;
-                console.log(config.JobName + " update lastProcessedDate to " + lastProcessedDate);
+                // console.log(config.JobName + " update lastProcessedDate to " + lastProcessedDate);
           }
 
-          var changeObj = config.PatternChangeEventDeserializeFun(changeEvent.get("Raw_Values"));
+          var changeObj = config.PatternChangeEventDeserializeFun(changeEvent);
 
           console.log("Saving pattern change " + config.PatternChangeEventLogFormatFun(changeObj));
 
           var parseObj = new Parse.Object(config.PatternChangeEventTableName);
-          config.PatternChangeEventSaveFun(parseObj, changeObj);
-          patternSavePromises.push(parseObj.save());
+          patternSavePromises.push(config.PatternChangeEventSaveFun(parseObj, changeObj));
         });
 
         return Parse.Promise.when(patternSavePromises);
@@ -198,10 +200,12 @@ var CreateAggregateRateJob = function(config) {
         status.error(config.JobName + " aggregation error " + error.message);
       }
     ).then(
-      function (shouldSave) {
-        if (!!!shouldSave) {
+      function () {
+        if (lastProcessedDate.getTime() == originalLastProcessedDate.getTime()) {
+          console.log("No updates");
           return Parse.Promise.as(true);
         }
+    console.log("E");
         console.log(config.JobName + " Saving aggregation last processed date at " + lastProcessedDate);
         var logItem = new Parse.Object(processLogTableName);
         logItem.set("lastProcessedDate", lastProcessedDate);

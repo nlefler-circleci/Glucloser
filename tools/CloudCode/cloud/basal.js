@@ -31,9 +31,11 @@ var LogFormatBasalPatternChangeEvent = function (changeEvent) {
   return "NumProfiles: " + changeEvent.NumProfiles;
 };
 
-var DeserializeBasalChangeEvent = function(changeEventString) {
+var DeserializeBasalChangeEvent = function(changeEventParseObj) {
   // PATTERN_DATUM_ID=15277543362, PROFILE_INDEX=4, RATE=0.975, START_TIME=79200000
+  var changeEventString = changeEventParseObj.get('Raw_Values');
   var changeEvent = {
+    Timestamp: changeEventParseObj.get('Timestamp'),
     PatternDatumId: null,
     ProfileIndex: null, // The first, second, etc rate in the day
     Rate: null, // Units per hour
@@ -64,9 +66,11 @@ var DeserializeBasalChangeEvent = function(changeEventString) {
   return changeEvent;
 };
 
-var DeserializeBasalPatternChangeEvent = function(changeEventString) {
+var DeserializeBasalPatternChangeEvent = function(changeEventParseObj) {
   // PATTERN_NAME=standard, NUM_PROFILES=5, ACTION_REQUESTOR=pump
+  var changeEventString = changeEventParseObj.get('Raw_Values');
   var changeEvent = {
+    Timestamp: changeEventParseObj.get('Timestamp'),
     NumProfiles: null, // The number of basal rates in the day
   };
   var elements = changeEventString.split(",");

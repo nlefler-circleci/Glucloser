@@ -39,9 +39,12 @@ var LogFormatBolusPatternChangeEvent = function (changeEvent) {
   return "NumRatios: " + changeEvent.NumRatios;
 };
 
-var DeserializeBolusChangeEvent = function(changeEventString) {
+var DeserializeBolusChangeEvent = function(changeEventParseObj) {
+
   // PATTERN_DATUM_ID=15311235006, INDEX=0, AMOUNT=18, UNITS=grams, START_TIME=0
+  var changeEventString = changeEventParseObj.get('Raw_Values');
   var changeEvent = {
+    Timestamp: changeEventParseObj.get('Timestamp'),
     PatternDatumId: null,
     ProfileIndex: null, // The first, second, etc rate in the day
     Amount: null, // Carbs per unit of insulin
@@ -72,9 +75,11 @@ var DeserializeBolusChangeEvent = function(changeEventString) {
   return changeEvent;
 };
 
-var DeserializeBolusPatternChangeEvent = function(changeEventString) {
+var DeserializeBolusPatternChangeEvent = function(changeEventParseObj) {
   // SIZE=5
+  var changeEventString = changeEventParseObj.get('Raw_Values');
   var changeEvent = {
+    Timestamp: changeEventParseObj.get('Timestamp'),
     NumRatios: null, // The number of carb ratios in the day
   };
   var elements = changeEventString.split(",");
