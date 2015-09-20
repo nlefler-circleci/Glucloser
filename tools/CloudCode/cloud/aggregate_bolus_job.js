@@ -17,6 +17,7 @@ exports.RegisterAggregateBolusRates = function() {
     parseObj.set('rate', changeObj.Rate);
     parseObj.set('ordinal', changeObj.ProfileIndex);
     parseObj.set('startTime', changeObj.StartTime);
+    parseObj.set('timestamp', changeObj.Timestamp);
   };
   config.PatternChangeEventsAfterFun = bolus.BolusPatternChangeEventsAfter;
   config.PatternChangeEventDeserializeFun = bolus.DeserializeBolusPatternChangeEvent;
