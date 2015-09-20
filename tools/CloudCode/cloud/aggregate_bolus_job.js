@@ -24,6 +24,7 @@ exports.RegisterAggregateBolusRates = function() {
   config.PatternChangeEventLogFormatFun = bolus.LogFormatBolusPatternChangeEvent;
   config.PatternChangeEventSaveFun = function (parseObj, changeObj) {
     parseObj.set('rateCount', changeObj.NumRatios);
+    parseObj.set('timestamp', changeObj.Timestamp);
 
     var makeResolveAdd = function (po, prms) {
       return function(rateObj) {

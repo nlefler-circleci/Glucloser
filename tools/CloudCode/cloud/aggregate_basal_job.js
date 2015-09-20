@@ -24,6 +24,7 @@ exports.RegisterAggregateBasalRates = function() {
   config.PatternChangeEventLogFormatFun = basal.LogFormatBasalPatternChangeEvent;
   config.PatternChangeEventSaveFun = function (parseObj, changeObj) {
     parseObj.set('rateCount', changeObj.NumProfiles);
+    parseObj.set('timestamp', changeObj.Timestamp);
 
     var makeResolveAdd = function (po, prms) {
       return function(rateObj) {
